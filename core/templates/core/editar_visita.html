@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Visita</title>
+  </head>
+  <body>
+    <h1>Editar Visita</h1>
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Campo para exibir o nome da escola -->
+      <label for="escola">Escola:</label>
+      <input
+        type="text"
+        id="escola"
+        name="escola"
+        value="{{ visita.escola.nome }}"
+        readonly
+      /><br />
+
+      <label for="data">Data da Visita:</label>
+      <input
+        type="date"
+        id="data"
+        name="data"
+        value="{{ visita.data|date:'Y-m-d' }}"
+        required
+      /><br />
+
+      <label for="periodo">Período:</label>
+      <input
+        type="text"
+        id="periodo"
+        name="periodo"
+        value="{{ visita.periodo }}"
+        required
+      /><br />
+
+      <label for="clima">Clima:</label>
+      <input
+        type="text"
+        id="clima"
+        name="clima"
+        value="{{ visita.clima }}"
+        required
+      /><br />
+
+      <label for="serie_alunos">Série dos Alunos:</label>
+      <input
+        type="text"
+        id="serie_alunos"
+        name="serie_alunos"
+        value="{{ visita.serie_alunos }}"
+        required
+      /><br />
+
+      <button type="submit">Salvar Alterações</button>
+    </form>
+  </body>
+</html>

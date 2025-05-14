@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar Monitores</title>
+  </head>
+  <body>
+    <h1>Adicionar Monitores</h1>
+
+    <!-- Exibir mensagens -->
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="visita">Visita: *</label>
+      <select id="visita" name="visita" required>
+        <option value="">Selecione uma visita</option>
+        {% for visita in visitas %}
+        <option value="{{ visita.id }}">
+          Visita de {{ visita.escola.nome }} em {{ visita.data|date:"d/m/Y" }}
+        </option>
+        {% endfor %}</select
+      ><br />
+
+      <label for="monitores_fazendinha">Monitores da Fazendinha: *</label>
+      <textarea
+        id="monitores_fazendinha"
+        name="monitores_fazendinha"
+        required
+      ></textarea
+      ><br />
+
+      <label for="monitores_free">Monitores Free: </label>
+      <textarea id="monitores_free" name="monitores_free" required></textarea
+      ><br />
+
+      <label for="guia_fazendinha">Guia da Fazendinha: *</label>
+      <input
+        type="text"
+        id="guia_fazendinha"
+        name="guia_fazendinha"
+        required
+      /><br />
+
+      <label for="guias_free">Guias Free:</label>
+      <textarea id="guias_free" name="guias_free"></textarea><br />
+
+      <label for="historico_passeio">Histórico do Passeio:</label>
+      <textarea id="historico_passeio" name="historico_passeio"></textarea
+      ><br />
+
+      <!-- Comentário sobre os campos obrigatórios -->
+      <p>Todos os campos marcados com * são obrigatórios.</p>
+
+      <button type="submit">Salvar</button>
+    </form>
+  </body>
+</html>
+{% endblock %}

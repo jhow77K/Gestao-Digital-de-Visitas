@@ -1,0 +1,248 @@
+{% extends 'core/base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizar Dados</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pesquisar Dados</h1>
+    <form method="get">
+      {{ escola_filter.form.as_p }}
+      <button type="submit">Filtrar</button>
+    </form>
+
+    <form method="get">
+      <input
+        type="text"
+        name="q"
+        placeholder="Pesquisar..."
+        value="{{ query }}"
+      />
+      <button type="submit">Pesquisar</button>
+    </form>
+
+    <h2>Dados das Escolas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Responsável</th>
+          <th>Endereço</th>
+          <th>Bairro</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th>CNPJ</th>
+          <th>Data de Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for escola in escolas %}
+        <tr>
+          <td>{{ escola.nome }}</td>
+          <td>{{ escola.responsavel }}</td>
+          <td>{{ escola.endereco }}</td>
+          <td>{{ escola.bairro }}</td>
+          <td>{{ escola.telefone }}</td>
+          <td>{{ escola.email }}</td>
+          <td>{{ escola.cnpj }}</td>
+          <td>{{ escola.data_cadastro|date:"d/m/Y H:i" }}</td>
+          <td>
+            <a href="{% url 'editar_escola' escola.id %}">Editar</a> |
+            <a
+              href="{% url 'excluir_escola' escola.id %}"
+              onclick="return confirm('Tem certeza que deseja excluir esta escola?');"
+              >Excluir</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">Nenhuma escola cadastrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Dados das Visitas</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Escola</th>
+          <th>Data da Visita</th>
+          <th>Período</th>
+          <th>Clima</th>
+          <th>Série dos Alunos</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for visita in visitas %}
+        <tr>
+          <td>{{ visita.escola.nome }}</td>
+          <td>{{ visita.data|date:"d/m/Y" }}</td>
+          <td>{{ visita.periodo }}</td>
+          <td>{{ visita.clima }}</td>
+          <td>{{ visita.serie_alunos }}</td>
+          <td>
+            <a href="{% url 'editar_visita' visita.id %}">Editar</a> |
+            <a
+              href="{% url 'excluir_visita' visita.id %}"
+              onclick="return confirm('Tem certeza que deseja excluir esta visita?');"
+              >Excluir</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">Nenhuma visita cadastrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Visitas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Escola</th>
+          <th>Data</th>
+          <th>Série</th>
+          <th>Clima</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for visita in visitas %}
+        <tr>
+          <td>{{ visita.escola.nome }}</td>
+          <td>{{ visita.data }}</td>
+          <td>{{ visita.serie_alunos }}</td>
+          <td>{{ visita.clima }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">Nenhuma visita encontrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Dados dos Pagamentos</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Escola</th>
+          <th>Número de Crianças Pagantes</th>
+          <th>Valor por Criança</th>
+          <th>Número de Adultos Pagantes</th>
+          <th>Valor por Adulto</th>
+          <th>Total</th>
+          <th>Forma de Pagamento</th>
+          <th>Nota Fiscal</th>
+          <th>Recibo</th>
+          <th>Agência</th>
+          <th>Comissão (%)</th>
+          <th>Número Previsto de Crianças</th>
+          <th>Número de Adultos Cortesia</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pagamento in pagamentos %}
+        <tr>
+          <td>{{ pagamento.escola.nome }}</td>
+          <td>{{ pagamento.numero_criancas_pagantes }}</td>
+          <td>{{ pagamento.valor_por_crianca }}</td>
+          <td>{{ pagamento.numero_adultos_pagantes }}</td>
+          <td>{{ pagamento.valor_por_adulto }}</td>
+          <td>{{ pagamento.total }}</td>
+          <td>{{ pagamento.forma_pagamento }}</td>
+          <td>{{ pagamento.nota_fiscal|yesno:"Sim,Não" }}</td>
+          <td>{{ pagamento.recibo|yesno:"Sim,Não" }}</td>
+          <td>{{ pagamento.agencia|yesno:"Sim,Não" }}</td>
+          <td>{{ pagamento.comissao|default:"-" }}</td>
+          <td>{{ pagamento.numero_previsto_criancas }}</td>
+          <td>{{ pagamento.numero_adultos_cortesia }}</td>
+          <td>
+            <a href="{% url 'editar_pagamento' pagamento.id %}">Editar</a> |
+            <a
+              href="{% url 'excluir_pagamento' pagamento.id %}"
+              onclick="return confirm('Tem certeza que deseja excluir este pagamento?');"
+              >Excluir</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">Nenhum pagamento cadastrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h1>Dados dos Monitores</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Escola</th>
+          <th>Visita</th>
+          <th>Monitores da Fazendinha</th>
+          <th>Monitores Free</th>
+          <th>Guia da Fazendinha</th>
+          <th>Guias Free</th>
+          <th>Histórico do Passeio</th>
+          <th>Ações</th>
+          <!-- Adicionando a coluna de Ações -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for monitor in monitores %}
+        <tr>
+          <td>{{ monitor.escola.nome }}</td>
+          <td>Visita em {{ monitor.visita.data|date:"d/m/Y" }}</td>
+          <td>{{ monitor.monitores_fazendinha }}</td>
+          <td>{{ monitor.monitores_free }}</td>
+          <td>{{ monitor.guia_fazendinha }}</td>
+          <td>{{ monitor.guias_free|default:"-" }}</td>
+          <td>{{ monitor.historico_passeio|default:"-" }}</td>
+          <td>
+            <a href="{% url 'editar_monitor' monitor.id %}">Editar</a> |
+            <a
+              href="{% url 'excluir_monitor' monitor.id %}"
+              onclick="return confirm('Tem certeza que deseja excluir este monitor?');"
+              >Excluir</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">Nenhum monitor cadastrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
+{% endblock %}

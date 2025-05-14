@@ -1,0 +1,178 @@
+{% extends 'core/base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestão Fazendinha</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Header */
+      .header {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .header .logo {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .header .menu {
+        display: flex;
+        gap: 15px;
+      }
+
+      .header .menu a {
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+      }
+
+      .header .menu a:last-child {
+        margin-right: 30px; /* Move o botão "Sair" 30px para a esquerda */
+      }
+
+      .header .menu a:hover {
+        text-decoration: underline;
+      }
+
+      /* Dropdown */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown .dropbtn {
+        background-color: #333;
+        color: white;
+        padding: 5px 10px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #444;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #575757;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #575757;
+      }
+
+      /* Conteúdo principal */
+      .container {
+        margin-top: 60px; /* Espaço para não sobrepor o header */
+        padding: 20px;
+        text-align: center;
+      }
+
+      /* Cards informativos */
+      .info-cards {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .info-card {
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 18px;
+        transition: background 0.3s;
+      }
+
+      .info-card p {
+        font-size: 16px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">Fazendinha Estação Natureza</div>
+      <div class="menu">
+        <a href="{% url 'home' %}">Início</a>
+        <a href="{% url 'adicionar_escola' %}">Adicionar Escola</a>
+        <a href="{% url 'adicionar_visita' %}">Adicionar Visita</a>
+        <a href="{% url 'adicionar_pagamento' %}">Adicionar Pagamento</a>
+        <a href="{% url 'adicionar_monitores' %}">Adicionar Monitores</a>
+        <a href="{% url 'visualizar_dados' %}">Visualizar Dados</a>
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button class="dropbtn">Gerenciar Usuários</button>
+          <div class="dropdown-content">
+            <a href="{% url 'listar_usuarios' %}">Listar Usuários</a>
+            <a href="{% url 'adicionar_usuario' %}">Adicionar Usuário</a>
+          </div>
+        </div>
+        <!-- Botão Sair fora do dropdown -->
+        <a href="{% url 'logout' %}">Sair</a>
+      </div>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="container">
+      <h1>Bem-vindo ao Sistema de Visitas</h1>
+
+      <!-- Cards informativos -->
+      <div class="info-cards">
+        <div class="info-card">
+          <h2>{{ total_escolas }}</h2>
+          <p>Total de Escolas Cadastradas</p>
+        </div>
+        <div class="info-card">
+          <h2>{{ visitas_agendadas }}</h2>
+          <p>Visitas Agendadas</p>
+        </div>
+        <div class="info-card">
+          <h2>{{ visitas_realizadas }}</h2>
+          <p>Visitas Realizadas</p>
+        </div>
+        <div class="info-card">
+          <h2>R$ {{ pagamentos_recebidos|floatformat:2 }}</h2>
+          <p>Pagamentos Recebidos</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+{% endblock %}

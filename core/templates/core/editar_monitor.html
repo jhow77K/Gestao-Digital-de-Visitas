@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Monitor</title>
+  </head>
+  <body>
+    <h1>Editar Monitor</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label for="monitores_fazendinha">Monitores da Fazendinha:</label>
+      <textarea id="monitores_fazendinha" name="monitores_fazendinha" required>
+{{ monitor.monitores_fazendinha }}</textarea
+      ><br />
+
+      <label for="monitores_free">Monitores Free:</label>
+      <textarea id="monitores_free" name="monitores_free">
+{{ monitor.monitores_free }}</textarea
+      ><br />
+
+      <label for="guia_fazendinha">Guia da Fazendinha:</label>
+      <input
+        type="text"
+        id="guia_fazendinha"
+        name="guia_fazendinha"
+        value="{{ monitor.guia_fazendinha }}"
+        required
+      /><br />
+
+      <label for="guias_free">Guias Free:</label>
+      <textarea id="guias_free" name="guias_free">
+{{ monitor.guias_free }}</textarea
+      ><br />
+
+      <label for="historico_passeio">Histórico do Passeio:</label>
+      <textarea id="historico_passeio" name="historico_passeio">
+{{ monitor.historico_passeio }}</textarea
+      ><br />
+
+      <button type="submit">Salvar Alterações</button>
+    </form>
+  </body>
+</html>

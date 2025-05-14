@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agendamentos Próximos</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #333;
+        color: white;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Agendamentos Próximos</h1>
+    {% if visitas_proximas %}
+    <table>
+      <thead>
+        <tr>
+          <th>Escola</th>
+            <th>Data</th>
+          <th>Período</th>
+          <th>Série</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for visita in visitas_proximas %}
+        <tr>
+          <td>{{ visita.escola.nome }}</td>
+            <td>{{ visita.data|date:"d/m/Y" }}</td>
+          <td>{{ visita.periodo }}</td>
+          <td>{{ visita.serie_alunos }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center">
+      Nenhum agendamento encontrado para os próximos dias.
+    </p>
+    {% endif %}
+  </body>
+</html>
+{% endblock %}

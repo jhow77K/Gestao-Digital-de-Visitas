@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adicionar Visita</title>
+  </head>
+  <body>
+    <h1>Adicionar Visita</h1>
+
+    <!-- Exibir mensagens -->
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <label for="escola">Escola: *</label>
+      <select id="escola" name="escola" required>
+        <option value="">Selecione uma escola</option>
+        {% for escola in escolas %}
+        <option value="{{ escola.id }}">{{ escola.nome }}</option>
+        {% endfor %}</select
+      ><br />
+
+      <label for="data">Data da Visita: *</label>
+      <input
+        type="date"
+        id="data"
+        name="data"
+        min="{{ today }}"
+        required
+      /><br />
+
+      <label for="periodo">Período: *</label>
+      <select id="periodo" name="periodo" required>
+        <option value="Manhã">Manhã</option>
+        <option value="Tarde">Tarde</option>
+        <option value="Integral">Integral</option></select
+      ><br />
+
+      <label for="clima">Clima: *</label>
+      <input type="text" id="clima" name="clima" required /><br />
+
+      <label for="serie_alunos">Série dos Alunos: *</label>
+      <input type="text" id="serie_alunos" name="serie_alunos" required /><br />
+
+      <!-- Comentário sobre os campos obrigatórios -->
+      <p>Todos os campos marcados com * são obrigatórios.</p>
+
+      <button type="submit">Salvar</button>
+    </form>
+  </body>
+</html>
+{% endblock %}
