@@ -8,7 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import ProtectedError
 from .filters import EscolaFilter
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Count
+from django.utils.timezone import now
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 
 
@@ -201,23 +204,44 @@ def verificar_login(request):
     return render(request, 'core/tela_login.html')
 
 def home(request):
+    # Data atual
+    data_atual = now().date()
+
     # Total de escolas cadastradas
     total_escolas = Escola.objects.count()
 
     # Total de visitas agendadas
-    visitas_agendadas = Visita.objects.filter(periodo='agendada').count()
+    visitas_agendadas = Visita.objects.filter(data__gte=data_atual).count()
 
     # Total de visitas realizadas
-    visitas_realizadas = Visita.objects.filter(periodo='realizada').count()
+    visitas_realizadas = Visita.objects.filter(data__lt=data_atual).count()
 
     # Total de pagamentos recebidos
     pagamentos_recebidos = Pagamento.objects.aggregate(total=Sum('total'))['total'] or 0
+
+    # As 3 últimas escolas adicionadas (ordenadas por data de cadastro)
+    escolas = Escola.objects.all().order_by('-data_cadastro')[:3]
+
+    # As 3 próximas visitas (ordenadas pela data mais próxima)
+    proximas_visitas = Visita.objects.filter(data__gte=data_atual).order_by('data')[:3]
+
+    # Os 3 pagamentos mais recentes
+    pagamentos = Pagamento.objects.all().order_by('-id')[:3]
+
+    # Dados para o relatório e gráficos
+    total_visitas_por_escola = Escola.objects.annotate(total_visitas=Count('visita')).order_by('-total_visitas')[:5]
+    total_pagamentos_por_escola = Escola.objects.annotate(total_pagamentos=Sum('pagamento__total')).order_by('-total_pagamentos')[:5]
 
     context = {
         'total_escolas': total_escolas,
         'visitas_agendadas': visitas_agendadas,
         'visitas_realizadas': visitas_realizadas,
         'pagamentos_recebidos': pagamentos_recebidos,
+        'escolas': escolas,
+        'proximas_visitas': proximas_visitas,
+        'pagamentos': pagamentos,
+        'total_visitas_por_escola': total_visitas_por_escola,
+        'total_pagamentos_por_escola': total_pagamentos_por_escola,
     }
 
     return render(request, 'core/home.html', context)
@@ -229,20 +253,24 @@ def visualizar_dados(request):
     query = request.GET.get('q', '').strip()  # Remove espaços em branco no início e no final
 
     # Filtra os dados com base na query
-    escolas = Escola.objects.filter(nome__icontains=query) if query else Escola.objects.all()
+    escolas = Escola.objects.filter(nome__icontains(query)) if query else Escola.objects.all()
     visitas = Visita.objects.filter(
-        escola__nome__icontains=query  # Pesquisa pelo nome da escola
+        escola__nome__icontains(query)  # Pesquisa pelo nome da escola
     ) | Visita.objects.filter(
-        serie_alunos__icontains=query  # Pesquisa pela série dos alunos
+        serie_alunos__icontains(query)  # Pesquisa pela série dos alunos
     ) if query else Visita.objects.all()
-    pagamentos = Pagamento.objects.filter(escola__nome__icontains=query) if query else Pagamento.objects.all()
-    monitores = Monitor.objects.filter(escola__nome__icontains=query) if query else Monitor.objects.all()
+    pagamentos = Pagamento.objects.filter(escola__nome__icontains(query)) if query else Pagamento.objects.all()
+    monitores = Monitor.objects.filter(escola__nome__icontains(query)) if query else Monitor.objects.all()
+
+    # Calcula o total de visitas agendadas com base em visita.data
+    visitas_agendadas = Visita.objects.values('data').annotate(total_escolas=Count('escola'))
 
     return render(request, 'core/visualizar_dados.html', {
         'escolas': escolas,
         'visitas': visitas,
         'pagamentos': pagamentos,
         'monitores': monitores,
+        'visitas_agendadas': visitas_agendadas,
         'query': query,
     })
 

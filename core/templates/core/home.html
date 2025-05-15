@@ -123,6 +123,67 @@
         font-size: 16px;
         color: #666;
       }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .relatorio {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .graficos {
+        margin-top: 20px;
+      }
+
+      .graficos canvas {
+        max-width: 100%;
+        margin: 20px auto;
+      }
+
+      .graficos-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .grafico {
+        flex: 1;
+        text-align: center;
+      }
+
+      .grafico canvas {
+        max-width: 400px; /* Define a largura máxima */
+        height: 300px; /* Define a altura fixa */
+        margin: 0 auto; /* Centraliza o gráfico */
+      }
     </style>
   </head>
   <body>
@@ -172,6 +233,192 @@
           <p>Pagamentos Recebidos</p>
         </div>
       </div>
+
+      <!-- Tabela de Escolas -->
+      <h2>Últimas Escolas Adicionadas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Responsável</th>
+            <th>Endereço</th>
+            <th>Telefone</th>
+            <th>Data de Cadastro</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for escola in escolas %}
+          <tr>
+            <td>{{ escola.nome }}</td>
+            <td>{{ escola.responsavel }}</td>
+            <td>{{ escola.endereco }}</td>
+            <td>{{ escola.telefone }}</td>
+            <td>{{ escola.data_cadastro|date:"d/m/Y H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">Nenhuma escola cadastrada.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Tabela de Próximas Visitas -->
+      <h2>Próximas Visitas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Escola</th>
+            <th>Data</th>
+            <th>Série</th>
+            <th>Clima</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for visita in proximas_visitas %}
+          <tr>
+            <td>{{ visita.escola.nome }}</td>
+            <td>{{ visita.data|date:"d/m/Y" }}</td>
+            <td>{{ visita.serie_alunos }}</td>
+            <td>{{ visita.clima }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4">Nenhuma visita agendada.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Tabela de Pagamentos -->
+      <h2>Pagamentos Recentes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Escola</th>
+            <th>Total</th>
+            <th>Forma de Pagamento</th>
+            <th>Nota Fiscal</th>
+            <th>Número de Crianças Pagantes</th>
+            <th>Número de Adultos Pagantes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pagamento in pagamentos %}
+          <tr>
+            <td>{{ pagamento.escola.nome }}</td>
+            <td>R$ {{ pagamento.total|floatformat:2 }}</td>
+            <td>{{ pagamento.forma_pagamento }}</td>
+            <td>{% if pagamento.nota_fiscal %}Sim{% else %}Não{% endif %}</td>
+            <td>{{ pagamento.numero_criancas_pagantes }}</td>
+            <td>{{ pagamento.numero_adultos_pagantes }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7">Nenhum pagamento registrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Gráficos -->
+      <h2>Gráficos</h2>
+
+      <div class="graficos-container">
+        <!-- Gráfico de Visitas por Escola -->
+        <div class="grafico">
+          <h3>Gráfico de Visitas por Escola</h3>
+          <canvas id="graficoVisitas"></canvas>
+        </div>
+
+        <!-- Gráfico de Pagamentos por Escola -->
+        <div class="grafico">
+          <h3>Gráfico de Pagamentos por Escola</h3>
+          <canvas id="graficoPagamentos"></canvas>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        // Dados para o gráfico de visitas por escola
+        const visitasLabels = [
+          {% for escola in total_visitas_por_escola %}
+            "{{ escola.nome }}",
+          {% endfor %}
+        ];
+        const visitasData = [
+          {% for escola in total_visitas_por_escola %}
+            {{ escola.total_visitas }},
+          {% endfor %}
+        ];
+
+        // Configuração do gráfico de visitas
+        const ctxVisitas = document.getElementById('graficoVisitas').getContext('2d');
+        new Chart(ctxVisitas, {
+          type: 'bar',
+          data: {
+            labels: visitasLabels,
+            datasets: [{
+              label: 'Total de Visitas',
+              data: visitasData,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        // Dados para o gráfico de pagamentos por escola
+        const pagamentosLabels = [
+          {% for escola in total_pagamentos_por_escola %}
+            "{{ escola.nome }}",
+          {% endfor %}
+        ];
+        const pagamentosData = [
+          {% for escola in total_pagamentos_por_escola %}
+            {{ escola.total_pagamentos|default:0 }},
+          {% endfor %}
+        ];
+
+        // Configuração do gráfico de pagamentos
+        const ctxPagamentos = document.getElementById('graficoPagamentos').getContext('2d');
+        new Chart(ctxPagamentos, {
+          type: 'pie',
+          data: {
+            labels: pagamentosLabels,
+            datasets: [{
+              label: 'Total de Pagamentos',
+              data: pagamentosData,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true
+          }
+        });
+      </script>
     </div>
   </body>
 </html>

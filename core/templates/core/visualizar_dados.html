@@ -123,31 +123,6 @@
       </tbody>
     </table>
 
-    <h2>Visitas</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Escola</th>
-          <th>Data</th>
-          <th>Série</th>
-          <th>Clima</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for visita in visitas %}
-        <tr>
-          <td>{{ visita.escola.nome }}</td>
-          <td>{{ visita.data }}</td>
-          <td>{{ visita.serie_alunos }}</td>
-          <td>{{ visita.clima }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4">Nenhuma visita encontrada.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
 
     <h1>Dados dos Pagamentos</h1>
     <table>
