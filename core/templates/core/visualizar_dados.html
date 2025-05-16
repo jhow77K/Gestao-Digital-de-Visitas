@@ -107,12 +107,15 @@
           <td>{{ visita.clima }}</td>
           <td>{{ visita.serie_alunos }}</td>
           <td>
-            <a href="{% url 'editar_visita' visita.id %}">Editar</a> |
-            <a
-              href="{% url 'excluir_visita' visita.id %}"
-              onclick="return confirm('Tem certeza que deseja excluir esta visita?');"
-              >Excluir</a
+            <a href="{% url 'editar_visita' visita.id %}">Editar</a>
+            <a href="{% url 'excluir_visita' visita.id %}">Excluir</a>
+            {% if not visita.feita %}
+            <a href="{% url 'marcar_visita_feita' visita.id %}"
+              >Visita Realizada</a
             >
+            {% else %}
+            <span style="color: green; font-weight: bold">Realizada</span>
+            {% endif %}
           </td>
         </tr>
         {% empty %}
@@ -122,7 +125,6 @@
         {% endfor %}
       </tbody>
     </table>
-
 
     <h1>Dados dos Pagamentos</h1>
     <table>
@@ -167,6 +169,15 @@
               onclick="return confirm('Tem certeza que deseja excluir este pagamento?');"
               >Excluir</a
             >
+            {% if not pagamento.confirmado %} |
+            <a href="{% url 'marcar_pagamento_confirmado' pagamento.id %}"
+              >Pagamento Pendente</a
+            >
+            {% else %} |
+            <span style="color: green; font-weight: bold"
+              >Pagamento Confirmado</span
+            >
+            {% endif %}
           </td>
         </tr>
         {% empty %}

@@ -1,6 +1,7 @@
 from django.urls import path
 from core import views
 from .views import login_view, logout_view
+from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -28,4 +29,7 @@ urlpatterns = [
     path('usuarios/editar/<int:usuario_id>/', views.editar_usuario, name='editar_usuario'),
     path('usuarios/excluir/<int:usuario_id>/', views.excluir_usuario, name='excluir_usuario'),
     path('agendamentos_proximos/', views.agendamentos_proximos, name='agendamentos_proximos'),
+    path('marcar_visita_feita/<int:visita_id>/', views.marcar_visita_feita, name='marcar_visita_feita'),
+    path('marcar_pagamento_confirmado/<int:pagamento_id>/', views.marcar_pagamento_confirmado, name='marcar_pagamento_confirmado'),
+
 ]

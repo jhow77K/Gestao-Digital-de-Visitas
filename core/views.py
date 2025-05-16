@@ -25,6 +25,13 @@ def adicionar_escola(request):
         email = request.POST.get('email')
         cnpj = request.POST.get('cnpj')
 
+        # Remove máscara para comparar apenas os números
+        cnpj_limpo = ''.join(filter(str.isdigit, cnpj))
+        # Verifica se já existe escola com esse CNPJ (ignorando máscara)
+        if Escola.objects.filter(cnpj__regex=rf'\D*{cnpj_limpo[:2]}\D*{cnpj_limpo[2:5]}\D*{cnpj_limpo[5:8]}\D*{cnpj_limpo[8:12]}\D*{cnpj_limpo[12:]}').exists():
+            messages.error(request, "Já existe uma escola cadastrada com este CNPJ.")
+            return render(request, 'core/adicionar_escola.html')
+
         # Criação de uma nova instância do modelo Escola
         escola = Escola(
             nome=nome,
@@ -214,10 +221,10 @@ def home(request):
     visitas_agendadas = Visita.objects.filter(data__gte=data_atual).count()
 
     # Total de visitas realizadas
-    visitas_realizadas = Visita.objects.filter(data__lt=data_atual).count()
+    visitas_realizadas = Visita.objects.filter(feita=True).count()
 
-    # Total de pagamentos recebidos
-    pagamentos_recebidos = Pagamento.objects.aggregate(total=Sum('total'))['total'] or 0
+    # Total de pagamentos recebidos (apenas confirmados)
+    pagamentos_recebidos = Pagamento.objects.filter(confirmado=True).aggregate(total=Sum('total'))['total'] or 0
 
     # As 3 últimas escolas adicionadas (ordenadas por data de cadastro)
     escolas = Escola.objects.all().order_by('-data_cadastro')[:3]
@@ -456,3 +463,17 @@ def agendamentos_proximos(request):
     visitas_proximas = Visita.objects.filter(data__range=[hoje, proximos_dias]).order_by('data')
 
     return render(request, 'core/agendamentos_proximos.html', {'visitas_proximas': visitas_proximas})
+
+def marcar_visita_feita(request, visita_id):
+    visita = get_object_or_404(Visita, id=visita_id)
+    visita.feita = True
+    visita.save()
+    messages.success(request, "Visita marcada como FEITA com sucesso!")
+    return redirect('visualizar_dados')
+
+def marcar_pagamento_confirmado(request, pagamento_id):
+    pagamento = get_object_or_404(Pagamento, id=pagamento_id)
+    pagamento.confirmado = True
+    pagamento.save()
+    messages.success(request, "Pagamento confirmado com sucesso!")
+    return redirect('visualizar_dados')

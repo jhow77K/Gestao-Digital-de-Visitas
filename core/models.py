@@ -30,6 +30,7 @@ class Visita(models.Model):
     periodo = models.CharField(max_length=20)  # Manhã, Tarde ou Integral
     clima = models.CharField(max_length=50)
     serie_alunos = models.CharField(max_length=50)
+    feita = models.BooleanField(default=False)  # Novo campo
 
     def __str__(self):
         return f"Visita à {self.escola.nome} em {self.data}"
@@ -48,6 +49,7 @@ class Pagamento(models.Model):
     comissao = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     numero_previsto_criancas = models.IntegerField()
     numero_adultos_cortesia = models.IntegerField()
+    confirmado = models.BooleanField(default=False)  # Novo campo
 
 class Monitor(models.Model):
     escola = models.ForeignKey(Escola, on_delete=models.SET_NULL, null=True, blank=True)
