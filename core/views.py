@@ -283,15 +283,25 @@ def visualizar_dados(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        # Validação simples no backend
+        if not username or not password:
+            messages.error(request, "Preencha todos os campos.")
+            return render(request, 'core/login.html')
+
+        if len(username) < 3 or len(password) < 6:
+            messages.error(request, "Usuário deve ter pelo menos 3 caracteres e senha pelo menos 6.")
+            return render(request, 'core/login.html')
+
+        # Autenticação padrão Django
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            print("Login bem-sucedido")
             login(request, user)
-            return redirect('home')  # Certifique-se de que 'home' está correto
+            return redirect('home')
         else:
-            messages.error(request, 'Usuário ou senha inválidos.')
+            messages.error(request, "Usuário, email ou senha incorretos.")
     return render(request, 'core/login.html')
 
 def logout_view(request):
@@ -477,3 +487,32 @@ def marcar_pagamento_confirmado(request, pagamento_id):
     pagamento.save()
     messages.success(request, "Pagamento confirmado com sucesso!")
     return redirect('visualizar_dados')
+
+def cadastro_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        # Validação backend
+        if not username or not email or not password:
+            messages.error(request, "Preencha todos os campos.")
+            return render(request, 'core/cadastro.html')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Nome de usuário já existe.")
+            return render(request, 'core/cadastro.html')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email já cadastrado.")
+            return render(request, 'core/cadastro.html')
+
+        if len(password) < 6:
+            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
+            return render(request, 'core/cadastro.html')
+
+        # Criação do usuário
+        User.objects.create_user(username=username, email=email, password=password)
+        messages.success(request, "Usuário cadastrado com sucesso!")
+        return redirect('login')
+    return render(request, 'core/cadastro.html')

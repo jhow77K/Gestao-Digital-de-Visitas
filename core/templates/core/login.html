@@ -58,14 +58,21 @@
   <body>
     <div class="login-container">
       <h1>Login</h1>
+      {% if messages %}
+        <div style="color: #b30000; background: #ffeaea; border: 1px solid #b30000; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
       <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
-        <label for="username">Usuário:</label>
+        <label for="username">Usuário ou Email:</label>
         <input
           type="text"
           id="username"
           name="username"
-          placeholder="Digite seu usuário"
+          placeholder="Digite seu usuário ou email"
           required
         />
         <label for="password">Senha:</label>
@@ -78,6 +85,16 @@
         />
         <button type="submit">Entrar</button>
       </form>
+      <script>
+        // Permite apenas letras, números, @, ., -, _ no usuário/email
+        document.getElementById('username').addEventListener('input', function () {
+          this.value = this.value.replace(/[^a-zA-Z0-9@._\-]/g, '');
+        });
+        // Permite apenas letras, números e caracteres especiais comuns em senha
+        document.getElementById('password').addEventListener('input', function () {
+          this.value = this.value.replace(/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '');
+        });
+      </script>
     </div>
   </body>
 </html>

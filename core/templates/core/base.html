@@ -5,79 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Sistema de Gerenciamento{% endblock %}</title>
     <style>
-      /* Estilo básico para a navbar */
-      .navbar {
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
         background-color: #333;
-        overflow: hidden;
+        color: white;
+        padding: 15px 20px;
         display: flex;
         justify-content: space-between;
-        padding: 10px 20px;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
       }
-      .navbar a {
-        color: white;
-        text-decoration: none;
-        padding: 14px 20px;
-        display: block;
-      }
-      .navbar a:hover {
-        background-color: #575757;
-      }
-      .navbar .logo {
+
+      .header .logo {
         font-size: 20px;
         font-weight: bold;
       }
-      .navbar .links {
+
+      .header .menu {
         display: flex;
+        gap: 15px;
+      }
+
+      .header .menu a {
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+      }
+
+      .header .menu a:last-child {
+        margin-right: 30px;
+      }
+
+      .header .menu a:hover {
+        text-decoration: underline;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown .dropbtn {
+        background-color: #333;
+        color: white;
+        padding: 5px 10px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #444;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #575757;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #575757;
+      }
+
+      .content {
+        margin-top: 80px;
+        padding: 20px;
       }
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <div class="navbar">
-      <div class="logo">
-      </div>
-      <div class="links">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">Fazendinha Estação Natureza</div>
+      <div class="menu">
         <a href="{% url 'home' %}">Início</a>
         <a href="{% url 'adicionar_escola' %}">Adicionar Escola</a>
         <a href="{% url 'adicionar_visita' %}">Adicionar Visita</a>
         <a href="{% url 'adicionar_pagamento' %}">Adicionar Pagamento</a>
         <a href="{% url 'adicionar_monitores' %}">Adicionar Monitores</a>
         <a href="{% url 'visualizar_dados' %}">Visualizar Dados</a>
+        <div class="dropdown">
+          <button class="dropbtn">Gerenciar Usuários</button>
+          <div class="dropdown-content">
+            <a href="{% url 'listar_usuarios' %}">Listar Usuários</a>
+            <a href="{% url 'adicionar_usuario' %}">Adicionar Usuário</a>
+          </div>
+        </div>
+        <a href="{% url 'logout' %}">Sair</a>
       </div>
     </div>
 
-    <!-- Conteúdo da página -->
     <div class="content">
-      {% block content %}
-      <h1>Adicionar Escola</h1>
-
-      <!-- Exibe mensagens de erro ou sucesso -->
       {% if messages %}
-      <script>
-        {% for message in messages %}
-          alert("{{ message|escapejs }}");
-        {% endfor %}
-      </script>
+        <div style="max-width: 600px; margin: 20px auto;">
+          {% for message in messages %}
+            <div style="
+              padding: 12px 18px;
+              margin-bottom: 10px;
+              border-radius: 6px;
+              font-weight: bold;
+              color: {% if message.tags == 'error' %}#b30000{% else %}#155724{% endif %};
+              background: {% if message.tags == 'error' %}#ffeaea{% else %}#d4edda{% endif %};
+              border: 1px solid {% if message.tags == 'error' %}#b30000{% else %}#c3e6cb{% endif %};
+            ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
-
-      <form method="post">
-        {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" required /><br />
-        <label for="responsavel">Responsável:</label>
-        <input type="text" name="responsavel" id="responsavel" required /><br />
-        <label for="endereco">Endereço:</label>
-        <input type="text" name="endereco" id="endereco" required /><br />
-        <label for="bairro">Bairro:</label>
-        <input type="text" name="bairro" id="bairro" required /><br />
-        <label for="telefone">Telefone:</label>
-        <input type="text" name="telefone" id="telefone" required /><br />
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" required /><br />
-        <label for="cnpj">CNPJ:</label>
-        <input type="text" name="cnpj" id="cnpj" required /><br />
-        <button type="submit">Salvar</button>
-      </form>
+      {% block content %}
       {% endblock %}
     </div>
   </body>

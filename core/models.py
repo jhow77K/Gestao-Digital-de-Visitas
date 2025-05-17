@@ -2,6 +2,8 @@ import re
 from django.db import models
 from django.utils.timezone import now
 from django.db.models import ProtectedError
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
 
 class Escola(models.Model):
     nome = models.CharField(max_length=255)
@@ -37,6 +39,8 @@ class Visita(models.Model):
 
 class Pagamento(models.Model):
     escola = models.ForeignKey(Escola, on_delete=models.SET_NULL, null=True, blank=True)
+    visita = models.ForeignKey(Visita, on_delete=models.SET_NULL, null=True, blank=True)
+    visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
     numero_criancas_pagantes = models.IntegerField()
     valor_por_crianca = models.DecimalField(max_digits=10, decimal_places=2)
     numero_adultos_pagantes = models.IntegerField()
@@ -67,4 +71,30 @@ class Usuario(models.Model):
 
     def __str__(self):
         return self.nome
+
+# Exemplo para exclusão
+def excluir_escola(request, escola_id):
+    escola = get_object_or_404(Escola, id=escola_id)
+    if escola.visita_set.exists() or Pagamento.objects.filter(escola=escola).exists() or Monitor.objects.filter(escola=escola).exists():
+        messages.error(request, "Não é possível excluir a escola porque ela possui visitas, pagamentos ou monitores relacionados.")
+        return redirect('visualizar_dados')
+    try:
+        escola.delete()
+        messages.success(request, "Escola excluída com sucesso!")
+    except ProtectedError:
+        messages.error(request, "Não é possível excluir a escola porque ela está protegida por registros relacionados.")
+    return redirect('visualizar_dados')
+
+def editar_usuario(request, usuario_id):
+    user = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        user.username = request.POST.get('username')
+        user.email = request.POST.get('email')
+        password = request.POST.get('password')
+        if password:
+            user.set_password(password)
+        user.save()
+        messages.success(request, "Usuário atualizado com sucesso!")
+        return redirect('listar_usuarios')
+    return render(request, 'core/editar_usuario.html', {'user': user})
 
