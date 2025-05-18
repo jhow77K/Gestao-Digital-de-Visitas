@@ -2,6 +2,7 @@ from django.urls import path
 from core import views
 from .views import login_view, logout_view
 from . import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -31,5 +32,5 @@ urlpatterns = [
     path('agendamentos_proximos/', views.agendamentos_proximos, name='agendamentos_proximos'),
     path('marcar_visita_feita/<int:visita_id>/', views.marcar_visita_feita, name='marcar_visita_feita'),
     path('marcar_pagamento_confirmado/<int:pagamento_id>/', views.marcar_pagamento_confirmado, name='marcar_pagamento_confirmado'),
-
+    path('politica-cookies/', TemplateView.as_view(template_name='core/politica_cookies.html'), name='politica_cookies'),
 ]

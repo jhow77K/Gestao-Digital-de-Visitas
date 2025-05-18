@@ -260,14 +260,10 @@ def visualizar_dados(request):
     query = request.GET.get('q', '').strip()  # Remove espaços em branco no início e no final
 
     # Filtra os dados com base na query
-    escolas = Escola.objects.filter(nome__icontains(query)) if query else Escola.objects.all()
-    visitas = Visita.objects.filter(
-        escola__nome__icontains(query)  # Pesquisa pelo nome da escola
-    ) | Visita.objects.filter(
-        serie_alunos__icontains(query)  # Pesquisa pela série dos alunos
-    ) if query else Visita.objects.all()
-    pagamentos = Pagamento.objects.filter(escola__nome__icontains(query)) if query else Pagamento.objects.all()
-    monitores = Monitor.objects.filter(escola__nome__icontains(query)) if query else Monitor.objects.all()
+    escolas = Escola.objects.filter(nome__icontains=query) if query else Escola.objects.all()
+    visitas = Visita.objects.filter(escola__nome__icontains=query) | Visita.objects.filter(serie_alunos__icontains=query) # Pesquisa pela série dos alunos) if query else Visita.objects.all()
+    pagamentos = Pagamento.objects.filter(escola__nome__icontains=query) if query else Pagamento.objects.all()
+    monitores = Monitor.objects.filter(escola__nome__icontains=query) if query else Monitor.objects.all()
 
     # Calcula o total de visitas agendadas com base em visita.data
     visitas_agendadas = Visita.objects.values('data').annotate(total_escolas=Count('escola'))

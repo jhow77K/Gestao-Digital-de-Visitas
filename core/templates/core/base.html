@@ -121,9 +121,10 @@
 
     <div class="content">
       {% if messages %}
-        <div style="max-width: 600px; margin: 20px auto;">
-          {% for message in messages %}
-            <div style="
+      <div style="max-width: 600px; margin: 20px auto">
+        {% for message in messages %}
+        <div
+          style="
               padding: 12px 18px;
               margin-bottom: 10px;
               border-radius: 6px;
@@ -131,14 +132,63 @@
               color: {% if message.tags == 'error' %}#b30000{% else %}#155724{% endif %};
               background: {% if message.tags == 'error' %}#ffeaea{% else %}#d4edda{% endif %};
               border: 1px solid {% if message.tags == 'error' %}#b30000{% else %}#c3e6cb{% endif %};
-            ">
-              {{ message }}
-            </div>
-          {% endfor %}
+            "
+        >
+          {{ message }}
         </div>
-      {% endif %}
-      {% block content %}
-      {% endblock %}
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %} {% endblock %}
     </div>
+    <div
+      id="cookie-banner"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        background: #222;
+        color: #fff;
+        padding: 16px;
+        text-align: center;
+        z-index: 9999;
+      "
+    >
+      Este site utiliza cookies para garantir o funcionamento correto e melhorar
+      sua experiência. Ao continuar navegando, você concorda com nossa
+      <a
+        href="{% url 'politica_cookies' %}"
+        style="color: #4dd0e1"
+        target="_blank"
+        >Política de Cookies</a
+      >.
+      <button
+        onclick="aceitarCookies()"
+        style="
+          margin-left: 20px;
+          padding: 6px 18px;
+          border: none;
+          background: #4dd0e1;
+          color: #222;
+          border-radius: 4px;
+          font-weight: bold;
+        "
+      >
+        Aceitar
+      </button>
+    </div>
+    <script>
+      function aceitarCookies() {
+        document.cookie = "cookies_aceitos=true; path=/; max-age=31536000";
+        document.getElementById("cookie-banner").style.display = "none";
+      }
+      function verificaCookies() {
+        if (!document.cookie.includes("cookies_aceitos=true")) {
+          document.getElementById("cookie-banner").style.display = "block";
+        }
+      }
+      window.onload = verificaCookies;
+    </script>
   </body>
 </html>

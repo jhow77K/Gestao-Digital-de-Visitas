@@ -26,7 +26,17 @@ SECRET_KEY = 'your-secret-key'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '9d75eec4-e03e-4e4c-b4eb-e5120fe275d3-00-1j9d16fs0cp1e.spock.replit.dev',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.replit.dev',
+    'https://9d75eec4-e03e-4e4c-b4eb-e5120fe275d3-00-1j9d16fs0cp1e.spock.replit.dev',
+    'https://9d75eec4-e03e-4e4c-b4eb-e5120fe275d3-00-1j9d16fs0cp1e.spock.replit.dev:3000',
+]
 
 # Application definition
 
