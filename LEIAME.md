@@ -69,7 +69,7 @@ pip install mysqlclient
 
 1. Clone o repositório:
    ```
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/jhow77K/projeto-django.git
    cd django_project
    ```
 
