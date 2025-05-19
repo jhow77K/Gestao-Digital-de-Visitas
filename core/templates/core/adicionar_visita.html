@@ -5,56 +5,186 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Visita</title>
+    <style>
+      body {
+        background: #f7fafc;
+      }
+      .form-container {
+        background: #fff;
+        max-width: 420px;
+        margin: 40px auto 0 auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      .form-container h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .form-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #388e3c;
+        margin-top: 14px;
+      }
+      .form-container input,
+      .form-container select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        box-sizing: border-box;
+      }
+      .form-container select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='16' height='16' fill='gray' xmlns='http://www.w3.org/2000/svg'><path d='M4 6l4 4 4-4'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 18px 18px;
+        padding-right: 32px;
+      }
+      .form-container input:focus,
+      .form-container select:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container input[type="date"],
+      .form-container input#clima,
+      .form-container input#serie_alunos {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .form-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      .form-container p {
+        font-size: 13px;
+        color: #555;
+        margin-top: 18px;
+        text-align: center;
+      }
+      .form-container ul {
+        padding-left: 18px;
+        color: #b30000;
+        margin-bottom: 10px;
+      }
+      .form-container li {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      @media (max-width: 600px) {
+        .form-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+      }
+      .form-container input[type="date"] {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        box-sizing: border-box;
+        color: #333;
+      }
+      .form-container input[type="date"]:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(38%) sepia(77%) saturate(377%) hue-rotate(74deg) brightness(92%) contrast(92%);
+        cursor: pointer;
+        height: 22px;
+        width: 22px;
+      }
+      .form-container input[type="date"]::-moz-focus-inner {
+        border: 0;
+      }
+      .form-container input[type="date"]::-ms-input-placeholder {
+        color: #888;
+      }
+    </style>
   </head>
   <body>
-    <h1>Adicionar Visita</h1>
+    <div class="form-container">
+      <h1>Adicionar Visita</h1>
 
-    <!-- Exibir mensagens -->
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+      <!-- Exibir mensagens -->
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
 
-    <form method="post">
-      {% csrf_token %}
-      <label for="escola">Escola: *</label>
-      <select id="escola" name="escola" required>
-        <option value="">Selecione uma escola</option>
-        {% for escola in escolas %}
-        <option value="{{ escola.id }}">{{ escola.nome }}</option>
-        {% endfor %}</select
-      ><br />
+      <form method="post">
+        {% csrf_token %}
+        <label for="escola">Escola: *</label>
+        <select id="escola" name="escola" required>
+          <option value="">Selecione uma escola</option>
+          {% for escola in escolas %}
+          <option value="{{ escola.id }}">{{ escola.nome }}</option>
+          {% endfor %}
+        </select>
 
-      <label for="data">Data da Visita: *</label>
-      <input
-        type="date"
-        id="data"
-        name="data"
-        min="{{ today }}"
-        required
-      /><br />
+        <label for="data">Data da Visita: *</label>
+        <input type="date" id="data" name="data" min="{{ today }}" required />
 
-      <label for="periodo">Período: *</label>
-      <select id="periodo" name="periodo" required>
-        <option value="Manhã">Manhã</option>
-        <option value="Tarde">Tarde</option>
-        <option value="Integral">Integral</option></select
-      ><br />
+        <label for="periodo">Período: *</label>
+        <select id="periodo" name="periodo" required>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Integral">Integral</option>
+        </select>
 
-      <label for="clima">Clima: *</label>
-      <input type="text" id="clima" name="clima" required /><br />
+        <label for="clima">Clima: *</label>
+        <input type="text" id="clima" name="clima" required />
 
-      <label for="serie_alunos">Série dos Alunos: *</label>
-      <input type="text" id="serie_alunos" name="serie_alunos" required /><br />
+        <label for="serie_alunos">Série dos Alunos: *</label>
+        <input type="text" id="serie_alunos" name="serie_alunos" required />
 
-      <!-- Comentário sobre os campos obrigatórios -->
-      <p>Todos os campos marcados com * são obrigatórios.</p>
+        <p>Todos os campos marcados com * são obrigatórios.</p>
 
-      <button type="submit">Salvar</button>
-    </form>
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
   </body>
 </html>
 {% endblock %}

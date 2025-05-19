@@ -6,109 +6,256 @@
     <title>Login</title>
     <style>
       body {
+        margin: 0;
         font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
+        height: 100vh;
+        background: url("/static/img/bg-fazendinha.jpg") no-repeat center center
+          fixed;
+        background-size: cover;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
+        position: relative;
+        overflow: hidden;
       }
+
       .login-container {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        width: 300px;
+        background: rgba(255, 255, 255, 0.97);
+        padding: 38px 28px 28px 28px;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        width: 340px;
         text-align: center;
+        z-index: 1;
+        transition: box-shadow 0.2s;
       }
+      .login-container:hover {
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+      }
+
       .login-container h1 {
-        margin-bottom: 20px;
-        font-size: 24px;
-        color: #333;
+        margin-bottom: 22px;
+        font-size: 28px;
+        color: #2e7d32;
+        letter-spacing: 1px;
       }
+
       .login-container label {
         display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
+        margin-bottom: 6px;
+        font-weight: 600;
         text-align: left;
+        color: #333;
       }
+
       .login-container input {
         width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        padding: 11px;
+        margin-bottom: 18px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
       }
+      .login-container input:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+
       .login-container button {
         width: 100%;
-        padding: 10px;
-        background-color: #007bff;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
         color: #fff;
         border: none;
-        border-radius: 4px;
+        border-radius: 6px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
       }
       .login-container button:hover {
-        background-color: #0056b3;
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+
+      .login-container .mensagem-erro {
+        color: #b30000;
+        background: #ffeaea;
+        border: 1px solid #b30000;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 18px;
+        font-size: 15px;
+      }
+
+      /* Onda branca */
+      .wave-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        line-height: 0;
+        z-index: 0;
+      }
+      .wave-bottom svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          width: 95vw;
+          padding: 22px 6vw;
+        }
       }
     </style>
   </head>
   <body>
+    <div
+      style="
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 45vw;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        z-index: 2;
+        pointer-events: none;
+      "
+    >
+    </div>
     <div class="login-container">
       <h1>Login</h1>
       {% if messages %}
-      <div
-        style="
-          color: #b30000;
-          background: #ffeaea;
-          border: 1px solid #b30000;
-          padding: 10px;
-          border-radius: 4px;
-          margin-bottom: 15px;
-        "
-      >
+      <div class="mensagem-erro">
         {% for message in messages %} {{ message }} {% endfor %}
       </div>
       {% endif %}
-      <form method="post" action="{% url 'login' %}">
+      <form
+        method="post"
+        action="{% url 'login' %}"
+        style="display: flex; flex-direction: column; align-items: center"
+      >
         {% csrf_token %}
-        <label for="username">Usuário ou Email:</label>
+        <label
+          for="username"
+          style="align-self: center; width: 100%; text-align: center"
+          >Usuário ou Email:</label
+        >
         <input
           type="text"
           id="username"
           name="username"
           placeholder="Digite seu usuário ou email"
           required
+          style="text-align: center"
         />
-        <label for="password">Senha:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Digite sua senha"
-          required
-        />
+
+        <label
+          for="password"
+          style="align-self: center; width: 100%; text-align: center"
+          >Senha:</label
+        >
+        <div
+          style="
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+          "
+        >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Digite sua senha"
+            required
+            style="text-align: center; width: 100%; padding-right: 38px"
+          />
+          <button
+            type="button"
+            onclick="togglePassword()"
+            style="
+              position: absolute;
+              right: -315px;
+              top: 35%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              cursor: pointer;
+              color: #388e3c;
+              font-size: 18px;
+              padding: 0;
+              margin: 0;
+              height: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: none;
+            "
+            tabindex="-1"
+            aria-label="Mostrar ou ocultar senha"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="22"
+              viewBox="0 0 24 24"
+              width="22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <ellipse cx="12" cy="12" rx="8" ry="5" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+          </button>
+        </div>
+
         <button type="submit">Entrar</button>
       </form>
-      <script>
-        // Permite apenas letras, números, @, ., -, _ no usuário/email
-        document
-          .getElementById("username")
-          .addEventListener("input", function () {
-            this.value = this.value.replace(/[^a-zA-Z0-9@._\-]/g, "");
-          });
-        // Permite apenas letras, números e caracteres especiais comuns em senha
-        document
-          .getElementById("password")
-          .addEventListener("input", function () {
-            this.value = this.value.replace(
-              /[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g,
-              ""
-            );
-          });
-      </script>
     </div>
+
+    <!-- Onda SVG branca -->
+    <div class="wave-bottom">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path
+          fill="#ffffff"
+          d="M0,224L48,197.3C96,171,192,117,288,117.3C384,117,480,171,576,202.7C672,235,768,245,864,240C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+        ></path>
+      </svg>
+    </div>
+
+    <script>
+      document
+        .getElementById("username")
+        .addEventListener("input", function () {
+          this.value = this.value.replace(/[^a-zA-Z0-9@._\-]/g, "");
+        });
+      document
+        .getElementById("password")
+        .addEventListener("input", function () {
+          this.value = this.value.replace(
+            /[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g,
+            ""
+          );
+        });
+
+      function togglePassword() {
+        const input = document.getElementById("password");
+        if (input.type === "password") {
+          input.type = "text";
+        } else {
+          input.type = "password";
+        }
+      }
+    </script>
   </body>
 </html>

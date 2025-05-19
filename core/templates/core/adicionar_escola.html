@@ -5,56 +5,128 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adicionar Escola</title>
+    <style>
+      body {
+        background: #f7fafc;
+      }
+      .form-container {
+        background: #fff;
+        max-width: 420px;
+        margin: 40px auto 0 auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+        font-family: Arial, sans-serif;
+      }
+      .form-container h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .form-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #388e3c;
+        margin-top: 14px;
+      }
+      .form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+      }
+      .form-container input:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .form-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      .form-container p {
+        font-size: 13px;
+        color: #555;
+        margin-top: 18px;
+        text-align: center;
+      }
+      @media (max-width: 600px) {
+        .form-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Adicionar Escola</h1>
-    <form method="post">
-      {% csrf_token %}
-      <label for="nome">Nome da Escola: *</label>
-      <input type="text" id="nome" name="nome" required /><br />
+    <div class="form-container">
+      <h1>Adicionar Escola</h1>
+      <form method="post">
+        {% csrf_token %}
+        <label for="nome">Nome da Escola: *</label>
+        <input type="text" id="nome" name="nome" required />
 
-      <label for="responsavel">Responsável: *</label>
-      <input type="text" id="responsavel" name="responsavel" required /><br />
+        <label for="responsavel">Responsável: *</label>
+        <input type="text" id="responsavel" name="responsavel" required />
 
-      <label for="endereco">Endereço: *</label>
-      <input type="text" id="endereco" name="endereco" required /><br />
+        <label for="endereco">Endereço: *</label>
+        <input type="text" id="endereco" name="endereco" required />
 
-      <label for="bairro">Bairro: *</label>
-      <input type="text" id="bairro" name="bairro" required /><br />
+        <label for="bairro">Bairro: *</label>
+        <input type="text" id="bairro" name="bairro" required />
 
-      <label for="telefone">Telefone: *</label>
-      <input
-        type="text"
-        id="telefone"
-        name="telefone"
-        maxlength="15"
-        placeholder="Digite apenas números do telefone"
-        required
-      /><br />
+        <label for="telefone">Telefone: *</label>
+        <input
+          type="text"
+          id="telefone"
+          name="telefone"
+          maxlength="15"
+          placeholder="Digite apenas números do telefone"
+          required
+        />
 
-      <label for="email">Email: *</label>
-      <input type="email" id="email" name="email" required /><br />
+        <label for="email">Email: *</label>
+        <input type="email" id="email" name="email" required />
 
-      <label for="cnpj">CNPJ: *</label>
-      <input
-        type="text"
-        id="cnpj"
-        name="cnpj"
-        placeholder="Digite apenas os números do CNPJ"
-        required
-      /><br />
+        <label for="cnpj">CNPJ: *</label>
+        <input
+          type="text"
+          id="cnpj"
+          name="cnpj"
+          placeholder="Digite apenas os números do CNPJ"
+          required
+        />
 
-      <!-- Comentário sobre os campos obrigatórios -->
-      <p>Todos os campos marcados com * são obrigatórios.</p>
-
-      <button type="submit">Salvar</button>
-    </form>
+        <p>Todos os campos marcados com * são obrigatórios.</p>
+        <button type="submit">Salvar</button>
+      </form>
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Máscara para telefone
         const telefoneInput = document.getElementById("telefone");
         telefoneInput.addEventListener("input", function () {
-          let value = telefoneInput.value.replace(/\D/g, ""); // Remove tudo que não for número
+          let value = telefoneInput.value.replace(/\D/g, "");
           if (value.length > 11) value = value.slice(0, 11);
 
           let formatted = "";
@@ -63,27 +135,19 @@
           }
           if (value.length >= 3) {
             formatted += ") ";
-            // Fixo curto: (11) 9999-999
             if (value.length === 9) {
               formatted += value.substring(2, 6) + "-" + value.substring(6, 9);
-            }
-            // Fixo comum: (11) 9999-9999
-            else if (value.length === 10) {
+            } else if (value.length === 10) {
               formatted += value.substring(2, 6) + "-" + value.substring(6, 10);
-            }
-            // Celular: (11) 99999-9999
-            else if (value.length === 11) {
+            } else if (value.length === 11) {
               formatted += value.substring(2, 7) + "-" + value.substring(7, 11);
-            }
-            // Enquanto digita, sem hífen
-            else if (value.length > 2) {
+            } else if (value.length > 2) {
               formatted += value.substring(2, value.length);
             }
           }
           telefoneInput.value = formatted;
         });
 
-        // Permite apenas números e hífen
         telefoneInput.addEventListener("keypress", function (e) {
           const char = String.fromCharCode(e.which);
           if (!/[0-9\-]/.test(char)) {
@@ -116,7 +180,6 @@
           cnpjInput.value = formatted;
         });
 
-        // Permite apenas números no CNPJ
         cnpjInput.addEventListener("keypress", function (e) {
           const char = String.fromCharCode(e.which);
           if (!/[0-9]/.test(char)) {
@@ -127,13 +190,11 @@
         // Máscara para email: impede espaços e caracteres inválidos
         const emailInput = document.getElementById("email");
         emailInput.addEventListener("input", function () {
-          // Remove espaços em branco
           emailInput.value = emailInput.value.replace(/\s/g, "");
         });
 
         emailInput.addEventListener("keypress", function (e) {
           const char = String.fromCharCode(e.which);
-          // Permite letras, números, @, ., -, _ e nada de espaço
           if (!/[a-zA-Z0-9@._\-]/.test(char)) {
             e.preventDefault();
           }

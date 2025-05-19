@@ -4,78 +4,146 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Escola</title>
+    <style>
+      body {
+        background: #f7fafc;
+      }
+      .form-container {
+        background: #fff;
+        max-width: 420px;
+        margin: 40px auto 0 auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      .form-container h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .form-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #388e3c;
+        margin-top: 14px;
+      }
+      .form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        box-sizing: border-box;
+      }
+      .form-container input:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .form-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      @media (max-width: 600px) {
+        .form-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Editar Escola</h1>
+    <div class="form-container">
+      <h1>Editar Escola</h1>
+      <form method="post">
+        {% csrf_token %}
+        <label for="nome">Nome:</label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          value="{{ escola.nome }}"
+          required
+        />
 
-    <form method="post">
-      {% csrf_token %}
-      <label for="nome">Nome:</label>
-      <input
-        type="text"
-        id="nome"
-        name="nome"
-        value="{{ escola.nome }}"
-        required
-      /><br />
+        <label for="responsavel">Responsável:</label>
+        <input
+          type="text"
+          id="responsavel"
+          name="responsavel"
+          value="{{ escola.responsavel }}"
+          required
+        />
 
-      <label for="responsavel">Responsável:</label>
-      <input
-        type="text"
-        id="responsavel"
-        name="responsavel"
-        value="{{ escola.responsavel }}"
-        required
-      /><br />
+        <label for="endereco">Endereço:</label>
+        <input
+          type="text"
+          id="endereco"
+          name="endereco"
+          value="{{ escola.endereco }}"
+          required
+        />
 
-      <label for="endereco">Endereço:</label>
-      <input
-        type="text"
-        id="endereco"
-        name="endereco"
-        value="{{ escola.endereco }}"
-        required
-      /><br />
+        <label for="bairro">Bairro:</label>
+        <input
+          type="text"
+          id="bairro"
+          name="bairro"
+          value="{{ escola.bairro }}"
+          required
+        />
 
-      <label for="bairro">Bairro:</label>
-      <input
-        type="text"
-        id="bairro"
-        name="bairro"
-        value="{{ escola.bairro }}"
-        required
-      /><br />
+        <label for="telefone">Telefone:</label>
+        <input
+          type="text"
+          id="telefone"
+          name="telefone"
+          value="{{ escola.telefone }}"
+          required
+        />
 
-      <label for="telefone">Telefone:</label>
-      <input
-        type="text"
-        id="telefone"
-        name="telefone"
-        value="{{ escola.telefone }}"
-        required
-      /><br />
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ escola.email }}"
+          required
+        />
 
-      <label for="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        value="{{ escola.email }}"
-        required
-      /><br />
+        <label for="cnpj">CNPJ:</label>
+        <input
+          type="text"
+          id="cnpj"
+          name="cnpj"
+          value="{{ escola.cnpj }}"
+          required
+        />
 
-      <label for="cnpj">CNPJ:</label>
-      <input
-        type="text"
-        id="cnpj"
-        name="cnpj"
-        value="{{ escola.cnpj }}"
-        required
-      /><br />
-
-      <button type="submit">Salvar Alterações</button>
-    </form>
-
+        <button type="submit">Salvar Alterações</button>
+      </form>
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Máscara para telefone

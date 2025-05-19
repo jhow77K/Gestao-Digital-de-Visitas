@@ -6,41 +6,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Visualizar Dados</title>
     <style>
+      body {
+        background: #f7fafc;
+      }
+      h1,
+      h2 {
+        color: rgb(0, 0, 0);
+        margin-top: 32px;
+        margin-bottom: 18px;
+        text-align: center;
+        font-size: 2rem;
+      }
+      form {
+        margin: 18px auto 28px auto;
+        max-width: 700px;
+        background: #fff;
+        padding: 18px 22px 10px 22px;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+      }
+      form input,
+      form select {
+        padding: 8px 10px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        margin-bottom: 0;
+      }
+      form input:focus,
+      form select:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      form button {
+        padding: 8px 18px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      form button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
       table {
         width: 100%;
         border-collapse: collapse;
-        margin: 20px 0;
+        margin: 24px 0 40px 0;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
       }
       table,
       th,
       td {
-        border: 1px solid #ddd;
+        border: 1px solid #e0e0e0;
+      }
+      th {
+        background-color: #2d8346 !important;
+        color: #fff !important;
+        font-weight: bold;
+      }
+      td {
+        background-color: #fff;
+        color: #222;
+      }
+      tr:nth-child(even) td {
+        background-color: #f7fafc;
       }
       th,
       td {
         padding: 10px;
         text-align: left;
+        font-size: 15px;
       }
-      th {
-        background-color: #f4f4f9;
+      tr:nth-child(even) {
+        background-color: #f7fafc;
+      }
+      tr:hover {
+        background-color: #e0f2f1;
+      }
+      a {
+        color: #388e3c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: #1b5e20;
+        text-decoration: underline;
+      }
+      .status-realizada {
+        color: #1976d2 !important; /* azul forte */
+        font-weight: bold;
+      }
+      .status-pendente {
+        color: #ffb300 !important; /* amarelo forte */
+        font-weight: bold;
+      }
+      a.excluir-link {
+        color: #c62828 !important;
+        font-weight: bold;
+        transition: color 0.2s;
+      }
+      a.excluir-link:hover {
+        color: #ff1744 !important;
+        text-decoration: underline;
+      }
+      a.finalizar-visita-link {
+        color: #111 !important;
+        font-weight: bold;
+        transition: color 0.2s;
+      }
+      a.finalizar-visita-link:hover {
+        color: #444 !important;
+        text-decoration: underline;
+      }
+      a.confirmar-link {
+        color: #111 !important;
+        font-weight: bold;
+        transition: color 0.2s;
+      }
+      a.confirmar-link:hover {
+        color: #444 !important;
+        text-decoration: underline;
+      }
+      @media (max-width: 900px) {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+        table {
+          border: none;
+        }
+        th,
+        td {
+          border: none;
+          padding: 10px 6vw;
+        }
+        th {
+          background: #e8f5e9;
+        }
+        tr {
+          margin-bottom: 18px;
+          box-shadow: 0 2px 8px rgba(67, 160, 71, 0.06);
+          border-radius: 8px;
+          background: #fff;
+        }
       }
     </style>
   </head>
   <body>
     <h1>Pesquisar Dados</h1>
-    <form method="get">
-      {{ escola_filter.form.as_p }}
-      <button type="submit">Filtrar</button>
-    </form>
-
-    <form method="get">
+    <form
+      method="get"
+      style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: flex-end;
+        justify-content: center;
+      "
+    >
+      <div style="display: flex; flex-direction: column">
+        {{ escola_filter.form.as_p }}
+      </div>
       <input
         type="text"
         name="q"
         placeholder="Pesquisar..."
         value="{{ query }}"
+        style="height: 38px"
       />
-      <button type="submit">Pesquisar</button>
+      <button type="submit" name="filtrar" style="height: 38px">Filtrar</button>
+      <button type="submit" style="height: 38px">Pesquisar</button>
     </form>
 
     <h2>Dados das Escolas</h2>
@@ -74,6 +231,7 @@
             <a
               href="{% url 'excluir_escola' escola.id %}"
               onclick="return confirm('Tem certeza que deseja excluir esta escola?');"
+              class="excluir-link"
               >Excluir</a
             >
           </td>
@@ -86,7 +244,7 @@
       </tbody>
     </table>
 
-    <h1>Dados das Visitas</h1>
+    <h2>Dados das Visitas</h2>
     <table>
       <thead>
         <tr>
@@ -108,13 +266,17 @@
           <td>{{ visita.serie_alunos }}</td>
           <td>
             <a href="{% url 'editar_visita' visita.id %}">Editar</a>
-            <a href="{% url 'excluir_visita' visita.id %}">Excluir</a>
+            <a href="{% url 'excluir_visita' visita.id %}" class="excluir-link"
+              >Excluir</a
+            >
             {% if not visita.feita %}
-            <a href="{% url 'marcar_visita_feita' visita.id %}"
-              >Visita Realizada</a
+            <a
+              href="{% url 'marcar_visita_feita' visita.id %}"
+              class="finalizar-visita-link"
+              >Finalizar Visita</a
             >
             {% else %}
-            <span style="color: green; font-weight: bold">Realizada</span>
+            <span class="status-realizada">Realizada</span>
             {% endif %}
           </td>
         </tr>
@@ -126,7 +288,7 @@
       </tbody>
     </table>
 
-    <h1>Dados dos Pagamentos</h1>
+    <h2>Dados dos Pagamentos</h2>
     <table>
       <thead>
         <tr>
@@ -167,28 +329,30 @@
             <a
               href="{% url 'excluir_pagamento' pagamento.id %}"
               onclick="return confirm('Tem certeza que deseja excluir este pagamento?');"
+              class="excluir-link"
               >Excluir</a
             >
             {% if not pagamento.confirmado %} |
-            <a href="{% url 'marcar_pagamento_confirmado' pagamento.id %}"
-              >Pagamento Pendente</a
+            <span class="status-pendente">Pagamento Pendente</span>
+            <a
+              href="{% url 'marcar_pagamento_confirmado' pagamento.id %}"
+              class="confirmar-link"
+              >Confirmar</a
             >
             {% else %} |
-            <span style="color: green; font-weight: bold"
-              >Pagamento Confirmado</span
-            >
+            <span class="status-realizada">Pagamento Confirmado</span>
             {% endif %}
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="9">Nenhum pagamento cadastrado.</td>
+          <td colspan="14">Nenhum pagamento cadastrado.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <h1>Dados dos Monitores</h1>
+    <h2>Dados dos Monitores</h2>
     <table>
       <thead>
         <tr>
@@ -200,7 +364,6 @@
           <th>Guias Free</th>
           <th>Histórico do Passeio</th>
           <th>Ações</th>
-          <!-- Adicionando a coluna de Ações -->
         </tr>
       </thead>
       <tbody>
@@ -218,6 +381,7 @@
             <a
               href="{% url 'excluir_monitor' monitor.id %}"
               onclick="return confirm('Tem certeza que deseja excluir este monitor?');"
+              class="excluir-link"
               >Excluir</a
             >
           </td>

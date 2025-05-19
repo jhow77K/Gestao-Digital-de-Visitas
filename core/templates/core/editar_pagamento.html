@@ -1,146 +1,245 @@
-<!-- filepath: c:\Users\jhowg\OneDrive\Downloads\ProjetoDjango\django_project\core\templates\core\editar_pagamento.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Pagamento</title>
+    <style>
+      body {
+        background: #f7fafc;
+      }
+      .form-container {
+        background: #fff;
+        max-width: 440px;
+        margin: 40px auto 0 auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      .form-container h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .form-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #388e3c;
+        margin-top: 14px;
+      }
+      .form-container input,
+      .form-container select {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        box-sizing: border-box;
+      }
+      .form-container input[type="checkbox"] {
+        width: auto;
+        margin-right: 8px;
+        margin-bottom: 0;
+      }
+      .form-container input:focus,
+      .form-container select:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .form-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      .form-container p {
+        font-size: 13px;
+        color: #555;
+        margin-top: 18px;
+        text-align: center;
+      }
+      .form-container ul {
+        padding-left: 18px;
+        color: #b30000;
+        margin-bottom: 10px;
+      }
+      .form-container li {
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      @media (max-width: 600px) {
+        .form-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Editar Pagamento</h1>
+    <div class="form-container">
+      <h1>Editar Pagamento</h1>
 
-    <!-- Exibir mensagens -->
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+      <!-- Exibir mensagens -->
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
 
-    <form method="post">
-      {% csrf_token %}
-      <label for="numero_criancas_pagantes"
-        >Número de Crianças Pagantes: *</label
-      >
-      <input
-        type="number"
-        id="numero_criancas_pagantes"
-        name="numero_criancas_pagantes"
-        value="{{ pagamento.numero_criancas_pagantes }}"
-        required
-      /><br />
+      <form method="post">
+        {% csrf_token %}
+        <label for="numero_criancas_pagantes"
+          >Número de Crianças Pagantes: *</label
+        >
+        <input
+          type="number"
+          id="numero_criancas_pagantes"
+          name="numero_criancas_pagantes"
+          value="{{ pagamento.numero_criancas_pagantes }}"
+          required
+        />
 
-      <label for="valor_por_crianca">Valor por Criança: *</label>
-      <input
-        type="number"
-        id="valor_por_crianca"
-        name="valor_por_crianca"
-        step="0.01"
-        value="{{ pagamento.valor_por_crianca }}"
-        required
-      /><br />
+        <label for="valor_por_crianca">Valor por Criança: *</label>
+        <input
+          type="number"
+          id="valor_por_crianca"
+          name="valor_por_crianca"
+          step="0.01"
+          value="{{ pagamento.valor_por_crianca }}"
+          required
+        />
 
-      <label for="numero_adultos_pagantes">Número de Adultos Pagantes: *</label>
-      <input
-        type="number"
-        id="numero_adultos_pagantes"
-        name="numero_adultos_pagantes"
-        value="{{ pagamento.numero_adultos_pagantes }}"
-        required
-      /><br />
+        <label for="numero_adultos_pagantes"
+          >Número de Adultos Pagantes: *</label
+        >
+        <input
+          type="number"
+          id="numero_adultos_pagantes"
+          name="numero_adultos_pagantes"
+          value="{{ pagamento.numero_adultos_pagantes }}"
+          required
+        />
 
-      <label for="valor_por_adulto">Valor por Adulto: *</label>
-      <input
-        type="number"
-        id="valor_por_adulto"
-        name="valor_por_adulto"
-        step="0.01"
-        value="{{ pagamento.valor_por_adulto }}"
-        required
-      /><br />
+        <label for="valor_por_adulto">Valor por Adulto: *</label>
+        <input
+          type="number"
+          id="valor_por_adulto"
+          name="valor_por_adulto"
+          step="0.01"
+          value="{{ pagamento.valor_por_adulto }}"
+          required
+        />
 
-      <label for="forma_pagamento">Forma de Pagamento: *</label>
-      <input
-        type="text"
-        id="forma_pagamento"
-        name="forma_pagamento"
-        value="{{ pagamento.forma_pagamento }}"
-        required
-      /><br />
+        <label for="forma_pagamento">Forma de Pagamento: *</label>
+        <input
+          type="text"
+          id="forma_pagamento"
+          name="forma_pagamento"
+          value="{{ pagamento.forma_pagamento }}"
+          required
+        />
 
-      <label for="nota_fiscal">Nota Fiscal:</label>
-      <input
-        type="checkbox"
-        id="nota_fiscal"
-        name="nota_fiscal"
-        {%
-        if
-        pagamento.nota_fiscal
-        %}checked{%
-        endif
-        %}
-      /><br />
+        <label
+          ><input
+            type="checkbox"
+            id="nota_fiscal"
+            name="nota_fiscal"
+            {%
+            if
+            pagamento.nota_fiscal
+            %}checked{%
+            endif
+            %}
+          />
+          Nota Fiscal</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            id="recibo"
+            name="recibo"
+            {%
+            if
+            pagamento.recibo
+            %}checked{%
+            endif
+            %}
+          />
+          Recibo</label
+        >
+        <label
+          ><input
+            type="checkbox"
+            id="agencia"
+            name="agencia"
+            {%
+            if
+            pagamento.agencia
+            %}checked{%
+            endif
+            %}
+          />
+          Agência</label
+        >
 
-      <label for="recibo">Recibo:</label>
-      <input
-        type="checkbox"
-        id="recibo"
-        name="recibo"
-        {%
-        if
-        pagamento.recibo
-        %}checked{%
-        endif
-        %}
-      /><br />
+        <label for="comissao">Comissão:</label>
+        <input
+          type="number"
+          id="comissao"
+          name="comissao"
+          step="0.01"
+          value="{{ pagamento.comissao }}"
+        />
 
-      <label for="agencia">Agência:</label>
-      <input
-        type="checkbox"
-        id="agencia"
-        name="agencia"
-        {%
-        if
-        pagamento.agencia
-        %}checked{%
-        endif
-        %}
-      /><br />
+        <label for="numero_previsto_criancas"
+          >Número Previsto de Crianças: *</label
+        >
+        <input
+          type="number"
+          id="numero_previsto_criancas"
+          name="numero_previsto_criancas"
+          value="{{ pagamento.numero_previsto_criancas }}"
+          required
+        />
 
-      <label for="comissao">Comissão:</label>
-      <input
-        type="number"
-        id="comissao"
-        name="comissao"
-        step="0.01"
-        value="{{ pagamento.comissao }}"
-      /><br />
+        <label for="numero_adultos_cortesia"
+          >Número de Adultos Cortesia: *</label
+        >
+        <input
+          type="number"
+          id="numero_adultos_cortesia"
+          name="numero_adultos_cortesia"
+          value="{{ pagamento.numero_adultos_cortesia }}"
+          required
+        />
 
-      <label for="numero_previsto_criancas"
-        >Número Previsto de Crianças: *</label
-      >
-      <input
-        type="number"
-        id="numero_previsto_criancas"
-        name="numero_previsto_criancas"
-        value="{{ pagamento.numero_previsto_criancas }}"
-        required
-      /><br />
-
-      <label for="numero_adultos_cortesia">Número de Adultos Cortesia: *</label>
-      <input
-        type="number"
-        id="numero_adultos_cortesia"
-        name="numero_adultos_cortesia"
-        value="{{ pagamento.numero_adultos_cortesia }}"
-        required
-      /><br />
-
-      <!-- Comentário sobre os campos obrigatórios -->
-      <p>Todos os campos marcados com * são obrigatórios.</p>
-
-      <button type="submit">Salvar Alterações</button>
-    </form>
+        <p>Todos os campos marcados com * são obrigatórios.</p>
+        <button type="submit">Salvar Alterações</button>
+      </form>
+    </div>
   </body>
 </html>

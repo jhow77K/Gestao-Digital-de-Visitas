@@ -1,31 +1,145 @@
-<h1>Lista de Usuários</h1>
-<a href="{% url 'adicionar_usuario' %}">Adicionar Usuário</a>
-<table>
-  <thead>
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for usuario in usuarios %}
-    <tr>
-      <td>{{ usuario.username }}</td>
-      <td>{{ usuario.email }}</td>
-      <td>
-        <a href="{% url 'editar_usuario' usuario.id %}">Editar</a> |
-        <a
-          href="{% url 'excluir_usuario' usuario.id %}"
-          onclick="return confirm('Tem certeza que deseja excluir este usuário?');"
-          >Excluir</a
-        >
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3">Nenhum usuário encontrado.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de Usuários</title>
+    <style>
+      body {
+        background: #f7fafc;
+        font-family: Arial, sans-serif;
+      }
+      .usuarios-container {
+        max-width: 600px;
+        margin: 40px auto 0 auto;
+        background: #fff;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+      }
+      h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .adicionar-btn {
+        display: inline-block;
+        margin-bottom: 18px;
+        padding: 10px 18px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .adicionar-btn:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
+      }
+      th {
+        background-color: #2d8346 !important;
+        color: #fff !important;
+        font-weight: bold;
+        padding: 10px;
+        font-size: 15px;
+      }
+      td {
+        background-color: #fff;
+        color: #222;
+        padding: 10px;
+        font-size: 15px;
+      }
+      tr:nth-child(even) td {
+        background-color: #f7fafc;
+      }
+      td a {
+        color: #2e7d32;
+        font-weight: bold;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      td a:hover {
+        color: #c62828;
+        text-decoration: underline;
+      }
+      .excluir-link {
+        color: #c62828 !important;
+      }
+      .excluir-link:hover {
+        color: #ff1744 !important;
+      }
+      @media (max-width: 700px) {
+        .usuarios-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+        th,
+        td {
+          padding: 10px 6vw;
+        }
+        tr {
+          margin-bottom: 18px;
+          box-shadow: 0 2px 8px rgba(67, 160, 71, 0.06);
+          border-radius: 8px;
+          background: #fff;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="usuarios-container">
+      <h1>Lista de Usuários</h1>
+      <a href="{% url 'adicionar_usuario' %}" class="adicionar-btn"
+        >Adicionar Usuário</a
+      >
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.username }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>
+              <a href="{% url 'editar_usuario' usuario.id %}">Editar</a> |
+              <a
+                href="{% url 'excluir_usuario' usuario.id %}"
+                onclick="return confirm('Tem certeza que deseja excluir este usuário?');"
+                class="excluir-link"
+                >Excluir</a
+              >
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">Nenhum usuário encontrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

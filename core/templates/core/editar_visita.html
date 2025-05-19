@@ -4,59 +4,128 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Visita</title>
+    <style>
+      body {
+        background: #f7fafc;
+      }
+      .form-container {
+        background: #fff;
+        max-width: 420px;
+        margin: 40px auto 0 auto;
+        padding: 32px 28px 24px 28px;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(67, 160, 71, 0.1);
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      .form-container h1 {
+        color: #2e7d32;
+        text-align: center;
+        margin-bottom: 22px;
+        font-size: 2rem;
+      }
+      .form-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #388e3c;
+        margin-top: 14px;
+      }
+      .form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 6px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+        box-sizing: border-box;
+      }
+      .form-container input:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 18px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .form-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      @media (max-width: 600px) {
+        .form-container {
+          max-width: 98vw;
+          padding: 18px 4vw;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Editar Visita</h1>
-    <form method="post">
-      {% csrf_token %}
+    <div class="form-container">
+      <h1>Editar Visita</h1>
+      <form method="post">
+        {% csrf_token %}
 
-      <!-- Campo para exibir o nome da escola -->
-      <label for="escola">Escola:</label>
-      <input
-        type="text"
-        id="escola"
-        name="escola"
-        value="{{ visita.escola.nome }}"
-        readonly
-      /><br />
+        <label for="escola">Escola:</label>
+        <input
+          type="text"
+          id="escola"
+          name="escola"
+          value="{{ visita.escola.nome }}"
+          readonly
+        />
 
-      <label for="data">Data da Visita:</label>
-      <input
-        type="date"
-        id="data"
-        name="data"
-        value="{{ visita.data|date:'Y-m-d' }}"
-        required
-      /><br />
+        <label for="data">Data da Visita:</label>
+        <input
+          type="date"
+          id="data"
+          name="data"
+          value="{{ visita.data|date:'Y-m-d' }}"
+          required
+        />
 
-      <label for="periodo">Período:</label>
-      <input
-        type="text"
-        id="periodo"
-        name="periodo"
-        value="{{ visita.periodo }}"
-        required
-      /><br />
+        <label for="periodo">Período:</label>
+        <input
+          type="text"
+          id="periodo"
+          name="periodo"
+          value="{{ visita.periodo }}"
+          required
+        />
 
-      <label for="clima">Clima:</label>
-      <input
-        type="text"
-        id="clima"
-        name="clima"
-        value="{{ visita.clima }}"
-        required
-      /><br />
+        <label for="clima">Clima:</label>
+        <input
+          type="text"
+          id="clima"
+          name="clima"
+          value="{{ visita.clima }}"
+          required
+        />
 
-      <label for="serie_alunos">Série dos Alunos:</label>
-      <input
-        type="text"
-        id="serie_alunos"
-        name="serie_alunos"
-        value="{{ visita.serie_alunos }}"
-        required
-      /><br />
+        <label for="serie_alunos">Série dos Alunos:</label>
+        <input
+          type="text"
+          id="serie_alunos"
+          name="serie_alunos"
+          value="{{ visita.serie_alunos }}"
+          required
+        />
 
-      <button type="submit">Salvar Alterações</button>
-    </form>
+        <button type="submit">Salvar Alterações</button>
+      </form>
+    </div>
   </body>
 </html>
