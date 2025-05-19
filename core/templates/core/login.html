@@ -17,6 +17,7 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        transition: background-image 1s;
       }
 
       .login-container {
@@ -118,6 +119,35 @@
   <body>
     <div
       style="
+        width: 100vw;
+        text-align: center;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        z-index: 10;
+        font-size: 2.7rem;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 2px;
+        font-family: 'Segoe UI', 'Arial', 'Helvetica Neue', sans-serif;
+        text-shadow: 0 2px 8px rgba(44, 67, 71, 0.18);
+        line-height: 1.2;
+      "
+    >
+      Gestão Fazendinha Estação Natureza<br />
+      <span
+        style="
+          font-size: 1.4rem;
+          font-weight: 400;
+          letter-spacing: 0.5px;
+          display: block;
+          margin-top: 8px;
+        "
+      >
+      </span>
+    </div>
+    <div
+      style="
         position: absolute;
         left: 0;
         top: 0;
@@ -129,8 +159,7 @@
         z-index: 2;
         pointer-events: none;
       "
-    >
-    </div>
+    ></div>
     <div class="login-container">
       <h1>Login</h1>
       {% if messages %}
@@ -184,20 +213,23 @@
             onclick="togglePassword()"
             style="
               position: absolute;
-              right: -315px;
-              top: 35%;
-              transform: translateY(-50%);
+              right: 10px;
+              top: 0;
+              bottom: 0;
+              margin: auto 0;
               background: none;
               border: none;
               cursor: pointer;
               color: #388e3c;
               font-size: 18px;
               padding: 0;
-              margin: 0;
-              height: 10px;
+              height: 24px;
+              width: 28px;
+              min-width: 0;
               display: flex;
               align-items: center;
-              justify-content: none;
+              justify-content: center;
+              transform: translateY(-10px);
             "
             tabindex="-1"
             aria-label="Mostrar ou ocultar senha"
@@ -212,6 +244,7 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              style="pointer-events: none"
             >
               <ellipse cx="12" cy="12" rx="8" ry="5" />
               <circle cx="12" cy="12" r="2" />
@@ -256,6 +289,16 @@
           input.type = "password";
         }
       }
+
+      const imagens = [
+        "/static/img/bg-fazendinha.jpg",
+        "/static/img/bg-fazendinha3.jpg",
+      ];
+      let index = 0;
+      setInterval(() => {
+        index = (index + 1) % imagens.length;
+        document.body.style.backgroundImage = `url('${imagens[index]}')`;
+      }, 2500); // Troca a cada 2,5 segundos
     </script>
   </body>
 </html>
