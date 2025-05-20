@@ -33,7 +33,7 @@
 
       .header .menu {
         display: flex;
-        gap: 15px;
+        gap: 6px;
       }
 
       .header .menu a {
@@ -96,6 +96,17 @@
         margin-top: 80px;
         padding: 20px;
       }
+
+      .header .menu a[href$="{% url 'logout' %}"] {
+        color: #fff;
+        transition: color 0.2s;
+      }
+
+      .header .menu a[href$="{% url 'logout' %}"]:hover {
+        color: #ff3333 !important;
+        background: none;
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -103,7 +114,7 @@
     <div class="header">
       <div class="logo" style="display: flex; align-items: center">
         <img
-          src="{% static 'img/logo-fazendinha.png' %}"
+          src="\static\img\logo-fazendinha.png"
           alt="Logo Fazendinha"
           style="height: 38px; margin-right: 12px"
         />
