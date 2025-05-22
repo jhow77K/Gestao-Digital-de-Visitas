@@ -111,11 +111,11 @@
         text-decoration: underline;
       }
       .status-realizada {
-        color: #1976d2 !important; 
+        color: #1976d2 !important;
         font-weight: bold;
       }
       .status-pendente {
-        color: #ffb300 !important; 
+        color: #ffb300 !important;
         font-weight: bold;
       }
       a.excluir-link {
@@ -192,7 +192,7 @@
       .tabela-box {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(67,160,71,0.10);
+        box-shadow: 0 2px 12px rgba(67, 160, 71, 0.1);
         padding: 24px 2vw 32px 2vw;
         border: 2px solid #e0e0e0;
         margin-bottom: 38px;
@@ -232,7 +232,8 @@
         .tabela-box {
           padding: 12px 2vw 18px 2vw;
         }
-        table th, table td {
+        table th,
+        table td {
           font-size: 0.98em;
           padding: 8px 4px;
         }
@@ -252,7 +253,7 @@
       .tabela-box {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0 4px 18px rgba(67,160,71,0.08);
+        box-shadow: 0 4px 18px rgba(67, 160, 71, 0.08);
         padding: 24px 2vw 32px 2vw;
         border: 2px solid #e0e0e0;
         margin-bottom: 38px;
@@ -263,11 +264,11 @@
       .dados-sistema-box > .tabela-box:first-child {
         padding-top: -1px;
         padding-bottom: -1px;
-        height: calc(100% - 25px); 
-        margin-top: 25px; 
+        height: calc(100% - 25px);
+        margin-top: 25px;
       }
       .tabela-box:nth-of-type(4) table th {
-        padding: 6px 4px !important; 
+        padding: 6px 4px !important;
       }
     </style>
   </head>
@@ -295,7 +296,7 @@
             name="q"
             placeholder="Pesquisar..."
             value="{{ query }}"
-            style="height: 20px; width: 180px;"  
+            style="height: 20px; width: 180px"
           />
           <button type="submit" style="height: 38px">Pesquisar</button>
         </form>
@@ -372,17 +373,18 @@
               <td>{{ visita.serie_alunos }}</td>
               <td>
                 <a href="{% url 'editar_visita' visita.id %}">Editar</a> |
-                <a href="{% url 'excluir_visita' visita.id %}" class="excluir-link"
+                <a
+                  href="{% url 'excluir_visita' visita.id %}"
+                  class="excluir-link"
                   >Excluir</a
                 >
-                {% if not visita.feita %}
-                | <a
+                {% if not visita.feita %} |
+                <a
                   href="{% url 'marcar_visita_feita' visita.id %}"
                   class="finalizar-visita-link"
                   >Finalizar Visita</a
                 >
-                {% else %}
-                | <span class="status-realizada">Realizada</span>
+                {% else %} | <span class="status-realizada">Realizada</span>
                 {% endif %}
               </td>
             </tr>

@@ -19,7 +19,7 @@
         box-sizing: border-box;
       }
       .form-container h1 {
-        color: #2e7d32;
+        color: #000;
         text-align: center;
         margin-bottom: 22px;
         font-size: 2rem;
@@ -28,7 +28,7 @@
         display: block;
         margin-bottom: 6px;
         font-weight: 600;
-        color: #388e3c;
+        color: #000;
         margin-top: 14px;
       }
       .form-container input {
@@ -126,6 +126,22 @@
 
         <button type="submit">Salvar Alterações</button>
       </form>
+
+      <div style="text-align: center; margin: 12px 0 0 0;">
+        <a href="{% url 'visualizar_dados' %}" style="
+          display: inline-block;
+          color: #388e3c;
+          background: #e8f5e9;
+          padding: 7px 18px;
+          border-radius: 6px;
+          font-weight: bold;
+          text-decoration: none;
+          box-shadow: 0 2px 8px rgba(67,160,71,0.06);
+          transition: background 0.2s;
+        ">
+          ← Voltar para Visualizar Dados
+        </a>
+      </div>
     </div>
   </body>
 </html>

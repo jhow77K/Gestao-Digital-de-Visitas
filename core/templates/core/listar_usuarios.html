@@ -107,9 +107,29 @@
   <body>
     <div class="usuarios-container">
       <h1>Lista de Usuários</h1>
-      <a href="{% url 'adicionar_usuario' %}" class="adicionar-btn"
-        >Adicionar Usuário</a
-      >
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <a href="{% url 'adicionar_usuario' %}" class="adicionar-btn" style="height: 38px; line-height: 38px; padding-top: 0; padding-bottom: 0;">
+          Adicionar Usuário
+        </a>
+        <a href="{% url 'visualizar_dados' %}" style="
+          display: inline-block;
+          color: #388e3c;
+          background: #e8f5e9;
+          padding: 0 18px;
+          height: 38px;
+          line-height: 38px;
+          border-radius: 6px;
+          font-weight: bold;
+          text-decoration: none;
+          box-shadow: 0 2px 8px rgba(67,160,71,0.06);
+          transition: background 0.2s;
+          position: relative;
+          top: -10px;
+        ">
+          ← Voltar para Visualizar Dados
+        </a>
+      </div>
+
       <table>
         <thead>
           <tr>
