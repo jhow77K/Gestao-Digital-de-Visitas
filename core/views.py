@@ -65,7 +65,7 @@ def adicionar_visita(request):
             escolas = Escola.objects.all()
             return render(request, 'core/adicionar_visita.html', {'escolas': escolas, 'today': date.today()})
 
-        # Busca a escola pelo ID
+
         escola = Escola.objects.get(id=escola_id)
 
         # Cria uma nova visita
