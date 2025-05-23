@@ -16,9 +16,9 @@ class Escola(models.Model):
     data_cadastro = models.DateTimeField(default=now)  # Define um valor padrão válido
 
     def save(self, *args, **kwargs):
-        # Remove qualquer caractere que não seja número
+        
         cnpj_numerico = re.sub(r'\D', '', self.cnpj)
-        # Formata o CNPJ no padrão 00.000.000/0000-00
+        # Formatação no padrão 00.000.000/0000-00
         if len(cnpj_numerico) == 14:
             self.cnpj = f"{cnpj_numerico[:2]}.{cnpj_numerico[2:5]}.{cnpj_numerico[5:8]}/{cnpj_numerico[8:12]}-{cnpj_numerico[12:]}"
         super().save(*args, **kwargs)
@@ -72,7 +72,7 @@ class Usuario(models.Model):
     def __str__(self):
         return self.nome
 
-# Exemplo para exclusão
+
 def excluir_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)
     if escola.visita_set.exists() or Pagamento.objects.filter(escola=escola).exists() or Monitor.objects.filter(escola=escola).exists():

@@ -104,10 +104,10 @@ def adicionar_pagamento(request):
         total = (numero_criancas_pagantes * valor_por_crianca) + \
                 (numero_adultos_pagantes * valor_por_adulto)
 
-        # Calcula a comissão como percentual do total
+
         comissao = (float(comissao_percentual) / 100) * total if comissao_percentual else None
 
-        # Busca a escola pelo ID
+
         escola = Escola.objects.get(id=escola_id)
 
         # Cria um novo pagamento
@@ -122,15 +122,15 @@ def adicionar_pagamento(request):
             nota_fiscal=nota_fiscal,
             recibo=recibo,
             agencia=agencia,
-            comissao=comissao,  # Salva o valor calculado da comissão
+            comissao=comissao,  
             numero_previsto_criancas=numero_previsto_criancas,
             numero_adultos_cortesia=numero_adultos_cortesia
         )
         pagamento.save()
 
-        # Exibe uma mensagem de sucesso e permanece na mesma página
+
         messages.success(request, "Pagamento adicionado com sucesso!")
-        return redirect('adicionar_monitores')  # Redireciona para a mesma página
+        return redirect('adicionar_monitores') 
 
     escolas = Escola.objects.all()
     return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas})
@@ -141,43 +141,41 @@ def adicionar_monitores(request):
         monitores_fazendinha = request.POST.get('monitores_fazendinha')
         monitores_free = request.POST.get('monitores_free')
         guia_fazendinha = request.POST.get('guia_fazendinha')
-        guias_free = request.POST.get('guias_free')  # Novo campo
-        historico_passeio = request.POST.get('historico_passeio')  # Novo campo
+        guias_free = request.POST.get('guias_free') 
+        historico_passeio = request.POST.get('historico_passeio')  
 
-        # Busca a visita pelo ID
         visita = Visita.objects.get(id=visita_id)
 
-        # Cria um novo registro de monitores
         monitor = Monitor(
-            escola=visita.escola,  # A escola está associada à visita
+            escola=visita.escola, 
             visita=visita,
             monitores_fazendinha=monitores_fazendinha,
             monitores_free=monitores_free,
             guia_fazendinha=guia_fazendinha,
-            guias_free=guias_free,  # Salva o novo campo
-            historico_passeio=historico_passeio  # Salva o novo campo
+            guias_free=guias_free,  
+            historico_passeio=historico_passeio  
         )
         monitor.save()
 
         messages.success(request, "Monitores adicionados com sucesso!")
-        return redirect('visualizar_dados')  # Redireciona para a página de visualização de dados
+        return redirect('visualizar_dados') 
 
     visitas = Visita.objects.all()
     return render(request, 'core/adicionar_monitores.html', {'visitas': visitas})
 
 def excluir_registro(request, tabela, id_registro):
-    # Adicionar lógica para excluir o registro do banco de dados
+
     messages.success(request, f"Registro excluído com sucesso!")
     return redirect('visualizar_dados')
 
 def editar_registro(request, tabela, id_registro):
     if request.method == 'POST':
         dados = request.POST.dict()
-        # Adicionar lógica para editar o registro no banco de dados
+
         messages.success(request, f"Registro editado com sucesso!")
         return redirect('visualizar_dados')
 
-    # Adicionar lógica para obter os dados do registro e renderizar o formulário de edição
+
     return render(request, 'core/editar_registro.html')
 
 def formatar_cnpj(cnpj):
@@ -192,7 +190,7 @@ def adicionar_usuario(request):
         senha = request.POST.get('senha')
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
 
-        # Adicionar lógica para validar e salvar o usuário no banco de dados
+
         messages.success(request, "Usuário cadastrado com sucesso!")
         return redirect('tela_login')
 
@@ -204,35 +202,35 @@ def verificar_login(request):
         senha = request.POST.get('senha')
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
 
-        # Adicionar lógica para verificar o login do usuário
+
         messages.success(request, "Login realizado com sucesso!")
         return redirect('dashboard')
 
     return render(request, 'core/tela_login.html')
 
 def home(request):
-    # Data atual
+
     data_atual = now().date()
 
-    # Total de escolas cadastradas
+
     total_escolas = Escola.objects.count()
 
-    # Total de visitas agendadas
+
     visitas_agendadas = Visita.objects.filter(data__gte=data_atual).count()
 
-    # Total de visitas realizadas
+
     visitas_realizadas = Visita.objects.filter(feita=True).count()
 
-    # Total de pagamentos recebidos (apenas confirmados)
+
     pagamentos_recebidos = Pagamento.objects.filter(confirmado=True).aggregate(total=Sum('total'))['total'] or 0
 
-    # As 3 últimas escolas adicionadas (ordenadas por data de cadastro)
+
     escolas = Escola.objects.all().order_by('-data_cadastro')[:3]
 
-    # As 3 próximas visitas (ordenadas pela data mais próxima)
+
     proximas_visitas = Visita.objects.filter(data__gte=data_atual).order_by('data')[:3]
 
-    # Os 3 pagamentos mais recentes
+
     pagamentos = Pagamento.objects.all().order_by('-id')[:3]
 
     # Dados para o relatório e gráficos
@@ -257,15 +255,15 @@ def tela_login(request):
     return render(request, 'core/login.html')
 
 def visualizar_dados(request):
-    query = request.GET.get('q', '').strip()  # Remove espaços em branco no início e no final
+    query = request.GET.get('q', '').strip()  
 
-    # Filtra os dados com base na query
+
     escolas = Escola.objects.filter(nome__icontains=query) if query else Escola.objects.all()
     visitas = Visita.objects.filter(escola__nome__icontains=query) | Visita.objects.filter(serie_alunos__icontains=query) # Pesquisa pela série dos alunos) if query else Visita.objects.all()
     pagamentos = Pagamento.objects.filter(escola__nome__icontains=query) if query else Pagamento.objects.all()
     monitores = Monitor.objects.filter(escola__nome__icontains=query) if query else Monitor.objects.all()
 
-    # Calcula o total de visitas agendadas com base em visita.data
+
     visitas_agendadas = Visita.objects.values('data').annotate(total_escolas=Count('escola'))
 
     return render(request, 'core/visualizar_dados.html', {
@@ -302,7 +300,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')  # Redireciona para a página de login após o logout
+    return redirect('login')  
 
 def editar_pagamento(request, pagamento_id):
     pagamento = get_object_or_404(Pagamento, id=pagamento_id)
@@ -320,7 +318,6 @@ def editar_pagamento(request, pagamento_id):
         pagamento.numero_previsto_criancas = request.POST.get('numero_previsto_criancas')
         pagamento.numero_adultos_cortesia = request.POST.get('numero_adultos_cortesia')
 
-        # Recalcula o total
         pagamento.total = (int(pagamento.numero_criancas_pagantes) * float(pagamento.valor_por_crianca)) + \
                           (int(pagamento.numero_adultos_pagantes) * float(pagamento.valor_por_adulto))
 
@@ -340,7 +337,7 @@ def editar_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)
 
     if request.method == 'POST':
-        # Atualiza os dados da escola
+
         escola.nome = request.POST.get('nome')
         escola.responsavel = request.POST.get('responsavel')
         escola.endereco = request.POST.get('endereco')
@@ -350,7 +347,7 @@ def editar_escola(request, escola_id):
         escola.cnpj = request.POST.get('cnpj')
         escola.save()
 
-        # Atualiza os dados relacionados nas tabelas Visita, Pagamento e Monitor
+
         Visita.objects.filter(escola=escola).update(escola=escola)
         Pagamento.objects.filter(escola=escola).update(escola=escola)
         Monitor.objects.filter(escola=escola).update(escola=escola)
@@ -363,7 +360,7 @@ def editar_escola(request, escola_id):
 def excluir_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)
 
-    # Verifica se a escola possui visitas, pagamentos ou monitores relacionados
+
     if escola.visita_set.exists() or Pagamento.objects.filter(escola=escola).exists() or Monitor.objects.filter(escola=escola).exists():
         messages.error(request, "Não é possível excluir a escola porque ela possui visitas, pagamentos ou monitores relacionados.")
         return redirect('visualizar_dados')
@@ -429,7 +426,7 @@ def adicionar_usuario(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Cria o usuário
+
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
 
@@ -461,7 +458,7 @@ def excluir_usuario(request, usuario_id):
     return redirect('listar_usuarios')
 
 def agendamentos_proximos(request):
-    # Data atual
+
     hoje = date.today()
 
     # Filtra visitas com datas nos próximos 7 dias
