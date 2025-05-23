@@ -9,8 +9,10 @@
         margin: 0;
         font-family: Arial, sans-serif;
         height: 100vh;
-        background: url("/static/img/bg-fazendinha.jpg") no-repeat center center
-          fixed;
+        background-image: url("/static/img/bg-fazendinha4.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
         background-size: cover;
         display: flex;
         justify-content: center;
@@ -134,7 +136,7 @@
         line-height: 1.2;
       "
     >
-      Gestão Fazendinha Estação Natureza<br />
+      Gestão de Visitas Escolares<br />
       <span
         style="
           font-size: 1.4rem;
@@ -291,14 +293,15 @@
       }
 
       const imagens = [
-        "/static/img/bg-fazendinha.jpg",
-        "/static/img/bg-fazendinha3.jpg",
+        "/static/img/bg-fazendinha4.png",
+        "/static/img/bg-fazendinha5.png",
+        "/static/img/bg-fazendinha6.png",
       ];
       let index = 0;
       setInterval(() => {
         index = (index + 1) % imagens.length;
         document.body.style.backgroundImage = `url('${imagens[index]}')`;
-      }, 2500); // Troca a cada 2,5 segundos
+      }, 2500);
     </script>
   </body>
 </html>
