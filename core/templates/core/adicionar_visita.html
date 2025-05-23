@@ -157,13 +157,21 @@
 
       <form method="post">
         {% csrf_token %}
-        <label for="escola">Escola: *</label>
-        <select id="escola" name="escola" required>
-          <option value="">Selecione uma escola</option>
+        <label for="escola_nome">Escola: *</label>
+        <input
+          list="escolas"
+          id="escola_nome"
+          name="escola_nome"
+          required
+          placeholder="Digite o nome da escola"
+          autocomplete="off"
+        />
+        <datalist id="escolas">
           {% for escola in escolas %}
-          <option value="{{ escola.id }}">{{ escola.nome }}</option>
+          <option value="{{ escola.nome }}" data-id="{{ escola.id }}"></option>
           {% endfor %}
-        </select>
+        </datalist>
+        <input type="hidden" id="escola_id" name="escola" required />
 
         <label for="data">Data da Visita: *</label>
         <input type="date" id="data" name="data" min="{{ today }}" required />
@@ -226,6 +234,20 @@
           Array.from(form.elements).forEach(function (el) {
             if (el.name) localStorage.removeItem("form_" + el.name);
           });
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const escolaInput = document.getElementById("escola_nome");
+        const escolaIdInput = document.getElementById("escola_id");
+        const datalist = document.getElementById("escolas");
+
+        escolaInput.addEventListener("input", function () {
+          const value = escolaInput.value;
+          const option = Array.from(datalist.options).find(
+            (opt) => opt.value === value
+          );
+          escolaIdInput.value = option ? option.getAttribute("data-id") : "";
         });
       });
     </script>

@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\jhowg\OneDrive\Downloads\ProjetoDjango\django_project\core\templates\core\adicionar_pagamento.html -->
 {% extends 'core/base.html' %} {% block content %}
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -131,13 +130,27 @@
 
       <form method="post">
         {% csrf_token %}
-        <label for="escola">Escola: *</label>
-        <select id="escola" name="escola" required>
-          <option value="">Selecione uma escola</option>
+        <label for="escola_nome">Escola: *</label>
+        <input
+          list="escolas"
+          id="escola_nome"
+          name="escola_nome"
+          required
+          placeholder="Digite o nome da escola"
+          autocomplete="off"
+          style="
+            width: 100%;
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 6px;
+          "
+        />
+        <datalist id="escolas">
           {% for escola in escolas %}
-          <option value="{{ escola.id }}">{{ escola.nome }}</option>
+          <option value="{{ escola.nome }}" data-id="{{ escola.id }}"></option>
           {% endfor %}
-        </select>
+        </datalist>
+        <input type="hidden" id="escola_id" name="escola" required />
 
         <label for="numero_criancas_pagantes"
           >Número de Crianças Pagantes: *</label
@@ -228,18 +241,21 @@
         <p>Todos os campos marcados com * são obrigatórios.</p>
         <button type="submit">Salvar</button>
 
-        <div style="text-align: center; margin: 12px 0 0 0;">
-          <a href="{% url 'adicionar_visita' %}" style="
-            display: inline-block;
-            color: #388e3c;
-            background: #e8f5e9;
-            padding: 7px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(67,160,71,0.06);
-            transition: background 0.2s;
-          ">
+        <div style="text-align: center; margin: 12px 0 0 0">
+          <a
+            href="{% url 'adicionar_visita' %}"
+            style="
+              display: inline-block;
+              color: #388e3c;
+              background: #e8f5e9;
+              padding: 7px 18px;
+              border-radius: 6px;
+              font-weight: bold;
+              text-decoration: none;
+              box-shadow: 0 2px 8px rgba(67, 160, 71, 0.06);
+              transition: background 0.2s;
+            "
+          >
             ← Voltar para Adicionar Visita
           </a>
         </div>
@@ -247,24 +263,35 @@
     </div>
     <script>
       // Salva os dados do formulário no localStorage ao digitar
-      document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form');
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
         if (!form) return;
 
-        Array.from(form.elements).forEach(function (el) {
-          if (el.name && localStorage.getItem('form_' + el.name)) {
-            el.value = localStorage.getItem('form_' + el.name);
-          }
+        // Autocomplete para escola
+        const escolaInput = document.getElementById("escola_nome");
+        const escolaIdInput = document.getElementById("escola_id");
+        const datalist = document.getElementById("escolas");
 
-          el.addEventListener('input', function () {
-            localStorage.setItem('form_' + el.name, el.value);
+        escolaInput.addEventListener("input", function () {
+          const value = escolaInput.value;
+          const option = Array.from(datalist.options).find(
+            (opt) => opt.value === value
+          );
+          escolaIdInput.value = option ? option.getAttribute("data-id") : "";
+        });
+
+        Array.from(form.elements).forEach(function (el) {
+          if (el.name && localStorage.getItem("form_" + el.name)) {
+            el.value = localStorage.getItem("form_" + el.name);
+          }
+          el.addEventListener("input", function () {
+            localStorage.setItem("form_" + el.name, el.value);
           });
         });
 
-
-        form.addEventListener('submit', function () {
+        form.addEventListener("submit", function () {
           Array.from(form.elements).forEach(function (el) {
-            if (el.name) localStorage.removeItem('form_' + el.name);
+            if (el.name) localStorage.removeItem("form_" + el.name);
           });
         });
       });

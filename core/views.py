@@ -12,6 +12,7 @@ from django.db.models import Sum, Count
 from django.utils.timezone import now
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 
@@ -255,25 +256,66 @@ def tela_login(request):
     return render(request, 'core/login.html')
 
 def visualizar_dados(request):
-    query = request.GET.get('q', '').strip()  
+    query = request.GET.get('q', '').strip()
+    escolas = Escola.objects.all()
+    visitas = Visita.objects.all()
+    pagamentos = Pagamento.objects.all()
+    monitores = Monitor.objects.all()
 
+    if query:
+        # Busca para escolas
+        escolas = escolas.filter(
+            Q(nome__icontains=query) |
+            Q(responsavel__icontains=query) |
+            Q(bairro__icontains=query) |
+            Q(telefone__icontains=query) |
+            Q(endereco__icontains=query) |
+            Q(cnpj__icontains=query)
+        )
+        # Busca para visitas (tratando data)
+        try:
+            data_query = datetime.strptime(query, "%d/%m/%Y").date()
+            visitas = visitas.filter(
+                Q(escola__nome__icontains=query) |
+                Q(data=data_query) |
+                Q(periodo__icontains=query) |
+                Q(clima__icontains=query) |
+                Q(serie_alunos__icontains=query)
+            )
+        except ValueError:
+            visitas = visitas.filter(
+                Q(escola__nome__icontains=query) |
+                Q(periodo__icontains=query) |
+                Q(clima__icontains=query) |
+                Q(serie_alunos__icontains=query)
+            )
+        # Busca para pagamentos (tratando booleanos)
+        pagamentos = pagamentos.filter(
+            Q(escola__nome__icontains=query) |
+            Q(forma_pagamento__icontains=query) |
+            Q(comissao__icontains=query) |
+            Q(nota_fiscal=True) if query.lower() in ['sim', 'true', '1'] else Q() |
+            Q(recibo=True) if query.lower() in ['sim', 'true', '1'] else Q()
+        )
+        # Busca para monitores
+        monitores = monitores.filter(
+            Q(escola__nome__icontains=query) |
+            Q(visita__escola__nome__icontains=query) |
+            Q(monitores_fazendinha__icontains=query) |
+            Q(monitores_free__icontains=query) |
+            Q(guia_fazendinha__icontains=query) |
+            Q(guias_free__icontains=query) |
+            Q(historico_passeio__icontains=query)
+        )
 
-    escolas = Escola.objects.filter(nome__icontains=query) if query else Escola.objects.all()
-    visitas = Visita.objects.filter(escola__nome__icontains=query) | Visita.objects.filter(serie_alunos__icontains=query) # Pesquisa pela série dos alunos) if query else Visita.objects.all()
-    pagamentos = Pagamento.objects.filter(escola__nome__icontains=query) if query else Pagamento.objects.all()
-    monitores = Monitor.objects.filter(escola__nome__icontains=query) if query else Monitor.objects.all()
-
-
-    visitas_agendadas = Visita.objects.values('data').annotate(total_escolas=Count('escola'))
-
-    return render(request, 'core/visualizar_dados.html', {
+    context = {
         'escolas': escolas,
         'visitas': visitas,
         'pagamentos': pagamentos,
         'monitores': monitores,
-        'visitas_agendadas': visitas_agendadas,
         'query': query,
-    })
+    }
+    return render(request, 'core/visualizar_dados.html', context)
 
 def login_view(request):
     if request.method == 'POST':
