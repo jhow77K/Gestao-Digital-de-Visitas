@@ -27,13 +27,13 @@ class Escola(models.Model):
         return self.nome
 
 class Visita(models.Model):
-    escola = models.ForeignKey(Escola, on_delete=models.PROTECT)  # Protege a exclusão
+    escola = models.ForeignKey(Escola, on_delete=models.PROTECT)  
     data = models.DateField()
-    periodo = models.CharField(max_length=20)  # Manhã, Tarde ou Integral
+    periodo = models.CharField(max_length=20)  
     clima = models.CharField(max_length=50)
     serie_alunos = models.CharField(max_length=50)
-    feita = models.BooleanField(default=False)  # Novo campo
-
+    feita = models.BooleanField(default=False) 
+    
     def __str__(self):
         return f"Visita à {self.escola.nome} em {self.data}"
 
