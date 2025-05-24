@@ -1,4 +1,4 @@
-# Sistema de Gerenciamento de Visitas Escolares
+# Gestão Digital de Visitas.
 
 Este projeto é uma aplicação web desenvolvida pelos alunos do grupo 10 da UNIVESP utilizando o framework Django para o gerenciamento de visitas a escolas, incluindo funcionalidades completas para cadastro, edição, exclusão e visualização de escolas, visitas, pagamentos, monitores e usuários.
 
@@ -54,7 +54,6 @@ pip install mysqlclient
   - **models.py**: Modelos de Escola, Visita, Pagamento, Monitor, LogAcao, etc.
   - **views.py**: Lógica das views (cadastro, edição, exclusão, autenticação, logs, etc).
   - **admin.py**: Registro dos modelos no admin.
-  - **forms.py**: (Opcional) Formulários customizados.
   - **migrations/**: Arquivos de migração do banco de dados.
   - **filters.py**: Filtros de busca.
 - **templates/core/**: Templates HTML.
@@ -63,7 +62,7 @@ pip install mysqlclient
   - **login.html**: Tela de login.
   - **adicionar_escola.html**, **adicionar_visita.html**, **adicionar_pagamento.html**, etc.
   - **visualizar_dados.html**: Listagem e busca de dados.
-- **static/**: Arquivos estáticos (CSS, JS, imagens).
+- **static/**: Arquivos estáticos (imagens).
 
 ## Como Executar o Projeto
 
@@ -95,7 +94,7 @@ pip install mysqlclient
    python manage.py runserver
    ```
 
-7. Acesse a aplicação em seu navegador: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+7. Acesse a aplicação em seu navegador: [http://127.0.0.1:8000]
 
 ## Contribuição
 
