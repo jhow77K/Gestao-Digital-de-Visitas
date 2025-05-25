@@ -228,10 +228,10 @@ def home(request):
     escolas = Escola.objects.all().order_by('-data_cadastro')[:3]
 
 
-    proximas_visitas = Visita.objects.filter(data__gte=data_atual).order_by('data')[:3]
+    proximas_visitas = Visita.objects.filter(data__gte=data_atual, feita=False).order_by('data')[:3]
 
 
-    pagamentos = Pagamento.objects.all().order_by('-id')[:3]
+    pagamentos = Pagamento.objects.filter(confirmado=False).order_by('-id')[:3]
 
     # Dados para o relatório e gráficos
     total_visitas_por_escola = Escola.objects.annotate(total_visitas=Count('visita')).order_by('-total_visitas')[:5]
