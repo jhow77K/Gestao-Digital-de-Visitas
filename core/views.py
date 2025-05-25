@@ -217,8 +217,7 @@ def home(request):
     total_escolas = Escola.objects.count()
 
 
-    visitas_agendadas = Visita.objects.filter(data__gte=data_atual).count()
-
+    visitas_agendadas = Visita.objects.filter(feita=False).count()
 
     visitas_realizadas = Visita.objects.filter(feita=True).count()
 
