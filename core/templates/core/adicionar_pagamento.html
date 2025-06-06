@@ -130,27 +130,24 @@
 
       <form method="post">
         {% csrf_token %}
-        <label for="escola_nome">Escola: *</label>
+        <label for="visita_busca">Selecionar Visita *</label>
         <input
-          list="escolas"
-          id="escola_nome"
-          name="escola_nome"
-          required
-          placeholder="Digite o nome da escola"
+          list="visitas"
+          id="visita_busca"
+          name="visita_busca"
+          placeholder="Digite o nome da escola ou data"
           autocomplete="off"
-          style="
-            width: 100%;
-            font-size: 1rem;
-            padding: 10px;
-            border-radius: 6px;
-          "
+          required
         />
-        <datalist id="escolas">
-          {% for escola in escolas %}
-          <option value="{{ escola.nome }}" data-id="{{ escola.id }}"></option>
+        <datalist id="visitas">
+          {% for visita in visitas %}
+            <option
+              value="{{ visita.escola.nome }} - {{ visita.data|date:'d/m/Y' }} - {{ visita.periodo }}"
+              data-id="{{ visita.id }}"
+            ></option>
           {% endfor %}
         </datalist>
-        <input type="hidden" id="escola_id" name="escola" required />
+        <input type="hidden" name="visita" id="visita_id" required />
 
         <label for="numero_criancas_pagantes"
           >Número de Crianças Pagantes: *</label
@@ -238,28 +235,29 @@
           required
         />
 
+
         <p>Todos os campos marcados com * são obrigatórios.</p>
         <button type="submit">Salvar</button>
-
-        <div style="text-align: center; margin: 12px 0 0 0">
-          <a
-            href="{% url 'adicionar_visita' %}"
-            style="
-              display: inline-block;
-              color: #388e3c;
-              background: #e8f5e9;
-              padding: 7px 18px;
-              border-radius: 6px;
-              font-weight: bold;
-              text-decoration: none;
-              box-shadow: 0 2px 8px rgba(67, 160, 71, 0.06);
-              transition: background 0.2s;
-            "
-          >
-            ← Voltar para Adicionar Visita
-          </a>
-        </div>
       </form>
+
+      <div style="text-align: center; margin: 12px 0 0 0">
+        <a
+          href="{% url 'adicionar_visita' %}"
+          style="
+            display: inline-block;
+            color: #388e3c;
+            background: #e8f5e9;
+            padding: 7px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(67, 160, 71, 0.06);
+            transition: background 0.2s;
+          "
+        >
+          ← Voltar para Adicionar Visita
+        </a>
+      </div>
     </div>
     <script>
       // Salva os dados do formulário no localStorage ao digitar

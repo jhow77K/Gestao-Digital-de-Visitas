@@ -88,7 +88,16 @@ def adicionar_visita(request):
 
 def adicionar_pagamento(request):
     if request.method == 'POST':
-        escola_id = request.POST.get('escola')
+        visita_id = request.POST.get('visita')
+        if not visita_id:
+            messages.error(request, "Selecione uma visita.")
+            escolas = Escola.objects.filter(visita__isnull=False).distinct()
+            visitas = Visita.objects.all()
+            return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas, 'visitas': visitas})
+
+        visita = Visita.objects.get(id=visita_id)
+        escola = visita.escola  # Agora pega a escola da visita
+
         numero_criancas_pagantes = int(request.POST.get('numero_criancas_pagantes'))
         valor_por_crianca = float(request.POST.get('valor_por_crianca'))
         numero_adultos_pagantes = int(request.POST.get('numero_adultos_pagantes'))
@@ -109,11 +118,10 @@ def adicionar_pagamento(request):
         comissao = (float(comissao_percentual) / 100) * total if comissao_percentual else None
 
 
-        escola = Escola.objects.get(id=escola_id)
-
         # Cria um novo pagamento
         pagamento = Pagamento(
             escola=escola,
+            visita=visita,  # <-- Adicione esta linha
             numero_criancas_pagantes=numero_criancas_pagantes,
             valor_por_crianca=valor_por_crianca,
             numero_adultos_pagantes=numero_adultos_pagantes,
@@ -133,8 +141,9 @@ def adicionar_pagamento(request):
         messages.success(request, "Pagamento adicionado com sucesso!")
         return redirect('adicionar_monitores') 
 
-    escolas = Escola.objects.all()
-    return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas})
+    escolas = Escola.objects.filter(visita__isnull=False).distinct()
+    visitas = Visita.objects.all()
+    return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas, 'visitas': visitas})
 
 def adicionar_monitores(request):
     if request.method == 'POST':

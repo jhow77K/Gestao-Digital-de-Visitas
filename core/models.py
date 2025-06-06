@@ -40,7 +40,6 @@ class Visita(models.Model):
 class Pagamento(models.Model):
     escola = models.ForeignKey(Escola, on_delete=models.SET_NULL, null=True, blank=True)
     visita = models.ForeignKey(Visita, on_delete=models.SET_NULL, null=True, blank=True)
-    visita = models.ForeignKey(Visita, on_delete=models.CASCADE)
     numero_criancas_pagantes = models.IntegerField()
     valor_por_crianca = models.DecimalField(max_digits=10, decimal_places=2)
     numero_adultos_pagantes = models.IntegerField()
