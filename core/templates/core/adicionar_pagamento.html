@@ -141,10 +141,10 @@
         />
         <datalist id="visitas">
           {% for visita in visitas %}
-            <option
-              value="{{ visita.escola.nome }} - {{ visita.data|date:'d/m/Y' }} - {{ visita.periodo }}"
-              data-id="{{ visita.id }}"
-            ></option>
+          <option
+            value="{{ visita.escola.nome }} - {{ visita.data|date:'d/m/Y' }} - {{ visita.periodo }}"
+            data-id="{{ visita.id }}"
+          ></option>
           {% endfor %}
         </datalist>
         <input type="hidden" name="visita" id="visita_id" required />
@@ -235,7 +235,6 @@
           required
         />
 
-
         <p>Todos os campos marcados com * são obrigatórios.</p>
         <button type="submit">Salvar</button>
       </form>
@@ -291,6 +290,20 @@
           Array.from(form.elements).forEach(function (el) {
             if (el.name) localStorage.removeItem("form_" + el.name);
           });
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const visitaBusca = document.getElementById("visita_busca");
+        const visitaId = document.getElementById("visita_id");
+        const datalist = document.getElementById("visitas");
+
+        visitaBusca.addEventListener("input", function () {
+          const value = visitaBusca.value;
+          const option = Array.from(datalist.options).find(
+            (opt) => opt.value === value
+          );
+          visitaId.value = option ? option.getAttribute("data-id") : "";
         });
       });
     </script>

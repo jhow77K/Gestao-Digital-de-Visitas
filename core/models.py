@@ -52,7 +52,7 @@ class Pagamento(models.Model):
     comissao = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     numero_previsto_criancas = models.IntegerField()
     numero_adultos_cortesia = models.IntegerField()
-    confirmado = models.BooleanField(default=False)  # Novo campo
+    confirmado = models.BooleanField(default=False)  
 
 class Monitor(models.Model):
     escola = models.ForeignKey(Escola, on_delete=models.SET_NULL, null=True, blank=True)
@@ -60,8 +60,8 @@ class Monitor(models.Model):
     monitores_fazendinha = models.TextField()
     monitores_free = models.TextField()
     guia_fazendinha = models.CharField(max_length=255)
-    guias_free = models.TextField(blank=True, null=True)  # Novo campo
-    historico_passeio = models.TextField(blank=True, null=True)  # Novo campo
+    guias_free = models.TextField(blank=True, null=True)  
+    historico_passeio = models.TextField(blank=True, null=True)  
     
 class Usuario(models.Model):
     nome = models.CharField(max_length=255)
