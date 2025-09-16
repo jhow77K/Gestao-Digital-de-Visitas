@@ -13,7 +13,7 @@ class Escola(models.Model):
     telefone = models.CharField(max_length=20)
     email = models.EmailField()
     cnpj = models.CharField(max_length=18)
-    data_cadastro = models.DateTimeField(default=now)  # Define um valor padrão válido
+    data_cadastro = models.DateTimeField(default=now) 
 
     def save(self, *args, **kwargs):
         
@@ -70,6 +70,26 @@ class Usuario(models.Model):
 
     def __str__(self):
         return self.nome
+
+class PreCadastroVisita(models.Model):
+    nome_escola = models.CharField(max_length=255)
+    email = models.EmailField()
+    telefone = models.CharField(max_length=20)
+    cnpj = models.CharField(max_length=18, default="00000000000000")
+    data_sugerida = models.DateField()
+    observacoes = models.TextField(blank=True)
+    numero_previsto_criancas = models.IntegerField(default=0)  
+    numero_previsto_adultos = models.IntegerField(default=0)
+    FORMA_PAGAMENTO_CHOICES = [
+        ('pix', 'Pix'),
+        ('dinheiro', 'Dinheiro'),
+    ]
+    forma_pagamento = models.CharField(max_length=10, choices=FORMA_PAGAMENTO_CHOICES, default='pix')  # NOVO
+    data_envio = models.DateTimeField(default=now)
+    aprovado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.nome_escola} ({self.data_sugerida})"
 
 
 def excluir_escola(request, escola_id):

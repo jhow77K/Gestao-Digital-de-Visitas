@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Pré-cadastro de Visita Escolar</h2>
+<form method="post">
+  {% csrf_token %}
+  <label for="id_nome_escola">Nome da escola:</label>
+  {{ form.nome_escola }}
+
+  <label for="id_cnpj">CNPJ:</label>
+  {{ form.cnpj }}
+
+  <label for="id_email">E-mail:</label>
+  {{ form.email }}
+
+  <label for="id_telefone">Telefone:</label>
+  {{ form.telefone }}
+
+  <label for="id_data_sugerida">Data sugerida para visita:</label>
+  {{ form.data_sugerida }}
+
+  <label for="id_numero_previsto_criancas">Número previsto de crianças:</label>
+  {{ form.numero_previsto_criancas }}
+
+  <label for="id_numero_previsto_adultos">Número previsto de adultos:</label>
+  {{ form.numero_previsto_adultos }}
+
+  <label for="id_forma_pagamento">Forma de pagamento:</label>
+  {{ form.forma_pagamento }}
+
+  <label for="id_observacoes">Observações:</label>
+  {{ form.observacoes }}
+
+  <br /><br />
+  <button type="submit">Enviar pré-cadastro</button>
+</form>
+{% endblock %}

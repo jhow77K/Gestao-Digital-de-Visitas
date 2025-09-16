@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Pré-cadastros pendentes</h2>
+<table style="width: 100%; border-collapse: collapse">
+  <thead>
+    <tr>
+      <th>Escola</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Data sugerida</th>
+      <th>Nº Crianças</th>
+      <th>Nº Adultos</th>
+      <th>Forma de pagamento</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pre in pre_cadastros %}
+    <tr>
+      <td>{{ pre.nome_escola }}</td>
+      <td>{{ pre.email }}</td>
+      <td>{{ pre.telefone }}</td>
+      <td>{{ pre.data_sugerida }}</td>
+      <td>{{ pre.numero_previsto_criancas }}</td>
+      <td>{{ pre.numero_previsto_adultos }}</td>
+      <td>{{ pre.get_forma_pagamento_display }}</td>
+      <td>
+        <a href="{% url 'aprovar_pre_cadastro' pre.id %}">Aprovar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="8" style="text-align: center">
+        Nenhum pré-cadastro pendente.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

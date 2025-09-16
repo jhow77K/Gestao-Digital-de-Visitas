@@ -5,7 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Gestão Digital de Visitas{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'img/logo-fazendinha1.png' %}">
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'img/logo-fazendinha1.png' %}"
+    />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -128,6 +132,7 @@
         <a href="{% url 'adicionar_pagamento' %}">Adicionar Pagamento</a>
         <a href="{% url 'adicionar_monitores' %}">Adicionar Monitores</a>
         <a href="{% url 'visualizar_dados' %}">Visualizar Dados</a>
+        <a href="{% url 'listar_pre_cadastros' %}">Pré-cadastros</a>
         <div class="dropdown">
           <button class="dropbtn">Gerenciar Usuários</button>
           <div class="dropdown-content">

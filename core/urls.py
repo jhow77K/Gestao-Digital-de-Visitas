@@ -3,9 +3,11 @@ from core import views
 from .views import login_view, logout_view
 from . import views
 from django.views.generic import TemplateView
+from .views import pre_cadastro_visita
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home, name='home'),  
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('adicionar_escola/', views.adicionar_escola, name='adicionar_escola'),
@@ -33,4 +35,9 @@ urlpatterns = [
     path('marcar_visita_feita/<int:visita_id>/', views.marcar_visita_feita, name='marcar_visita_feita'),
     path('marcar_pagamento_confirmado/<int:pagamento_id>/', views.marcar_pagamento_confirmado, name='marcar_pagamento_confirmado'),
     path('politica-cookies/', TemplateView.as_view(template_name='core/politica_cookies.html'), name='politica_cookies'),
+    path('pre-cadastro/', pre_cadastro_visita, name='pre_cadastro_visita'),
+    path('login-operacional/', auth_views.LoginView.as_view(template_name='core/login_operacional.html'), name='login_operacional'),
+    path('pre_cadastro/', views.pre_cadastro_visita, name='pre_cadastro_visita'),
+    path('pre_cadastros/', views.listar_pre_cadastros, name='listar_pre_cadastros'),
+    path('aprovar_pre_cadastro/<int:pre_id>/', views.aprovar_pre_cadastro, name='aprovar_pre_cadastro'),
 ]

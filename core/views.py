@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Escola, Visita, Pagamento, Monitor, Usuario
+from .models import Escola, Visita, Pagamento, Monitor, Usuario, PreCadastroVisita
 from django.contrib import messages
 import hashlib
 from datetime import datetime, date, timedelta
@@ -13,7 +13,16 @@ from django.utils.timezone import now
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.db.models import Q
+from .forms import PreCadastroVisitaForm
+from functools import wraps
 
+def somente_administracao(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.username.endswith('@fazendinha.com.br'):
+            return redirect('pre_cadastro_visita')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 
 def adicionar_escola(request):
@@ -96,7 +105,7 @@ def adicionar_pagamento(request):
             return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas, 'visitas': visitas})
 
         visita = Visita.objects.get(id=visita_id)
-        escola = visita.escola  # Agora pega a escola da visita
+        escola = visita.escola 
 
         numero_criancas_pagantes = int(request.POST.get('numero_criancas_pagantes'))
         valor_por_crianca = float(request.POST.get('valor_por_crianca'))
@@ -121,7 +130,7 @@ def adicionar_pagamento(request):
         # Cria um novo pagamento
         pagamento = Pagamento(
             escola=escola,
-            visita=visita,  # <-- Adicione esta linha
+            visita=visita, 
             numero_criancas_pagantes=numero_criancas_pagantes,
             valor_por_crianca=valor_por_crianca,
             numero_adultos_pagantes=numero_adultos_pagantes,
@@ -327,25 +336,35 @@ def visualizar_dados(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
+        username_or_email = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
 
-        # Validação simples no backend
-        if not username or not password:
+        if not username_or_email or not password:
             messages.error(request, "Preencha todos os campos.")
             return render(request, 'core/login.html')
 
-        if len(username) < 3 or len(password) < 6:
-            messages.error(request, "Usuário deve ter pelo menos 3 caracteres e senha pelo menos 6.")
-            return render(request, 'core/login.html')
 
-        # Autenticação padrão Django
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username_or_email, password=password)
+
+
+        if user is None:
+            try:
+                user_obj = User.objects.get(email=username_or_email)
+                user = authenticate(request, username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                user = None
+
         if user is not None:
             login(request, user)
-            return redirect('home')
+            # Redireciona conforme o domínio do e-mail
+            if user.email.endswith('@fazendinha.com.br'):
+                return redirect('home')
+            else:
+                return redirect('pre_cadastro_visita')
         else:
             messages.error(request, "Usuário, email ou senha incorretos.")
+            return render(request, 'core/login.html')
+
     return render(request, 'core/login.html')
 
 def logout_view(request):
@@ -559,3 +578,25 @@ def cadastro_view(request):
         messages.success(request, "Usuário cadastrado com sucesso!")
         return redirect('login')
     return render(request, 'core/cadastro.html')
+
+def listar_pre_cadastros(request):
+    pre_cadastros = PreCadastroVisita.objects.filter(aprovado=False)
+    return render(request, 'core/listar_pre_cadastros.html', {'pre_cadastros': pre_cadastros})
+
+def aprovar_pre_cadastro(request, pre_id):
+    pre = get_object_or_404(PreCadastroVisita, id=pre_id)
+    pre.aprovado = True
+    pre.save()
+    messages.success(request, "Pré-cadastro aprovado!")
+    return redirect('listar_pre_cadastros')
+
+def pre_cadastro_visita(request):
+    if request.method == 'POST':
+        form = PreCadastroVisitaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pré-cadastro enviado! Aguarde a análise da equipe.")
+            return redirect('home')
+    else:
+        form = PreCadastroVisitaForm()
+    return render(request, 'core/pre_cadastro_visita.html', {'form': form})
