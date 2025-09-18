@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Escola, Visita, Pagamento, Monitor, Usuario, PreCadastroVisita
+from .models import Escola, Visita, Pagamento, Monitor, Usuario, PreCadastroVisita, PreCadastroEscola
 from django.contrib import messages
 import hashlib
 from datetime import datetime, date, timedelta
@@ -15,16 +15,19 @@ from django.http import JsonResponse
 from django.db.models import Q
 from .forms import PreCadastroVisitaForm
 from functools import wraps
+from django.core.mail import send_mail
+from django.http import HttpResponse
 
 def somente_administracao(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_authenticated or not request.user.username.endswith('@fazendinha.com.br'):
+        if not request.user.is_authenticated or not (hasattr(request.user, 'email') and request.user.email and request.user.email.lower().endswith('@fazendinha.com.br')):
             return redirect('pre_cadastro_visita')
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
 
+@somente_administracao
 def adicionar_escola(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
@@ -60,6 +63,7 @@ def adicionar_escola(request):
 
     return render(request, 'core/adicionar_escola.html')
 
+@somente_administracao
 def adicionar_visita(request):
     if request.method == 'POST':
         escola_id = request.POST.get('escola')
@@ -95,6 +99,7 @@ def adicionar_visita(request):
     today = date.today()  # Obtém a data atual
     return render(request, 'core/adicionar_visita.html', {'escolas': escolas, 'today': today})
 
+@somente_administracao
 def adicionar_pagamento(request):
     if request.method == 'POST':
         visita_id = request.POST.get('visita')
@@ -154,6 +159,7 @@ def adicionar_pagamento(request):
     visitas = Visita.objects.all()
     return render(request, 'core/adicionar_pagamento.html', {'escolas': escolas, 'visitas': visitas})
 
+@somente_administracao
 def adicionar_monitores(request):
     if request.method == 'POST':
         visita_id = request.POST.get('visita')
@@ -182,11 +188,13 @@ def adicionar_monitores(request):
     visitas = Visita.objects.all()
     return render(request, 'core/adicionar_monitores.html', {'visitas': visitas})
 
+@somente_administracao
 def excluir_registro(request, tabela, id_registro):
 
     messages.success(request, f"Registro excluído com sucesso!")
     return redirect('visualizar_dados')
 
+@somente_administracao
 def editar_registro(request, tabela, id_registro):
     if request.method == 'POST':
         dados = request.POST.dict()
@@ -203,6 +211,7 @@ def formatar_cnpj(cnpj):
         return f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
     return cnpj
 
+@somente_administracao
 def adicionar_usuario(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -227,6 +236,7 @@ def verificar_login(request):
 
     return render(request, 'core/tela_login.html')
 
+@somente_administracao
 def home(request):
 
     data_atual = now().date()
@@ -269,9 +279,7 @@ def home(request):
 
     return render(request, 'core/home.html', context)
 
-def tela_login(request):
-    return render(request, 'core/login.html')
-
+@somente_administracao
 def visualizar_dados(request):
     query = request.GET.get('q', '').strip()
     escolas = Escola.objects.all()
@@ -343,10 +351,10 @@ def login_view(request):
             messages.error(request, "Preencha todos os campos.")
             return render(request, 'core/login.html')
 
-
+        # Tenta autenticar pelo username
         user = authenticate(request, username=username_or_email, password=password)
 
-
+        # Se falhar, tenta autenticar pelo e-mail
         if user is None:
             try:
                 user_obj = User.objects.get(email=username_or_email)
@@ -356,8 +364,8 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            # Redireciona conforme o domínio do e-mail
-            if user.email.endswith('@fazendinha.com.br'):
+            # Garante que o campo email existe e está correto
+            if hasattr(user, 'email') and user.email and user.email.lower().endswith('@fazendinha.com.br'):
                 return redirect('home')
             else:
                 return redirect('pre_cadastro_visita')
@@ -371,6 +379,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')  
 
+@somente_administracao
 def editar_pagamento(request, pagamento_id):
     pagamento = get_object_or_404(Pagamento, id=pagamento_id)
 
@@ -396,12 +405,14 @@ def editar_pagamento(request, pagamento_id):
 
     return render(request, 'core/editar_pagamento.html', {'pagamento': pagamento})
 
+@somente_administracao
 def excluir_pagamento(request, pagamento_id):
     pagamento = get_object_or_404(Pagamento, id=pagamento_id)
     pagamento.delete()
     messages.success(request, "Pagamento excluído com sucesso!")
     return redirect('visualizar_dados')
 
+@somente_administracao
 def editar_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)
 
@@ -426,6 +437,7 @@ def editar_escola(request, escola_id):
 
     return render(request, 'core/editar_escola.html', {'escola': escola})
 
+@somente_administracao
 def excluir_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)
 
@@ -442,6 +454,7 @@ def excluir_escola(request, escola_id):
     
     return redirect('visualizar_dados')
 
+@somente_administracao
 def editar_visita(request, visita_id):
     visita = get_object_or_404(Visita, id=visita_id)
 
@@ -457,12 +470,14 @@ def editar_visita(request, visita_id):
 
     return render(request, 'core/editar_visita.html', {'visita': visita})
 
+@somente_administracao
 def excluir_visita(request, visita_id):
     visita = get_object_or_404(Visita, id=visita_id)
     visita.delete()
     messages.success(request, "Visita excluída com sucesso!")
     return redirect('visualizar_dados')
 
+@somente_administracao
 def editar_monitor(request, monitor_id):
     monitor = get_object_or_404(Monitor, id=monitor_id)
 
@@ -479,16 +494,19 @@ def editar_monitor(request, monitor_id):
 
     return render(request, 'core/editar_monitor.html', {'monitor': monitor})
 
+@somente_administracao
 def excluir_monitor(request, monitor_id):
     monitor = get_object_or_404(Monitor, id=monitor_id)
     monitor.delete()
     messages.success(request, "Monitor excluído com sucesso!")
     return redirect('visualizar_dados')
 
+@somente_administracao
 def listar_usuarios(request):
     usuarios = User.objects.all()
     return render(request, 'core/listar_usuarios.html', {'usuarios': usuarios})
 
+@somente_administracao
 def adicionar_usuario(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -504,6 +522,7 @@ def adicionar_usuario(request):
 
     return render(request, 'core/adicionar_usuario.html')
 
+@somente_administracao
 def editar_usuario(request, usuario_id):
     user = get_object_or_404(User, id=usuario_id)
 
@@ -520,12 +539,14 @@ def editar_usuario(request, usuario_id):
 
     return render(request, 'core/editar_usuario.html', {'user': user})
 
+@somente_administracao
 def excluir_usuario(request, usuario_id):
     user = get_object_or_404(User, id=usuario_id)
     user.delete()
     messages.success(request, "Usuário excluído com sucesso!")
     return redirect('listar_usuarios')
 
+@somente_administracao
 def agendamentos_proximos(request):
 
     hoje = date.today()
@@ -536,6 +557,7 @@ def agendamentos_proximos(request):
 
     return render(request, 'core/agendamentos_proximos.html', {'visitas_proximas': visitas_proximas})
 
+@somente_administracao
 def marcar_visita_feita(request, visita_id):
     visita = get_object_or_404(Visita, id=visita_id)
     visita.feita = True
@@ -543,6 +565,7 @@ def marcar_visita_feita(request, visita_id):
     messages.success(request, "Visita marcada como FEITA com sucesso!")
     return redirect('visualizar_dados')
 
+@somente_administracao
 def marcar_pagamento_confirmado(request, pagamento_id):
     pagamento = get_object_or_404(Pagamento, id=pagamento_id)
     pagamento.confirmado = True
@@ -550,44 +573,33 @@ def marcar_pagamento_confirmado(request, pagamento_id):
     messages.success(request, "Pagamento confirmado com sucesso!")
     return redirect('visualizar_dados')
 
-def cadastro_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username', '').strip()
-        email = request.POST.get('email', '').strip()
-        password = request.POST.get('password', '').strip()
-
-        # Validação backend
-        if not username or not email or not password:
-            messages.error(request, "Preencha todos os campos.")
-            return render(request, 'core/cadastro.html')
-
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Nome de usuário já existe.")
-            return render(request, 'core/cadastro.html')
-
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email já cadastrado.")
-            return render(request, 'core/cadastro.html')
-
-        if len(password) < 6:
-            messages.error(request, "A senha deve ter pelo menos 6 caracteres.")
-            return render(request, 'core/cadastro.html')
-
-        # Criação do usuário
-        User.objects.create_user(username=username, email=email, password=password)
-        messages.success(request, "Usuário cadastrado com sucesso!")
-        return redirect('login')
-    return render(request, 'core/cadastro.html')
-
+@somente_administracao
 def listar_pre_cadastros(request):
     pre_cadastros = PreCadastroVisita.objects.filter(aprovado=False)
     return render(request, 'core/listar_pre_cadastros.html', {'pre_cadastros': pre_cadastros})
 
+@somente_administracao
 def aprovar_pre_cadastro(request, pre_id):
     pre = get_object_or_404(PreCadastroVisita, id=pre_id)
     pre.aprovado = True
     pre.save()
     messages.success(request, "Pré-cadastro aprovado!")
+    return redirect('listar_pre_cadastros')
+
+@somente_administracao
+def aprovar_cadastro_escola(request, pre_id):
+    pre = get_object_or_404(PreCadastroEscola, id=pre_id)
+    if not pre.aprovado:
+        escola = Escola(
+            nome=pre.nome,
+            email=pre.email,
+            cnpj=pre.cnpj,
+
+        )
+        escola.save()
+        pre.aprovado = True
+        pre.save()
+        messages.success(request, "Cadastro aprovado e escola criada!")
     return redirect('listar_pre_cadastros')
 
 def pre_cadastro_visita(request):
@@ -599,4 +611,53 @@ def pre_cadastro_visita(request):
             return redirect('home')
     else:
         form = PreCadastroVisitaForm()
-    return render(request, 'core/pre_cadastro_visita.html', {'form': form})
+    context = {
+        'form': form,
+        'today': date.today().isoformat(),
+    }
+    return render(request, 'core/pre_cadastro_visita.html', context)
+
+def cadastro_escola(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome_escola', '').strip()
+        email = request.POST.get('email_escola', '').strip()
+        cnpj = request.POST.get('cnpj_escola', '').strip()
+        telefone = request.POST.get('telefone_escola', '').strip()
+        senha = request.POST.get('senha_escola', '').strip()
+
+        if not nome or not email or not cnpj or not telefone or not senha:
+            messages.error(request, "Todos os campos são obrigatórios.")
+            return render(request, 'core/cadastro_escola.html')
+
+        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+
+        pre_cadastro = PreCadastroEscola(
+            nome=nome,
+            email=email,
+            cnpj=cnpj,
+            telefone=telefone,
+            senha=senha_hash
+        )
+        pre_cadastro.save()
+
+        send_mail(
+            'Cadastro realizado - Gestão de Visitas Escolares',
+            f'Olá, {nome}!\n\nSeu cadastro foi realizado com sucesso.\n\nObrigado!',
+            None, 
+            [email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "Cadastro realizado! Um e-mail de confirmação foi enviado.")
+        return redirect('pre_cadastro_visita')
+    return render(request, 'core/cadastro_escola.html')
+
+def teste_email(request):
+    send_mail(
+        'Bem-vindo à Gestão de Visitas Escolares!',
+        'Olá!\n\nSeu cadastro foi realizado com sucesso.\n\nObrigado por se cadastrar!',
+        None,  
+        ['pokejhow2053@gmail.com'], 
+        fail_silently=False,
+    )
+    return HttpResponse('E-mail de teste enviado com sucesso!')

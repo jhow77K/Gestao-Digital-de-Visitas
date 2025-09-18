@@ -162,6 +162,124 @@
 
         <button type="submit">Entrar</button>
       </form>
+
+      <div
+        style="
+          margin: 22px 0 0 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        "
+      >
+        <div
+          style="
+            width: 100%;
+            text-align: center;
+            margin: 18px 0 8px 0;
+            color: #888;
+            font-size: 15px;
+          "
+        >
+          <span
+            style="
+              display: inline-block;
+              width: 40%;
+              border-bottom: 1px solid #e0e0e0;
+              vertical-align: middle;
+            "
+          ></span>
+          <span style="margin: 0 12px">OU</span>
+          <span
+            style="
+              display: inline-block;
+              width: 40%;
+              border-bottom: 1px solid #e0e0e0;
+              vertical-align: middle;
+            "
+          ></span>
+        </div>
+        <a
+          href="{% url 'cadastro_escola' %}"
+          style="
+            margin-top: 10px;
+            color: #388e3c;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 16px;
+          "
+        >
+          Não tem uma conta?
+          <span style="text-decoration: underline">Cadastre-se</span>
+        </a>
+      </div>
+    </div>
+
+    <div
+      id="modal-cadastro"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 99;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          padding: 32px 24px;
+          border-radius: 12px;
+          width: 340px;
+          margin: auto;
+          position: relative;
+        "
+      >
+        <h2 style="margin-bottom: 18px">Cadastro de Escola</h2>
+        {% if cadastro_messages %}
+        <div class="mensagem-erro">
+          {% for message in cadastro_messages %} {{ message }} {% endfor %}
+        </div>
+        {% endif %}
+        <form method="post" action="{% url 'cadastro_escola' %}">
+          {% csrf_token %}
+          <label for="nome_escola">Nome da Escola:</label>
+          <input type="text" name="nome_escola" id="nome_escola" required />
+
+          <label for="email_escola">E-mail:</label>
+          <input type="email" name="email_escola" id="email_escola" required />
+
+          <label for="cnpj_escola">CNPJ:</label>
+          <input
+            type="text"
+            name="cnpj_escola"
+            id="cnpj_escola"
+            required
+            maxlength="18"
+          />
+
+          <label for="senha_escola">Senha:</label>
+          <input
+            type="password"
+            name="senha_escola"
+            id="senha_escola"
+            required
+          />
+
+          <button type="submit" style="margin-top: 14px">Cadastrar</button>
+          <button
+            type="button"
+            onclick="document.getElementById('modal-cadastro').style.display='none'"
+            style="margin-top: 8px; background: #ccc; color: #333"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Onda SVG branca -->

@@ -5,6 +5,7 @@ from . import views
 from django.views.generic import TemplateView
 from .views import pre_cadastro_visita
 from django.contrib.auth import views as auth_views
+from .views import cadastro_escola, teste_email
 
 urlpatterns = [
     path('', views.home, name='home'),  
@@ -40,4 +41,6 @@ urlpatterns = [
     path('pre_cadastro/', views.pre_cadastro_visita, name='pre_cadastro_visita'),
     path('pre_cadastros/', views.listar_pre_cadastros, name='listar_pre_cadastros'),
     path('aprovar_pre_cadastro/<int:pre_id>/', views.aprovar_pre_cadastro, name='aprovar_pre_cadastro'),
+    path('cadastro_escola/', cadastro_escola, name='cadastro_escola'),
+    path('teste-email/', teste_email, name='teste_email'),
 ]

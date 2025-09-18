@@ -91,6 +91,14 @@ class PreCadastroVisita(models.Model):
     def __str__(self):
         return f"{self.nome_escola} ({self.data_sugerida})"
 
+class PreCadastroEscola(models.Model):
+    nome = models.CharField(max_length=120)
+    email = models.EmailField()
+    cnpj = models.CharField(max_length=18)
+    telefone = models.CharField(max_length=16, default="") 
+    senha = models.CharField(max_length=128)  
+    aprovado = models.BooleanField(default=False)
+    data_cadastro = models.DateTimeField(auto_now_add=True)
 
 def excluir_escola(request, escola_id):
     escola = get_object_or_404(Escola, id=escola_id)

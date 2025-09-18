@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro de Escola</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'img/logo-fazendinha1.png' %}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7fafc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .cadastro-container {
+        background: #fff;
+        padding: 38px 28px;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        width: 340px;
+        text-align: center;
+      }
+      .cadastro-container h2 {
+        margin-bottom: 22px;
+        font-size: 28px;
+        color: #388e3c;
+        letter-spacing: 1px;
+      }
+      .cadastro-container label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        text-align: left;
+        color: #333;
+      }
+      .cadastro-container input {
+        width: 100%;
+        padding: 11px;
+        margin-bottom: 18px;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+      }
+      .cadastro-container input:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .cadastro-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+      }
+      .cadastro-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      .mensagem-erro {
+        color: #b30000;
+        background: #ffeaea;
+        border: 1px solid #b30000;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 18px;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cadastro-container">
+      <h2>Cadastro de Escola</h2>
+      </p>
+      {% if messages %}
+      <div class="mensagem-erro">
+        {% for message in messages %} {{ message }} {% endfor %}
+      </div>
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <label for="nome_escola"
+          >Nome da Escola: <span style="color: #b30000">*</span></label
+        >
+        <input type="text" name="nome_escola" id="nome_escola" required />
+
+        <label for="email_escola"
+          >E-mail: <span style="color: #b30000">*</span></label
+        >
+        <input type="email" name="email_escola" id="email_escola" required />
+
+        <label for="cnpj_escola"
+          >CNPJ: <span style="color: #b30000">*</span></label
+        >
+        <input
+          type="text"
+          name="cnpj_escola"
+          id="cnpj_escola"
+          required
+          maxlength="18"
+        />
+
+        <label for="telefone_escola"
+          >Telefone: <span style="color: #b30000">*</span></label
+        >
+        <input
+          type="text"
+          name="telefone_escola"
+          id="telefone_escola"
+          required
+          maxlength="16"
+        />
+
+        <label for="senha_escola"
+          >Senha: <span style="color: #b30000">*</span></label
+        >
+        <input type="password" name="senha_escola" id="senha_escola" required />
+
+        <label for="id_data_sugerida">Data sugerida para visita:</label>
+        <input
+          type="date"
+          name="data_sugerida"
+          id="id_data_sugerida"
+          required
+          min="{{ today }}"
+          style="width: 100%; padding: 11px; margin-bottom: 18px; border: 1.5px solid #b2dfdb; border-radius: 6px; font-size: 15px; background: #f7fafc;"
+        />
+
+        <p
+          style="
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 12px;
+            margin-top: -8px;
+          "
+        >
+          <span style="color: #b30000">*</span> Campos obrigatórios
+        </p>
+
+        <button type="submit" style="margin-top: 14px">Cadastrar</button>
+        <a
+          href="{% url 'login' %}"
+          style="
+            display: block;
+            margin-top: 18px;
+            color: #388e3c;
+            text-decoration: underline;
+          "
+          >Voltar ao Login</a
+        >
+      </form>
+    </div>
+  </body>
+</html>
