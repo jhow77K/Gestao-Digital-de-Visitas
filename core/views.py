@@ -602,55 +602,39 @@ def aprovar_cadastro_escola(request, pre_id):
         messages.success(request, "Cadastro aprovado e escola criada!")
     return redirect('listar_pre_cadastros')
 
-def pre_cadastro_visita(request):
-    if request.method == 'POST':
-        form = PreCadastroVisitaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Pré-cadastro enviado! Aguarde a análise da equipe.")
-            return redirect('home')
-    else:
-        form = PreCadastroVisitaForm()
-    context = {
-        'form': form,
-        'today': date.today().isoformat(),
-    }
-    return render(request, 'core/pre_cadastro_visita.html', context)
-
 def cadastro_escola(request):
     if request.method == 'POST':
-        nome = request.POST.get('nome_escola', '').strip()
-        email = request.POST.get('email_escola', '').strip()
-        cnpj = request.POST.get('cnpj_escola', '').strip()
-        telefone = request.POST.get('telefone_escola', '').strip()
-        senha = request.POST.get('senha_escola', '').strip()
-
-        if not nome or not email or not cnpj or not telefone or not senha:
-            messages.error(request, "Todos os campos são obrigatórios.")
-            return render(request, 'core/cadastro_escola.html')
-
-        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-
-        pre_cadastro = PreCadastroEscola(
-            nome=nome,
-            email=email,
-            cnpj=cnpj,
-            telefone=telefone,
-            senha=senha_hash
-        )
-        pre_cadastro.save()
-
-        send_mail(
-            'Cadastro realizado - Gestão de Visitas Escolares',
-            f'Olá, {nome}!\n\nSeu cadastro foi realizado com sucesso.\n\nObrigado!',
-            None, 
-            [email],
-            fail_silently=False,
-        )
-
-        messages.success(request, "Cadastro realizado! Um e-mail de confirmação foi enviado.")
+        request.session['cadastro'] = {
+            'nome': request.POST['nome_escola'],
+            'email': request.POST['email_escola'],
+            'cnpj': request.POST['cnpj_escola'],
+            'telefone': request.POST['telefone_escola'],
+            'senha': hashlib.sha256(request.POST['senha_escola'].encode()).hexdigest(),
+        }
         return redirect('pre_cadastro_visita')
     return render(request, 'core/cadastro_escola.html')
+
+def pre_cadastro_visita(request):
+    if request.method == 'POST':
+        dados = request.session.get('cadastro', {})
+        pre_cadastro = PreCadastroEscola(
+            nome=dados.get('nome'),
+            email=dados.get('email'),
+            cnpj=dados.get('cnpj'),
+            telefone=dados.get('telefone'),
+            senha=dados.get('senha'),
+            data_sugerida=request.POST['data_sugerida'],
+            numero_previsto_criancas=request.POST['numero_previsto_criancas'],
+            numero_previsto_adultos=request.POST['numero_previsto_adultos'],
+            forma_pagamento=request.POST.get('forma_pagamento', ''),
+            observacoes=request.POST.get('observacoes', ''),
+        )
+        pre_cadastro.save()
+        del request.session['cadastro']
+        messages.success(request, "Pré-cadastro realizado com sucesso!")
+        return redirect('login')
+    return render(request, 'core/pre_cadastro_visita.html')
+
 
 def teste_email(request):
     send_mail(

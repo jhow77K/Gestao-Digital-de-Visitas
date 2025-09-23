@@ -7,7 +7,6 @@ class PreCadastroVisitaForm(forms.ModelForm):
     class Meta:
         model = PreCadastroVisita
         fields = [
-            'telefone',
             'data_sugerida',
             'numero_previsto_criancas',
             'numero_previsto_adultos',

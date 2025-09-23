@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
+from datetime import date
 
 class Escola(models.Model):
     nome = models.CharField(max_length=255)
@@ -71,11 +72,17 @@ class Usuario(models.Model):
     def __str__(self):
         return self.nome
 
-class PreCadastroVisita(models.Model):
-    nome_escola = models.CharField(max_length=255)
+class PreCadastroEscola(models.Model):
+    nome = models.CharField(max_length=120)
     email = models.EmailField()
-    telefone = models.CharField(max_length=20)
-    cnpj = models.CharField(max_length=18, default="00000000000000")
+    cnpj = models.CharField(max_length=18)
+    telefone = models.CharField(max_length=16, default="") 
+    senha = models.CharField(max_length=128)
+    aprovado = models.BooleanField(default=False)
+    data_cadastro = models.DateTimeField(auto_now_add=True)
+
+class PreCadastroVisita(models.Model):
+    escola = models.ForeignKey(PreCadastroEscola, on_delete=models.CASCADE, related_name='pre_cadastros_visita')
     data_sugerida = models.DateField()
     observacoes = models.TextField(blank=True)
     numero_previsto_criancas = models.IntegerField(default=0)  
@@ -84,44 +91,12 @@ class PreCadastroVisita(models.Model):
         ('pix', 'Pix'),
         ('dinheiro', 'Dinheiro'),
     ]
-    forma_pagamento = models.CharField(max_length=10, choices=FORMA_PAGAMENTO_CHOICES, default='pix')  # NOVO
+    forma_pagamento = models.CharField(max_length=10, choices=FORMA_PAGAMENTO_CHOICES, default='pix')
     data_envio = models.DateTimeField(default=now)
     aprovado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.nome_escola} ({self.data_sugerida})"
+        return f"{self.escola.nome} ({self.data_sugerida})"
 
-class PreCadastroEscola(models.Model):
-    nome = models.CharField(max_length=120)
-    email = models.EmailField()
-    cnpj = models.CharField(max_length=18)
-    telefone = models.CharField(max_length=16, default="") 
-    senha = models.CharField(max_length=128)  
-    aprovado = models.BooleanField(default=False)
-    data_cadastro = models.DateTimeField(auto_now_add=True)
 
-def excluir_escola(request, escola_id):
-    escola = get_object_or_404(Escola, id=escola_id)
-    if escola.visita_set.exists() or Pagamento.objects.filter(escola=escola).exists() or Monitor.objects.filter(escola=escola).exists():
-        messages.error(request, "Não é possível excluir a escola porque ela possui visitas, pagamentos ou monitores relacionados.")
-        return redirect('visualizar_dados')
-    try:
-        escola.delete()
-        messages.success(request, "Escola excluída com sucesso!")
-    except ProtectedError:
-        messages.error(request, "Não é possível excluir a escola porque ela está protegida por registros relacionados.")
-    return redirect('visualizar_dados')
-
-def editar_usuario(request, usuario_id):
-    user = get_object_or_404(User, id=usuario_id)
-    if request.method == 'POST':
-        user.username = request.POST.get('username')
-        user.email = request.POST.get('email')
-        password = request.POST.get('password')
-        if password:
-            user.set_password(password)
-        user.save()
-        messages.success(request, "Usuário atualizado com sucesso!")
-        return redirect('listar_usuarios')
-    return render(request, 'core/editar_usuario.html', {'user': user})
 

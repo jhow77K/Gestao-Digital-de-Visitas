@@ -65,17 +65,34 @@
   <h2>Pré-cadastro de Visita Escolar</h2>
   <form method="post">
     {% csrf_token %}
-    <!-- Removido o campo de telefone -->
     <label for="id_data_sugerida">Data sugerida para visita:</label>
-    {{ form.data_sugerida }}
+    <input
+      type="date"
+      name="data_sugerida"
+      id="id_data_sugerida"
+      required
+      min="{{ today }}"
+    />
 
     <label for="id_numero_previsto_criancas"
       >Número previsto de crianças:</label
     >
-    {{ form.numero_previsto_criancas }}
+    <input
+      type="number"
+      name="numero_previsto_criancas"
+      id="id_numero_previsto_criancas"
+      required
+      min="1"
+    />
 
     <label for="id_numero_previsto_adultos">Número previsto de adultos:</label>
-    {{ form.numero_previsto_adultos }}
+    <input
+      type="number"
+      name="numero_previsto_adultos"
+      id="id_numero_previsto_adultos"
+      required
+      min="1"
+    />
 
     <label style="margin-bottom: 10px">Forma de pagamento:</label>
     <div
