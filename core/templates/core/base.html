@@ -86,8 +86,11 @@
       <div class="menu">
         <a href="{% url 'home' %}">Início</a>
         <a href="{% url 'cadastrar_visita' %}">Agendar Visita</a>
+        {% if request.user.is_staff %}
+        <a href="{% url 'admin_dashboard' %}">Visitas Recentes</a>
+        <a href="/admin/">Administração</a>
+        {% endif %}
         <a href="{% url 'logout' %}">Sair</a>
-        <a href="{% url 'politica_cookies' %}">Política de Cookies</a>
       </div>
     </div>
 

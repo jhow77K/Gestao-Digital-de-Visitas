@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.contrib.admin.views.decorators import staff_member_required
 
 def formatar_cnpj(cnpj):
     cnpj = ''.join(filter(str.isdigit, cnpj))
@@ -71,7 +72,10 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            if user.is_staff:
+                return redirect('admin_dashboard')
+            else:
+                return redirect('home')
         else:
             messages.error(request, "Usuário, email ou senha incorretos.")
             return render(request, 'core/login.html')
@@ -134,3 +138,8 @@ def teste_email(request):
         fail_silently=False,
     )
     return HttpResponse('E-mail de teste enviado com sucesso!')
+
+@staff_member_required
+def admin_dashboard(request):
+    visitas_recentes = Visita.objects.order_by('-id')[:10]  # últimas 10 visitas
+    return render(request, 'core/admin_dashboard.html', {'visitas': visitas_recentes})
