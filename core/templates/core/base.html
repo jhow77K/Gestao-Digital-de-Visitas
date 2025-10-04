@@ -55,48 +55,6 @@
         text-decoration: underline;
       }
 
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-
-      .dropdown .dropbtn {
-        background-color: #43a047;
-        color: white;
-        padding: 5px 10px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-      }
-
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #43a047;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-      }
-
-      .dropdown-content a {
-        color: white;
-        padding: 10px 15px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown-content a:hover {
-        background-color: #43a047;
-      }
-
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
-
-      .dropdown:hover .dropbtn {
-        background-color: #43a047;
-      }
-
       .content {
         margin-top: 80px;
         padding: 20px;
@@ -127,20 +85,9 @@
       </div>
       <div class="menu">
         <a href="{% url 'home' %}">Início</a>
-        <a href="{% url 'adicionar_escola' %}">Adicionar Escola</a>
-        <a href="{% url 'adicionar_visita' %}">Adicionar Visita</a>
-        <a href="{% url 'adicionar_pagamento' %}">Adicionar Pagamento</a>
-        <a href="{% url 'adicionar_monitores' %}">Adicionar Monitores</a>
-        <a href="{% url 'visualizar_dados' %}">Visualizar Dados</a>
-        <a href="{% url 'listar_pre_cadastros' %}">Pré-cadastros</a>
-        <div class="dropdown">
-          <button class="dropbtn">Gerenciar Usuários</button>
-          <div class="dropdown-content">
-            <a href="{% url 'listar_usuarios' %}">Listar Usuários</a>
-            <a href="{% url 'adicionar_usuario' %}">Adicionar Usuário</a>
-          </div>
-        </div>
+        <a href="{% url 'cadastrar_visita' %}">Agendar Visita</a>
         <a href="{% url 'logout' %}">Sair</a>
+        <a href="{% url 'politica_cookies' %}">Política de Cookies</a>
       </div>
     </div>
 

@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro de Visita</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'img/logo-fazendinha1.png' %}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7fafc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .visita-container {
+        background: #fff;
+        padding: 38px 28px;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        width: 540px;
+        text-align: center;
+      }
+      .visita-container h2 {
+        margin-bottom: 22px;
+        font-size: 28px;
+        color: #388e3c;
+        letter-spacing: 1px;
+      }
+      .form-row {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 22px;
+        margin-top: 0;
+      }
+      .form-row > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .visita-container label {
+        margin-bottom: 8px;
+        font-weight: 600;
+        text-align: left;
+        color: #333;
+        margin-left: 2px;
+        font-size: 16px;
+      }
+      .visita-container input,
+      .visita-container select,
+      .visita-container textarea {
+        width: 100%;
+        padding: 13px 10px;
+        margin-bottom: 0;
+        border: 1.5px solid #b2dfdb;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #f7fafc;
+        transition: border 0.2s;
+      }
+      .visita-container input:focus,
+      .visita-container select:focus,
+      .visita-container textarea:focus {
+        border: 1.5px solid #43a047;
+        outline: none;
+        background: #fff;
+      }
+      .visita-container button {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+        transition: background 0.2s;
+        margin-top: 10px;
+      }
+      .visita-container button:hover {
+        background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+      }
+      .mensagem-erro {
+        color: #b30000;
+        background: #ffeaea;
+        border: 1px solid #b30000;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 18px;
+        font-size: 15px;
+      }
+      .visita-container a {
+        color: #388e3c;
+        text-decoration: underline;
+        margin-top: 18px;
+        display: inline-block;
+        font-size: 16px;
+      }
+      @media (max-width: 700px) {
+        .visita-container {
+          width: 98vw;
+          padding: 18px 4vw;
+        }
+        .form-row {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="visita-container">
+      <h2>Cadastro de Visita</h2>
+      {% if messages %}
+      <div class="mensagem-erro">
+        {% for message in messages %} {{ message }} {% endfor %}
+      </div>
+      {% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div>
+            <label for="data_sugerida">Data sugerida da visita:</label>
+            <input
+              type="date"
+              name="data_sugerida"
+              id="data_sugerida"
+              required
+            />
+          </div>
+          <div>
+            <label for="periodo">Período:</label>
+            <select name="periodo" id="periodo" required>
+              <option value="">Selecione</option>
+              <option value="manha">Manhã</option>
+              <option value="tarde">Tarde</option>
+              <option value="noite">Noite</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="numero_previsto_criancas"
+              >Nº previsto de crianças:</label
+            >
+            <input
+              type="number"
+              name="numero_previsto_criancas"
+              id="numero_previsto_criancas"
+              min="0"
+              required
+            />
+          </div>
+          <div>
+            <label for="numero_previsto_adultos">Nº previsto de adultos:</label>
+            <input
+              type="number"
+              name="numero_previsto_adultos"
+              id="numero_previsto_adultos"
+              min="0"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="forma_pagamento">Forma de pagamento:</label>
+            <select name="forma_pagamento" id="forma_pagamento" required>
+              <option value="">Selecione</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="pix">Pix</option>
+            </select>
+          </div>
+          <div>
+            <label for="responsavel">Responsável pela visita:</label>
+            <input type="text" name="responsavel" id="responsavel" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="agencia">Agência:</label>
+            <input type="text" name="agencia" id="agencia" />
+          </div>
+          <div>
+            <label for="observacoes">Observações:</label>
+            <textarea name="observacoes" id="observacoes" rows="3"></textarea>
+          </div>
+        </div>
+        <button type="submit">Agendar Visita</button>
+        <a href="{% url 'home' %}">Voltar para o início</a>
+      </form>
+    </div>
+  </body>
+</html>

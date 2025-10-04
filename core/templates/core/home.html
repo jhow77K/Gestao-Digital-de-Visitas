@@ -41,21 +41,21 @@
     background: linear-gradient(90deg, #c8e6c9 0%, #fff 100%);
   }
   .info-card h2 {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: "Roboto", Arial, sans-serif;
     font-size: 2.2em;
     color: #2e7d32;
     margin: 0 0 8px 0;
     font-weight: bold;
     letter-spacing: 1px;
-    text-transform: uppercase; 
+    text-transform: uppercase;
   }
   .info-card p {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: "Roboto", Arial, sans-serif;
     color: #555555;
     font-size: 1.1em;
     margin: 0;
     font-weight: 500;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     letter-spacing: 1px;
   }
 
@@ -191,226 +191,69 @@
 <div class="container">
   <div class="info-cards">
     <div class="info-card">
-      <h2>{{ total_escolas }}</h2>
-      <p>Total de Escolas Cadastradas</p>
+      <h2>{{ escola.nome }}</h2>
+      <p>Sua Escola</p>
     </div>
     <div class="info-card">
-      <h2>{{ visitas_agendadas }}</h2>
+      <h2>{{ visitas|length }}</h2>
       <p>Visitas Agendadas</p>
     </div>
-    <div class="info-card">
-      <h2>{{ visitas_realizadas }}</h2>
-      <p>Visitas Realizadas</p>
-    </div>
-    <div class="info-card">
-      <h2>R$ {{ pagamentos_recebidos|floatformat:2 }}</h2>
-      <p>Total Pagamentos Recebidos</p>
-    </div>
   </div>
 
-<!-- Nova seção Dados do Sistema -->
-<div style="
-  max-width: 1240px;
-  margin: 0 auto 48px auto;
-  padding: 0 8px;
-  background: #f3f4f6;
-  border-radius: 22px;
-  box-shadow: 0 4px 24px rgba(67,160,71,0.07);
-  border: 1.5px solid #e0e0e0;
-">
-  <div style="padding: 0 10px 32px 10px;">
-    <!-- Título e linha decorativa -->
-    <div style="text-align: center; margin: 48px 0 32px 0;">
-      <span style="display: inline-block; font-size: 2em; font-weight: bold; color: #000; letter-spacing: 1px; position: relative;">
-        Dados do Sistema
-      </span>
-      <div style="
-        height: 4px;
-        width: 100%;
-        max-width: 100%;
-        background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
-        margin: 12px auto 0 auto;
-        border-radius: 2px;
-      "></div>
-    </div>
-
-
-    <div style="
+  <div
+    style="
       background: #fff;
       border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(67,160,71,0.06);
+      box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
       padding: 24px 2vw 32px 2vw;
       border: 2px solid #e0e0e0;
-    ">
-
-  <!-- Tabela de Escolas -->
-  <h2 class="subtitulo-centralizado">Últimas Escolas Adicionadas</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Responsável</th>
-        <th>Endereço</th>
-        <th>Telefone</th>
-        <th>Data de Cadastro</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for escola in escolas %}
-      <tr>
-        <td>{{ escola.nome }}</td>
-        <td>{{ escola.responsavel }}</td>
-        <td>{{ escola.endereco }}</td>
-        <td>{{ escola.telefone }}</td>
-        <td>{{ escola.data_cadastro|date:"d/m/Y H:i" }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5">Nenhuma escola cadastrada.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <!-- Tabela de Visitas -->
-  <h2 class="subtitulo-centralizado">Próximas Visitas</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Escola</th>
-        <th>Data</th>
-        <th>Série</th>
-        <th>Clima</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for visita in proximas_visitas %}
-      <tr>
-        <td>{{ visita.escola.nome }}</td>
-        <td>{{ visita.data|date:"d/m/Y" }}</td>
-        <td>{{ visita.serie_alunos }}</td>
-        <td>{{ visita.clima }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4">Nenhuma visita agendada.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <!-- Tabela de Pagamentos -->
-  <h2 class="subtitulo-centralizado">Pagamentos Recentes</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Escola</th>
-        <th>Total</th>
-        <th>Forma de Pagamento</th>
-        <th>Nota Fiscal</th>
-        <th>Número de Crianças Pagantes</th>
-        <th>Número de Adultos Pagantes</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for pagamento in pagamentos %}
-      <tr>
-        <td>{{ pagamento.escola.nome }}</td>
-        <td>R$ {{ pagamento.total|floatformat:2 }}</td>
-        <td>{{ pagamento.forma_pagamento }}</td>
-        <td>{% if pagamento.nota_fiscal %}Sim{% else %}Não{% endif %}</td>
-        <td>{{ pagamento.numero_criancas_pagantes }}</td>
-        <td>{{ pagamento.numero_adultos_pagantes }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="6">Nenhum pagamento registrado.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <!-- Análise Gráfica -->
-  <div style="text-align: center; margin: 48px 0 32px 0;">
-    <span style="display: inline-block; font-size: 2em; font-weight: bold; color: #000; letter-spacing: 1px; position: relative;">
-      Análise Gráfica
-    </span>
-    <div style="
-      height: 4px;
-      width: 100%;
-      max-width: 100%;
-      background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
-      margin: 12px auto 0 auto;
-      border-radius: 2px;
-    "></div>
+    "
+  >
+    <h2 class="subtitulo-centralizado">Suas Visitas Agendadas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Período</th>
+          <th>Responsável</th>
+          <th>Nº Crianças</th>
+          <th>Nº Adultos</th>
+          <th>Forma de Pagamento</th>
+          <th>Agência</th>
+          <th>Observações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for visita in visitas %}
+        <tr>
+          <td>{{ visita.data_sugerida|date:"d/m/Y" }}</td>
+          <td>{{ visita.get_periodo_display }}</td>
+          <td>{{ visita.responsavel }}</td>
+          <td>{{ visita.numero_previsto_criancas }}</td>
+          <td>{{ visita.numero_previsto_adultos }}</td>
+          <td>{{ visita.get_forma_pagamento_display }}</td>
+          <td>{{ visita.agencia }}</td>
+          <td>{{ visita.observacoes }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">Nenhuma visita agendada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a
+      href="{% url 'cadastrar_visita' %}"
+      style="
+        display: inline-block;
+        margin-top: 24px;
+        color: #388e3c;
+        text-decoration: underline;
+        font-weight: bold;
+      "
+    >
+      Agendar nova visita
+    </a>
   </div>
-  <div class="graficos-container">
-    <div class="grafico">
-      <h3>Gráfico de Visitas por Escola</h3>
-      <canvas id="graficoVisitas"></canvas>
-    </div>
-    <div class="grafico">
-      <h3>Gráfico de Pagamentos por Escola</h3>
-      <canvas id="graficoPagamentos"></canvas>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const visitasLabels = [{% for escola in total_visitas_por_escola %}"{{ escola.nome }}",{% endfor %}];
-    const visitasData = [{% for escola in total_visitas_por_escola %}{{ escola.total_visitas }},{% endfor %}];
-
-    new Chart(document.getElementById('graficoVisitas').getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: visitasLabels,
-        datasets: [{
-          label: 'Total de Visitas',
-          data: visitasData,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-
-    const pagamentosLabels = [{% for escola in total_pagamentos_por_escola %}"{{ escola.nome }}",{% endfor %}];
-    const pagamentosData = [{% for escola in total_pagamentos_por_escola %}{{ escola.total_pagamentos|default:0 }},{% endfor %}];
-
-    new Chart(document.getElementById('graficoPagamentos').getContext('2d'), {
-      type: 'pie',
-      data: {
-        labels: pagamentosLabels,
-        datasets: [{
-          label: 'Total de Pagamentos',
-          data: pagamentosData,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true
-      }
-    });
-  </script>
-</div>
-</div>
 </div>
 {% endblock %}

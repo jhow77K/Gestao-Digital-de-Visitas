@@ -3,8 +3,7 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestão Digital de Visitas</title>
+    <title>Login</title>
     <link
       rel="icon"
       type="image/png"
@@ -12,60 +11,27 @@
     />
     <style>
       body {
-        margin: 0;
         font-family: Arial, sans-serif;
-        height: 100vh;
-        background-image: url("/static/img/bg-fazendinha4.png");
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-attachment: fixed;
-        background-size: cover;
+        background: #f7fafc;
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative;
-        overflow: hidden;
-        transition: background-image 1s;
+        height: 100vh;
       }
-
-      .titulo-fundo {
-        position: fixed;
-        top: 40px;
-        left: 0;
-        width: 100vw;
-        text-align: center;
-        font-size: 4vw;
-        font-family: Arial, sans-serif;
-        font-weight: bold;
-        color: #fff;
-        text-shadow: 0 2px 8px #171818;
-        z-index: 0;
-        margin: 0;
-        pointer-events: none;
-        user-select: none;
-      }
-
       .login-container {
-        background: rgba(255, 255, 255, 0.97);
-        padding: 38px 28px 28px 28px;
+        background: #fff;
+        padding: 38px 28px;
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
         width: 340px;
         text-align: center;
-        z-index: 1;
-        position: relative;
       }
-      .login-container:hover {
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
-      }
-
       .login-container h2 {
         margin-bottom: 22px;
         font-size: 28px;
-        color: #000;
+        color: #388e3c;
         letter-spacing: 1px;
       }
-
       .login-container label {
         display: block;
         margin-bottom: 6px;
@@ -73,7 +39,6 @@
         text-align: left;
         color: #333;
       }
-
       .login-container input {
         width: 100%;
         padding: 11px;
@@ -89,7 +54,6 @@
         outline: none;
         background: #fff;
       }
-
       .login-container button {
         width: 100%;
         padding: 12px;
@@ -107,8 +71,7 @@
       .login-container button:hover {
         background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
       }
-
-      .login-container .mensagem-erro {
+      .mensagem-erro {
         color: #b30000;
         background: #ffeaea;
         border: 1px solid #b30000;
@@ -117,34 +80,9 @@
         margin-bottom: 18px;
         font-size: 15px;
       }
-
-      /* Onda branca */
-      .wave-bottom {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        line-height: 0;
-        z-index: 0;
-      }
-      .wave-bottom svg {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-
-      @media (max-width: 480px) {
-        .login-container {
-          width: 95vw;
-          padding: 22px 6vw;
-        }
-      }
     </style>
   </head>
   <body>
-    <!-- Título fixo no topo, atrás dos formulários -->
-    <h1 class="titulo-fundo">Gestão de Visitas Escolares</h1>
-
     <div class="login-container">
       <h2>Login</h2>
       {% if messages %}
@@ -161,162 +99,18 @@
         <input type="password" name="password" id="password" required />
 
         <button type="submit">Entrar</button>
-      </form>
-
-      <div
-        style="
-          margin: 22px 0 0 0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        "
-      >
-        <div
-          style="
-            width: 100%;
-            text-align: center;
-            margin: 18px 0 8px 0;
-            color: #888;
-            font-size: 15px;
-          "
-        >
-          <span
-            style="
-              display: inline-block;
-              width: 40%;
-              border-bottom: 1px solid #e0e0e0;
-              vertical-align: middle;
-            "
-          ></span>
-          <span style="margin: 0 12px">OU</span>
-          <span
-            style="
-              display: inline-block;
-              width: 40%;
-              border-bottom: 1px solid #e0e0e0;
-              vertical-align: middle;
-            "
-          ></span>
-        </div>
         <a
           href="{% url 'cadastro_escola' %}"
           style="
-            margin-top: 10px;
+            display: block;
+            margin-top: 18px;
             color: #388e3c;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 16px;
+            text-decoration: underline;
           "
         >
-          Não tem uma conta?
-          <span style="text-decoration: underline">Cadastre-se</span>
+          Cadastre sua escola
         </a>
-      </div>
+      </form>
     </div>
-
-    <div
-      id="modal-cadastro"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.35);
-        z-index: 99;
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          padding: 32px 24px;
-          border-radius: 12px;
-          width: 340px;
-          margin: auto;
-          position: relative;
-        "
-      >
-        <h2 style="margin-bottom: 18px">Cadastro de Escola</h2>
-        {% if cadastro_messages %}
-        <div class="mensagem-erro">
-          {% for message in cadastro_messages %} {{ message }} {% endfor %}
-        </div>
-        {% endif %}
-        <form method="post" action="{% url 'cadastro_escola' %}">
-          {% csrf_token %}
-          <label for="nome_escola">Nome da Escola:</label>
-          <input type="text" name="nome_escola" id="nome_escola" required />
-
-          <label for="email_escola">E-mail:</label>
-          <input type="email" name="email_escola" id="email_escola" required />
-
-          <label for="cnpj_escola">CNPJ:</label>
-          <input
-            type="text"
-            name="cnpj_escola"
-            id="cnpj_escola"
-            required
-            maxlength="18"
-          />
-
-          <label for="senha_escola">Senha:</label>
-          <input
-            type="password"
-            name="senha_escola"
-            id="senha_escola"
-            required
-          />
-
-          <button type="submit" style="margin-top: 14px">Cadastrar</button>
-          <button
-            type="button"
-            onclick="document.getElementById('modal-cadastro').style.display='none'"
-            style="margin-top: 8px; background: #ccc; color: #333"
-          >
-            Cancelar
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Onda SVG branca -->
-    <div class="wave-bottom">
-      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-        <path
-          fill="#ffffff"
-          d="M0,224L48,197.3C96,171,192,117,288,117.3C384,117,480,171,576,202.7C672,235,768,245,864,240C960,235,1056,213,1152,186.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        ></path>
-      </svg>
-    </div>
-
-    <script>
-      document
-        .getElementById("username")
-        .addEventListener("input", function () {
-          this.value = this.value.replace(/[^a-zA-Z0-9@._\-]/g, "");
-        });
-      document
-        .getElementById("password")
-        .addEventListener("input", function () {
-          this.value = this.value.replace(
-            /[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g,
-            ""
-          );
-        });
-
-      const imagens = [
-        "/static/img/bg-fazendinha4.png",
-        "/static/img/bg-fazendinha5.png",
-        "/static/img/bg-fazendinha6.png",
-      ];
-      let index = 0;
-      setInterval(() => {
-        index = (index + 1) % imagens.length;
-        document.body.style.backgroundImage = `url('${imagens[index]}')`;
-      }, 2500);
-    </script>
   </body>
 </html>

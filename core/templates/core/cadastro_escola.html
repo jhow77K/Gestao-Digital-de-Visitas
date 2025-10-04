@@ -23,29 +23,42 @@
         padding: 38px 28px;
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-        width: 340px;
+        width: 560px;
         text-align: center;
       }
       .cadastro-container h2 {
-        margin-bottom: 22px;
-        font-size: 28px;
+        margin-bottom: 32px;
+        font-size: 34px;
         color: #388e3c;
         letter-spacing: 1px;
+        font-weight: bold;
+      }
+      .form-row {
+        display: flex;
+        gap: 32px;
+        margin-bottom: 26px;
+        margin-top: 0;
+      }
+      .form-row > div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
       }
       .cadastro-container label {
-        display: block;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         font-weight: 600;
         text-align: left;
-        color: #333;
+        color: #388e3c;
+        margin-left: 2px;
+        font-size: 17px;
       }
       .cadastro-container input {
         width: 100%;
-        padding: 11px;
-        margin-bottom: 18px;
+        padding: 16px 12px;
+        margin-bottom: 0;
         border: 1.5px solid #b2dfdb;
         border-radius: 6px;
-        font-size: 15px;
+        font-size: 16px;
         background: #f7fafc;
         transition: border 0.2s;
       }
@@ -56,17 +69,18 @@
       }
       .cadastro-container button {
         width: 100%;
-        padding: 12px;
+        padding: 16px;
         background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
         color: #fff;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        font-size: 17px;
+        font-size: 20px;
         font-weight: bold;
         letter-spacing: 1px;
         box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
         transition: background 0.2s;
+        margin-top: 18px;
       }
       .cadastro-container button:hover {
         background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
@@ -80,12 +94,28 @@
         margin-bottom: 18px;
         font-size: 15px;
       }
+      .cadastro-container a {
+        color: #388e3c;
+        text-decoration: underline;
+        margin-top: 18px;
+        display: inline-block;
+        font-size: 17px;
+      }
+      @media (max-width: 700px) {
+        .cadastro-container {
+          width: 98vw;
+          padding: 18px 4vw;
+        }
+        .form-row {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="cadastro-container">
       <h2>Cadastro de Escola</h2>
-      </p>
       {% if messages %}
       <div class="mensagem-erro">
         {% for message in messages %} {{ message }} {% endfor %}
@@ -93,66 +123,116 @@
       {% endif %}
       <form method="post">
         {% csrf_token %}
-        <label for="nome_escola"
-          >Nome da Escola: <span style="color: #b30000">*</span></label
-        >
-        <input type="text" name="nome_escola" id="nome_escola" required />
-
-        <label for="email_escola"
-          >E-mail: <span style="color: #b30000">*</span></label
-        >
-        <input type="email" name="email_escola" id="email_escola" required />
-
-        <label for="cnpj_escola"
-          >CNPJ: <span style="color: #b30000">*</span></label
-        >
-        <input
-          type="text"
-          name="cnpj_escola"
-          id="cnpj_escola"
-          required
-          maxlength="18"
-        />
-
-        <label for="telefone_escola"
-          >Telefone: <span style="color: #b30000">*</span></label
-        >
-        <input
-          type="text"
-          name="telefone_escola"
-          id="telefone_escola"
-          required
-          maxlength="16"
-        />
-
-        <label for="senha_escola"
-          >Senha: <span style="color: #b30000">*</span></label
-        >
-        <input type="password" name="senha_escola" id="senha_escola" required />
-
+        <div class="form-row">
+          <div>
+            <label for="nome"
+              >Nome da Escola: <span style="color: #b30000">*</span></label
+            >
+            <input type="text" name="nome" id="nome" required />
+          </div>
+          <div>
+            <label for="cep">CEP: <span style="color: #b30000">*</span></label>
+            <input type="text" name="cep" id="cep" required maxlength="9" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="endereco"
+              >Endereço: <span style="color: #b30000">*</span></label
+            >
+            <input type="text" name="endereco" id="endereco" required />
+          </div>
+          <div>
+            <label for="bairro"
+              >Bairro: <span style="color: #b30000">*</span></label
+            >
+            <input type="text" name="bairro" id="bairro" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="cidade"
+              >Cidade: <span style="color: #b30000">*</span></label
+            >
+            <input type="text" name="cidade" id="cidade" required />
+          </div>
+          <div>
+            <label for="estado"
+              >Estado (UF): <span style="color: #b30000">*</span></label
+            >
+            <input
+              type="text"
+              name="estado"
+              id="estado"
+              required
+              maxlength="2"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="telefone"
+              >Telefone: <span style="color: #b30000">*</span></label
+            >
+            <input
+              type="text"
+              name="telefone"
+              id="telefone"
+              required
+              maxlength="16"
+            />
+          </div>
+          <div>
+            <label for="email"
+              >E-mail: <span style="color: #b30000">*</span></label
+            >
+            <input type="email" name="email" id="email" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="cnpj"
+              >CNPJ: <span style="color: #b30000">*</span></label
+            >
+            <input type="text" name="cnpj" id="cnpj" required maxlength="18" />
+          </div>
+          <div>
+            <label for="senha"
+              >Senha: <span style="color: #b30000">*</span></label
+            >
+            <input type="password" name="senha" id="senha" required />
+          </div>
+        </div>
         <p
           style="
-            color: #333;
+            color: #b30000;
             font-size: 15px;
             margin-bottom: 12px;
             margin-top: -8px;
           "
         >
-          <span style="color: #b30000">*</span> Campos obrigatórios
+          * Campos obrigatórios
         </p>
-
-        <button type="submit" style="margin-top: 14px">Cadastrar</button>
-        <a
-          href="{% url 'login' %}"
-          style="
-            display: block;
-            margin-top: 18px;
-            color: #388e3c;
-            text-decoration: underline;
-          "
-          >Voltar ao Login</a
-        >
+        <button type="submit">Cadastrar</button>
+        <a href="{% url 'login' %}">Voltar ao Login</a>
       </form>
     </div>
+    <script>
+      document.getElementById("cep").addEventListener("blur", function () {
+        var cep = this.value.replace(/\D/g, "");
+        if (cep.length === 8) {
+          fetch("https://viacep.com.br/ws/" + cep + "/json/")
+            .then((response) => response.json())
+            .then((data) => {
+              if (!data.erro) {
+                document.getElementById("endereco").value = data.logradouro;
+                document.getElementById("bairro").value = data.bairro;
+                document.getElementById("cidade").value = data.localidade;
+                document.getElementById("estado").value = data.uf;
+              }
+            });
+        }
+      });
+    </script>
   </body>
 </html>

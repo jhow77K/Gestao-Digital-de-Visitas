@@ -11,31 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='precadastrovisita',
-            name='cnpj',
-        ),
-        migrations.RemoveField(
-            model_name='precadastrovisita',
-            name='email',
-        ),
-        migrations.RemoveField(
-            model_name='precadastrovisita',
-            name='nome_escola',
-        ),
-        migrations.RemoveField(
-            model_name='precadastrovisita',
-            name='telefone',
-        ),
-        migrations.AddField(
-            model_name='precadastroescola',
-            name='telefone',
-            field=models.CharField(default='', max_length=16),
-        ),
         migrations.AddField(
             model_name='precadastrovisita',
             name='escola',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='pre_cadastros_visita', to='core.precadastroescola'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='pre_cadastros_visita', to='core.precadastroescola'),
             preserve_default=False,
         ),
     ]
