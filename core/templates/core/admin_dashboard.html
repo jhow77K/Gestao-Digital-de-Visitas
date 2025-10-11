@@ -76,6 +76,9 @@
       <th>Forma de Pagamento</th>
       <th>Agência</th>
       <th>Observações</th>
+      <th>Status</th>
+      <th>Feedback</th>
+      <th>Ações</th>
     </tr>
     {% for visita in visitas %}
     <tr>
@@ -88,6 +91,23 @@
       <td>{{ visita.forma_pagamento }}</td>
       <td>{{ visita.agencia }}</td>
       <td>{{ visita.observacoes }}</td>
+      <form method="post" action="{% url 'atualizar_status_visita' visita.id %}">
+        {% csrf_token %}
+        <td>
+          <select name="status">
+            <option value="SOLICITADO" {% if visita.status == 'SOLICITADO' %}selected{% endif %}>Solicitado</option>
+            <option value="CONFIRMADO" {% if visita.status == 'CONFIRMADO' %}selected{% endif %}>Confirmado</option>
+            <option value="REALIZADO" {% if visita.status == 'REALIZADO' %}selected{% endif %}>Realizado</option>
+            <option value="CANCELADO" {% if visita.status == 'CANCELADO' %}selected{% endif %}>Cancelado</option>
+          </select>
+        </td>
+        <td>
+          <textarea name="feedback" rows="2" style="width: 100%;" placeholder="Adicionar feedback...">{{ visita.feedback }}</textarea>
+        </td>
+        <td>
+          <button type="submit">Salvar</button>
+        </td>
+      </form>
     </tr>
     {% endfor %}
   </table>

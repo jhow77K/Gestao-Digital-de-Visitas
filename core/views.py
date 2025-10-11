@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 from django.contrib.admin.views.decorators import staff_member_required
+from datetime import datetime, time, timedelta
 
 def formatar_cnpj(cnpj):
     cnpj = ''.join(filter(str.isdigit, cnpj))
@@ -98,36 +100,46 @@ def home(request):
 
 @login_required
 def cadastrar_visita(request):
-    try:
-        escola = Escola.objects.get(email=request.user.email)
-    except Escola.DoesNotExist:
-        messages.error(request, "Escola não encontrada para este usuário.")
-        return redirect('login')
+    escola = Escola.objects.get(email=request.user.email)
+    data_escolhida = request.GET.get('data')
+    if not data_escolhida:
+        data_escolhida = datetime.now().date().strftime('%Y-%m-%d')
+
+    # Horários das 10:00 às 17:00
+    horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
+
+    # Busca visitas já agendadas para o dia
+    visitas_data = Visita.objects.filter(data_sugerida=data_escolhida)
+    horarios_ocupados = set(visita.periodo for visita in visitas_data)
+    horarios_lista = []
+    for h in horarios:
+        status = 'agendado' if h in horarios_ocupados else 'disponivel'
+        horarios_lista.append({'hora': h, 'status': status})
 
     if request.method == 'POST':
         data_sugerida = request.POST.get('data_sugerida')
-        numero_previsto_criancas = request.POST.get('numero_previsto_criancas')
-        numero_previsto_adultos = request.POST.get('numero_previsto_adultos')
-        forma_pagamento = request.POST.get('forma_pagamento')
         periodo = request.POST.get('periodo')
-        responsavel = request.POST.get('responsavel')
-        agencia = request.POST.get('agencia')
-        observacoes = request.POST.get('observacoes')
+        if periodo in horarios_ocupados:
+            messages.error(request, "Esse horário já está agendado para outra escola!")
+        else:
+            Visita.objects.create(
+                escola=escola,
+                data_sugerida=data_sugerida,
+                periodo=periodo,
+                numero_previsto_criancas=request.POST.get('numero_previsto_criancas'),
+                numero_previsto_adultos=request.POST.get('numero_previsto_adultos'),
+                forma_pagamento=request.POST.get('forma_pagamento'),
+                responsavel=request.POST.get('responsavel'),
+                agencia=request.POST.get('agencia'),
+                observacoes=request.POST.get('observacoes'),
+            )
+            messages.success(request, "Visita agendada com sucesso!")
+            return redirect('acompanhamento_visitas')
 
-        Visita.objects.create(
-            escola=escola,
-            data_sugerida=data_sugerida,
-            numero_previsto_criancas=numero_previsto_criancas,
-            numero_previsto_adultos=numero_previsto_adultos,
-            forma_pagamento=forma_pagamento,
-            periodo=periodo,
-            responsavel=responsavel,
-            agencia=agencia,
-            observacoes=observacoes
-        )
-        messages.success(request, "Visita agendada com sucesso!")
-        return redirect('home')
-    return render(request, 'core/cadastrar_visita.html')
+    return render(request, 'core/cadastrar_visita.html', {
+        'data_escolhida': data_escolhida,
+        'horarios_lista': horarios_lista,
+    })
 
 def teste_email(request):
     send_mail(
@@ -141,5 +153,31 @@ def teste_email(request):
 
 @staff_member_required
 def admin_dashboard(request):
-    visitas_recentes = Visita.objects.order_by('-id')[:10]  # últimas 10 visitas
+    visitas_recentes = Visita.objects.order_by('-id')[:10]
     return render(request, 'core/admin_dashboard.html', {'visitas': visitas_recentes})
+
+@login_required
+def acompanhamento_visitas(request):
+    escola = Escola.objects.get(email=request.user.email)
+    visitas = Visita.objects.filter(escola=escola).order_by('-id')
+    horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
+    return render(request, 'core/acompanhamento_visitas.html', {
+        'visitas': visitas,
+        'horarios': horarios,
+    })
+
+@staff_member_required
+@require_POST
+def atualizar_status_visita(request, visita_id):
+    visita = get_object_or_404(Visita, id=visita_id)
+    novo_status = request.POST.get('status')
+    novo_feedback = request.POST.get('feedback', '')
+    if novo_status in dict(Visita.STATUS_CHOICES):
+        visita.status = novo_status
+        visita.feedback = novo_feedback
+        visita.save()
+        messages.success(request, "Status e feedback atualizados com sucesso!")
+    else:
+        messages.error(request, "Status inválido.")
+    return redirect('admin_dashboard')
+

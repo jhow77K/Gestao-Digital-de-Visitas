@@ -29,19 +29,41 @@ class Escola(models.Model):
         return self.nome
 
 class Visita(models.Model):
+    STATUS_CHOICES = [
+        ('SOLICITADO', 'Solicitado'),
+        ('CONFIRMADO', 'Confirmado'),
+        ('REALIZADO', 'Realizado'),
+        ('CANCELADO', 'Cancelado'),
+    ]
+    HORARIO_CHOICES = [
+        ('10:00', '10:00'),
+        ('11:00', '11:00'),
+        ('12:00', '12:00'),
+        ('13:00', '13:00'),
+        ('14:00', '14:00'),
+        ('15:00', '15:00'),
+        ('16:00', '16:00'),
+        ('17:00', '17:00'),
+    ]
+    AGENCIA_CHOICES = [
+        ('Sim', 'Sim'),
+        ('Não', 'Não'),
+    ]
     escola = models.ForeignKey(Escola, on_delete=models.PROTECT)
     data_sugerida = models.DateField()
     numero_previsto_criancas = models.IntegerField()
     numero_previsto_adultos = models.IntegerField()
     forma_pagamento = models.CharField(max_length=20, choices=[('dinheiro', 'Dinheiro'), ('pix', 'Pix')])
-    periodo = models.CharField(max_length=10, choices=[('manha', 'Manhã'), ('tarde', 'Tarde'), ('noite', 'Noite')])
+    periodo = models.CharField(max_length=5, choices=HORARIO_CHOICES)  # agora armazena o horário
     responsavel = models.CharField(max_length=255)
-    agencia = models.CharField(max_length=255, blank=True, null=True)
+    agencia = models.CharField(max_length=3, choices=AGENCIA_CHOICES)  # agora só aceita Sim/Não
     observacoes = models.TextField(blank=True, null=True)
     feita = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SOLICITADO')
+    feedback = models.TextField(blank=True)
 
     def __str__(self):
-        return f"Visita à {self.escola.nome} em {self.data_sugerida}"
+        return f"Visita à {self.escola.nome} em {self.data_sugerida} às {self.periodo}"
 
 class Pagamento(models.Model):
     escola = models.ForeignKey(Escola, on_delete=models.SET_NULL, null=True, blank=True)

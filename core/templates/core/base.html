@@ -86,6 +86,7 @@
       <div class="menu">
         <a href="{% url 'home' %}">Início</a>
         <a href="{% url 'cadastrar_visita' %}">Agendar Visita</a>
+        <a href="{% url 'acompanhamento_visitas' %}">Acompanhamento</a>
         {% if request.user.is_staff %}
         <a href="{% url 'admin_dashboard' %}">Visitas Recentes</a>
         <a href="/admin/">Administração</a>
@@ -125,33 +126,63 @@
         right: 0;
         background: #43a047;
         color: #fff;
-        padding: 16px;
-        text-align: center;
+        padding: 8px 0;
         z-index: 9999;
+        font-size: 1rem;
+        border-radius: 8px;
       "
     >
-      Este site utiliza cookies para garantir o funcionamento correto e melhorar
-      sua experiência. Ao continuar navegando, você concorda com nossa
-      <a
-        href="{% url 'politica_cookies' %}"
-        style="color: rgb(0, 0, 0)"
-        target="_blank"
-        >Política de Cookies</a
-      >.
-      <button
-        onclick="aceitarCookies()"
+      <div
         style="
-          margin-left: 20px;
-          padding: 6px 18px;
-          border: none;
-          background: rgb(0, 0, 0);
-          color: #fff;
-          border-radius: 4px;
-          font-weight: bold;
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 16px;
+          padding: 0 24px;
         "
       >
-        Aceitar
-      </button>
+        <span style="white-space: nowrap">
+          Este site utiliza cookies para garantir o funcionamento correto e
+          melhorar sua experiência. Ao continuar navegando, você concorda com
+          nossa
+          <a
+            href="{% url 'politica_cookies' %}"
+            style="
+              color: #fff;
+              font-size: 0.98rem;
+              font-weight: bold;
+              text-decoration: underline;
+              margin-left: 4px;
+              white-space: nowrap;
+              padding: 0;
+              background: none;
+              border: none;
+              display: inline;
+            "
+            target="_blank"
+            >Política de Cookies</a
+          >.
+        </span>
+        <button
+          onclick="aceitarCookies()"
+          style="
+            margin-left: 10px;
+            padding: 5px 16px;
+            border: none;
+            background: #222;
+            color: #fff;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 0.98rem;
+            white-space: nowrap;
+          "
+        >
+          Aceitar
+        </button>
+      </div>
     </div>
     <script>
       function aceitarCookies() {
