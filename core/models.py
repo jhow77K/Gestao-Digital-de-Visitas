@@ -54,13 +54,14 @@ class Visita(models.Model):
     numero_previsto_criancas = models.IntegerField()
     numero_previsto_adultos = models.IntegerField()
     forma_pagamento = models.CharField(max_length=20, choices=[('dinheiro', 'Dinheiro'), ('pix', 'Pix')])
-    periodo = models.CharField(max_length=5, choices=HORARIO_CHOICES)  # agora armazena o horário
+    periodo = models.CharField(max_length=5, choices=HORARIO_CHOICES)
     responsavel = models.CharField(max_length=255)
-    agencia = models.CharField(max_length=3, choices=AGENCIA_CHOICES)  # agora só aceita Sim/Não
+    agencia = models.CharField(max_length=3, choices=AGENCIA_CHOICES) 
     observacoes = models.TextField(blank=True, null=True)
     feita = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SOLICITADO')
     feedback = models.TextField(blank=True)
+    horario = models.TimeField(null=True, blank=True)  # Novo campo para horário exato
 
     def __str__(self):
         return f"Visita à {self.escola.nome} em {self.data_sugerida} às {self.periodo}"

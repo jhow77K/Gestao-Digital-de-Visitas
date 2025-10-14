@@ -105,27 +105,33 @@ def cadastrar_visita(request):
     if not data_escolhida:
         data_escolhida = datetime.now().date().strftime('%Y-%m-%d')
 
-    # Horários das 10:00 às 17:00
     horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
-
-    # Busca visitas já agendadas para o dia
     visitas_data = Visita.objects.filter(data_sugerida=data_escolhida)
     horarios_ocupados = set(visita.periodo for visita in visitas_data)
     horarios_lista = []
     for h in horarios:
-        status = 'agendado' if h in horarios_ocupados else 'disponivel'
+        status = 'reservado' if h in horarios_ocupados else 'disponivel'
         horarios_lista.append({'hora': h, 'status': status})
 
     if request.method == 'POST':
-        data_sugerida = request.POST.get('data_sugerida')
         periodo = request.POST.get('periodo')
+        data_sugerida = request.POST.get('data_sugerida')
+        # Novo: converte o horário para objeto time
+        horario_obj = None
+        if periodo:
+            try:
+                horario_obj = datetime.strptime(periodo, "%H:%M").time()
+            except ValueError:
+                horario_obj = None
+
         if periodo in horarios_ocupados:
-            messages.error(request, "Esse horário já está agendado para outra escola!")
+            messages.error(request, "Esse horário já está reservado!")
         else:
             Visita.objects.create(
                 escola=escola,
                 data_sugerida=data_sugerida,
                 periodo=periodo,
+                horario=horario_obj,  # <-- salva o horário no novo campo
                 numero_previsto_criancas=request.POST.get('numero_previsto_criancas'),
                 numero_previsto_adultos=request.POST.get('numero_previsto_adultos'),
                 forma_pagamento=request.POST.get('forma_pagamento'),
