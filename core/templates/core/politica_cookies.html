@@ -1,75 +1,134 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <title>Gestão Digital de Visitas</title>
-    <link rel="icon" type="image/png" href=\static\img\logo-fazendinha1.png>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'img/logo-fazendinha1.png' %}"
+    />
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 40px auto;
+        font-family: "Inter", Arial, sans-serif;
+        background: #f7fafc;
+        color: #234d20;
+        margin: 0;
+        padding: 0;
+      }
+      .cookie-container {
         max-width: 700px;
-        background: #f9f9f9;
-        color: #222;
-        padding: 24px;
-        border-radius: 8px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        margin: 50px auto 0 auto;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 6px 32px rgba(56, 142, 60, 0.13);
+        padding: 32px 40px 28px 40px; 
       }
       h1 {
-        color: #43a047;
+        color: #388e3c;
         text-align: center;
+        font-size: 2.1rem;
+        font-weight: bold;
+        margin-bottom: 24px;
+        letter-spacing: 1px;
+      }
+      h2 {
+        color: #388e3c;
+        font-size: 1.2rem;
+        margin-top: 28px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      ul {
+        margin-left: 18px;
+        margin-bottom: 18px;
+      }
+      li {
+        margin-bottom: 10px;
+        font-size: 1rem;
       }
       a {
-        color: #43a047;
+        color: #388e3c;
+        font-weight: bold;
+        text-decoration: underline;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: #8bc34a;
+      }
+      .cookie-container p {
+        font-size: 1.05rem;
+        margin-bottom: 14px;
+      }
+      .cookie-btn {
+        display: block;
+        margin: 32px auto 0 auto;
+        background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 32px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(56, 142, 60, 0.1);
+        transition: background 0.2s;
+        text-align: center;
+      }
+      .cookie-btn:hover {
+        background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+        color: #234d20;
       }
     </style>
   </head>
   <body>
-    <h1>Política de Cookies</h1>
-    <p>
-      Este site utiliza cookies para melhorar sua experiência, garantir o
-      funcionamento correto do sistema e coletar informações estatísticas de
-      uso.
-    </p>
-    <h2>O que são cookies?</h2>
-    <p>
-      Cookies são pequenos arquivos de texto armazenados no seu navegador quando
-      você acessa um site. Eles servem para lembrar suas preferências, manter
-      você autenticado e ajudar a entender como o site está sendo utilizado.
-    </p>
-    <h2>Como usamos cookies?</h2>
-    <ul>
-      <li>
-        <strong>Cookies essenciais:</strong> Necessários para o funcionamento do
-        sistema, como autenticação e segurança (ex: CSRF).
-      </li>
-      <li>
-        <strong>Cookies de desempenho:</strong> Utilizados para análise de uso e
-        melhoria do site.
-      </li>
-      <li>
-        <strong>Cookies de preferências:</strong> Guardam suas escolhas e
-        preferências no sistema.
-      </li>
-    </ul>
-    <h2>Gerenciamento de cookies</h2>
-    <p>
-      Você pode, a qualquer momento, bloquear ou apagar cookies nas
-      configurações do seu navegador. No entanto, isso pode afetar o
-      funcionamento do sistema.
-    </p>
-    <p>
-      Ao continuar navegando neste site, você concorda com o uso de cookies
-      conforme esta política.
-    </p>
-    <p>
-      Para mais informações, entre em contato com a equipe responsável pelo
-      sistema.
-    </p>
-    <p style="text-align: center">
-      <a href="{% url 'home' %}" onclick="window.close(); return false;"
+    <div class="cookie-container">
+      <h1>Política de Cookies</h1>
+      <p>
+        Este site utiliza cookies para melhorar sua experiência, garantir o
+        funcionamento correto do sistema e coletar informações estatísticas de
+        uso.
+      </p>
+      <h2>O que são cookies?</h2>
+      <p>
+        Cookies são pequenos arquivos de texto armazenados no seu navegador
+        quando você acessa um site. Eles servem para lembrar suas preferências,
+        manter você autenticado e ajudar a entender como o site está sendo
+        utilizado.
+      </p>
+      <h2>Como usamos cookies?</h2>
+      <ul>
+        <li>
+          <strong>Cookies essenciais:</strong> Necessários para o funcionamento
+          do sistema, como autenticação e segurança (ex: CSRF).
+        </li>
+        <li>
+          <strong>Cookies de desempenho:</strong> Utilizados para análise de uso
+          e melhoria do site.
+        </li>
+        <li>
+          <strong>Cookies de preferências:</strong> Guardam suas escolhas e
+          preferências no sistema.
+        </li>
+      </ul>
+      <h2>Gerenciamento de cookies</h2>
+      <p>
+        Você pode, a qualquer momento, bloquear ou apagar cookies nas
+        configurações do seu navegador. No entanto, isso pode afetar o
+        funcionamento do sistema.
+      </p>
+      <p>
+        Ao continuar navegando neste site, você concorda com o uso de cookies
+        conforme esta política.
+      </p>
+      <p>
+        Para mais informações, entre em contato com a equipe responsável pelo
+        sistema.
+      </p>
+      <a href="{% url 'home' %}" class="cookie-btn"
         >Fechar e Voltar para o início</a
       >
-    </p>
+    </div>
   </body>
 </html>

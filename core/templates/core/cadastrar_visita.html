@@ -5,32 +5,32 @@
   }
   .flex-container {
     display: flex;
-    gap: 24px;
     justify-content: center;
     align-items: flex-start;
     margin-top: 40px;
+    margin-bottom: 40px;
   }
   .visita-container {
     background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(80, 80, 80, 0.1);
-    padding: 28px 22px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(56, 142, 60, 0.1);
+    padding: 36px 32px 32px 32px;
     width: 440px;
     min-width: 280px;
-    border: 1px solid #e0e0e0;
+    border: 2px solid #c5e1a5;
   }
   .visita-container h2 {
-    color: #222;
-    font-size: 1.7rem;
+    color: #388e3c;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
     letter-spacing: 1px;
     text-align: center;
   }
   .form-row {
     display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 14px;
+    margin-bottom: 16px;
   }
   .form-row > div {
     flex: 1;
@@ -38,10 +38,11 @@
     flex-direction: column;
   }
   label {
-    color: #555;
-    font-size: 0.98rem;
+    color: #388e3c;
+    font-size: 1rem;
     margin-bottom: 4px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.5px;
   }
   input[type="number"],
   input[type="text"],
@@ -51,9 +52,9 @@
     background: #f5f5f5;
     border: 1px solid #bdbdbd;
     border-radius: 7px;
-    padding: 8px;
-    font-size: 0.98rem;
-    color: #222;
+    padding: 10px;
+    font-size: 1rem;
+    color: #234d20;
     margin-bottom: 2px;
     transition: border 0.2s;
   }
@@ -62,63 +63,67 @@
   select:focus,
   textarea:focus,
   input[type="date"]:focus {
-    border: 1.5px solid #757575;
+    border: 1.5px solid #388e3c;
     outline: none;
   }
   textarea {
     resize: none;
   }
   button[type="submit"] {
-    background: linear-gradient(90deg, #757575 0%, #333 100%);
+    background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
     color: #fff;
     border: none;
     border-radius: 7px;
-    padding: 10px 0;
-    font-size: 1rem;
+    padding: 12px 0;
+    font-size: 1.08rem;
     font-weight: 700;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 14px;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(80, 80, 80, 0.07);
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.07);
     transition: background 0.2s;
   }
   button[type="submit"]:hover {
-    background: linear-gradient(90deg, #333 0%, #757575 100%);
+    background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+    color: #234d20;
   }
   a {
     display: block;
     text-align: center;
-    margin-top: 10px;
-    color: #757575;
-    text-decoration: none;
-    font-size: 0.98rem;
-    font-weight: 500;
+    margin-top: 12px;
+    color: #388e3c;
+    text-decoration: underline;
+    font-size: 1rem;
+    font-weight: 600;
     transition: color 0.2s;
   }
   a:hover {
-    color: #333;
+    color: #8bc34a;
     text-decoration: underline;
   }
   .mensagem-erro {
-    background: #f2f2f2;
+    background: #e8f5e9;
     color: #b71c1c;
     border-radius: 7px;
-    padding: 8px 12px;
-    margin-bottom: 12px;
-    font-size: 0.98rem;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 1rem;
     text-align: center;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #c5e1a5;
   }
   @media (max-width: 1000px) {
     .flex-container {
       flex-direction: column;
-      gap: 12px;
       align-items: center;
     }
     .visita-container {
       width: 98vw;
       min-width: unset;
-      padding: 12px 3vw;
+      padding: 18px 3vw;
+    }
+    .form-row {
+      flex-direction: column;
+      gap: 8px;
     }
   }
 </style>
@@ -193,12 +198,7 @@
         </div>
         <div>
           <label for="observacoes">Observações:</label>
-          <textarea
-            name="observacoes"
-            id="observacoes"
-            rows="3"
-            style="resize: none"
-          ></textarea>
+          <textarea name="observacoes" id="observacoes" rows="3"></textarea>
         </div>
       </div>
       <button type="submit">Agendar Visita</button>
@@ -206,6 +206,4 @@
     </form>
   </div>
 </div>
-<script>
-</script>
 {% endblock %}

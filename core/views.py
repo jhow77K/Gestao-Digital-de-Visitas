@@ -90,13 +90,16 @@ def logout_view(request):
 
 @login_required
 def home(request):
-    escola = Escola.objects.filter(email=request.user.email).first()
-    visitas = Visita.objects.filter(escola=escola) if escola else []
-    context = {
+    escola = Escola.objects.get(email=request.user.email)
+    visitas = Visita.objects.filter(escola=escola).order_by('data_sugerida')
+    visitas_agendadas = visitas.filter(status='CONFIRMADO').count()
+    visitas_concluidas = visitas.filter(status='REALIZADO').count()
+    return render(request, 'core/home.html', {
         'escola': escola,
         'visitas': visitas,
-    }
-    return render(request, 'core/home.html', context)
+        'visitas_agendadas': visitas_agendadas,
+        'visitas_concluidas': visitas_concluidas,
+    })
 
 @login_required
 def cadastrar_visita(request):
@@ -116,7 +119,7 @@ def cadastrar_visita(request):
     if request.method == 'POST':
         periodo = request.POST.get('periodo')
         data_sugerida = request.POST.get('data_sugerida')
-        # Novo: converte o horário para objeto time
+
         horario_obj = None
         if periodo:
             try:
@@ -131,7 +134,7 @@ def cadastrar_visita(request):
                 escola=escola,
                 data_sugerida=data_sugerida,
                 periodo=periodo,
-                horario=horario_obj,  # <-- salva o horário no novo campo
+                horario=horario_obj, 
                 numero_previsto_criancas=request.POST.get('numero_previsto_criancas'),
                 numero_previsto_adultos=request.POST.get('numero_previsto_adultos'),
                 forma_pagamento=request.POST.get('forma_pagamento'),
@@ -186,4 +189,37 @@ def atualizar_status_visita(request, visita_id):
     else:
         messages.error(request, "Status inválido.")
     return redirect('admin_dashboard')
+
+@login_required
+def detalhes_visita(request, id):
+    visita = get_object_or_404(Visita, id=id)
+
+    return render(request, 'core/detalhes_visita.html', {'visita': visita})
+
+@login_required
+def editar_visita(request, id):
+    visita = get_object_or_404(Visita, id=id)
+    
+    if request.method == 'POST':
+        visita.data_sugerida = request.POST.get('data_sugerida')
+        visita.periodo = request.POST.get('periodo')
+        visita.numero_previsto_criancas = request.POST.get('numero_previsto_criancas')
+        visita.numero_previsto_adultos = request.POST.get('numero_previsto_adultos')
+        visita.forma_pagamento = request.POST.get('forma_pagamento')
+        visita.responsavel = request.POST.get('responsavel')
+        visita.agencia = request.POST.get('agencia')
+        visita.observacoes = request.POST.get('observacoes')
+        visita.save()
+        messages.success(request, "Visita atualizada com sucesso!")
+        return redirect('acompanhamento_visitas')
+
+    return render(request, 'core/editar_visita.html', {'visita': visita})
+
+@login_required
+def cancelar_visita(request, id):
+    visita = get_object_or_404(Visita, id=id)
+    visita.status = 'CANCELADO'
+    visita.save()
+    messages.success(request, "Visita cancelada com sucesso!")
+    return redirect('acompanhamento_visitas')
 

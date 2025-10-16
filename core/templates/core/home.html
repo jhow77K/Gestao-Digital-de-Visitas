@@ -1,259 +1,247 @@
 {% extends 'core/base.html' %} {% block content %}
 <style>
   body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background: #f7fafc;
   }
-
-  .container {
+  .dashboard-container {
     max-width: 1200px;
-    margin: 0 auto 40px auto;
-    padding: 0 18px;
+    margin: 0 auto;
+    padding: 32px 16px;
   }
-
-  .info-cards {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin-top: 32px;
-    margin-bottom: 32px;
-  }
-
-  .info-card {
-    background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
-    border: 1.5px solid #b2dfdb;
-    border-radius: 14px;
-    text-decoration: none;
-    padding: 28px 24px 18px 24px;
-    width: 230px;
-    font-size: 18px;
-    box-shadow: 0 4px 18px rgba(67, 160, 71, 0.08);
-    transition: box-shadow 0.2s, transform 0.2s;
-    text-align: center;
-    color: #222;
-  }
-  .info-card:hover {
-    box-shadow: 0 8px 32px rgba(67, 160, 71, 0.18);
-    transform: translateY(-4px) scale(1.03);
-    background: linear-gradient(90deg, #c8e6c9 0%, #fff 100%);
-  }
-  .info-card h2 {
-    font-family: "Roboto", Arial, sans-serif;
-    font-size: 2.2em;
-    color: #2e7d32;
-    margin: 0 0 8px 0;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .info-card p {
-    font-family: "Roboto", Arial, sans-serif;
-    color: #555555;
-    font-size: 1.1em;
-    margin: 0;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .titulo-centralizado {
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 30px;
-    font-size: 2.3em;
-    font-weight: bold;
-    color: rgb(0, 0, 0);
-    letter-spacing: 1px;
-    text-shadow: 0 2px 8px rgba(44, 67, 71, 0.08);
-  }
-
-  .subtitulo-centralizado {
-    text-align: center;
-    margin-top: 36px;
-    margin-bottom: 18px;
-    font-size: 1.3em;
-    font-weight: bold;
-    color: rgb(0, 0, 0);
-    letter-spacing: 0.5px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 18px;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
-  }
-
-  table th,
-  table td {
-    border: 1px solid #e0e0e0;
-    padding: 10px 8px;
-    text-align: left;
-    font-size: 1em;
-  }
-
-  table th {
-    background-color: #2d8346;
-    font-weight: bold;
-    color: #fff;
-    letter-spacing: 0.5px;
-  }
-
-  table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  table tr:hover {
-    background-color: #f1f1f1;
-  }
-
-  .graficos-container {
+  .dashboard-header {
     display: flex;
     justify-content: space-between;
-    gap: 32px;
-    margin-top: 32px;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 24px;
   }
-
-  .grafico {
+  .dashboard-cards {
+    display: flex;
+    gap: 24px;
     flex: 1;
-    text-align: center;
-    min-width: 280px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
-    padding: 18px 8px 8px 8px;
-    margin-bottom: 18px;
   }
-
-  .grafico h3 {
-    color: rgb(0, 0, 0);
+  .dashboard-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(56, 142, 60, 0.08);
+    padding: 24px 18px;
+    min-width: 180px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .dashboard-card .icon {
+    font-size: 2.1em;
+    margin-bottom: 8px;
+    color: #388e3c;
+  }
+  .dashboard-card .card-title {
     font-size: 1.1em;
-    margin-bottom: 10px;
+    color: #388e3c;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .dashboard-card .card-value {
+    font-size: 1.7em;
+    font-weight: bold;
+    color: #222;
+  }
+  .dashboard-user {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(56, 142, 60, 0.08);
+    padding: 18px 24px;
+    min-width: 180px;
+    text-align: right;
+    font-size: 1.1em;
+    color: #388e3c;
+    font-weight: 600;
+    border: 1px solid #e0e0e0;
+  }
+  .dashboard-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+  }
+  .dashboard-actions .btn-agendar {
+    background: #43a047;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.1);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .dashboard-actions .btn-agendar:hover {
+    background: #388e3c;
+  }
+  .visitas-lista {
+    margin-top: 12px;
+  }
+  .visita-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
+    padding: 18px 24px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    gap: 18px;
+  }
+  .visita-info {
+    flex: 1;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .visita-data {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #388e3c;
+    min-width: 110px;
+    text-align: center;
+  }
+  .visita-detalhes {
+    font-size: 1em;
+    color: #222;
+  }
+  .visita-detalhes strong {
+    color: #388e3c;
     font-weight: 600;
   }
-
-  .grafico canvas {
-    max-width: 400px;
-    height: 300px;
-    margin: 0 auto;
+  .visita-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    min-width: 80px;
   }
-
+  .visita-actions button,
+  .visita-actions a {
+    background: none;
+    border: none;
+    color: #388e3c;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    transition: color 0.2s;
+  }
+  .visita-actions button:hover,
+  .visita-actions a:hover {
+    color: #b71c1c;
+  }
   @media (max-width: 900px) {
-    .graficos-container {
+    .dashboard-header {
       flex-direction: column;
-      gap: 18px;
-    }
-    .info-cards {
       gap: 12px;
     }
-    .grafico canvas {
-      max-width: 98vw;
-      height: 220px;
-    }
-  }
-  @media (max-width: 600px) {
-    .info-cards {
+    .dashboard-cards {
       flex-direction: column;
-      align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
-    .info-card {
-      width: 98vw;
-      max-width: 340px;
-      padding: 18px 8vw 12px 8vw;
+    .dashboard-user {
+      text-align: left;
     }
-    .container {
-      padding: 0 2vw;
+    .visita-card {
+      flex-direction: column;
+      gap: 8px;
     }
-    table th,
-    table td {
-      font-size: 0.98em;
-      padding: 8px 4px;
+    .visita-info {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
     }
-    .titulo-centralizado {
-      font-size: 1.3em;
+    .visita-data {
+      min-width: unset;
     }
-    .subtitulo-centralizado {
-      font-size: 1em;
+    .visita-actions {
+      flex-direction: row;
+      gap: 16px;
+      min-width: unset;
     }
   }
 </style>
 
-<h1 class="titulo-centralizado">Bem-vindo ao Sistema de Visitas</h1>
-
-<div class="container">
-  <div class="info-cards">
-    <div class="info-card">
-      <h2>{{ escola.nome }}</h2>
-      <p>Sua Escola</p>
-    </div>
-    <div class="info-card">
-      <h2>{{ visitas|length }}</h2>
-      <p>Visitas Agendadas</p>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <span class="icon">🏫</span>
+        <div class="card-title">Sua Escola</div>
+        <div class="card-value">{{ escola.nome }}</div>
+      </div>
+      <div class="dashboard-card">
+        <span class="icon">📅</span>
+        <div class="card-title">Visitas Agendadas</div>
+        <div class="card-value">{{ visitas_agendadas }}</div>
+      </div>
+      <div class="dashboard-card">
+        <span class="icon">📈</span>
+        <div class="card-title">Visitas Concluídas</div>
+        <div class="card-value">{{ visitas_concluidas }}</div>
+      </div>
     </div>
   </div>
-
-  <div
+  <div class="dashboard-actions">
+    <a href="{% url 'cadastrar_visita' %}" class="btn-agendar"
+      >+ Agendar Nova Visita</a
+    >
+  </div>
+  <h2
     style="
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(67, 160, 71, 0.06);
-      padding: 24px 2vw 32px 2vw;
-      border: 2px solid #e0e0e0;
+      color: #388e3c;
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 18px;
     "
   >
-    <h2 class="subtitulo-centralizado">Suas Visitas Agendadas</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Período</th>
-          <th>Responsável</th>
-          <th>Nº Crianças</th>
-          <th>Nº Adultos</th>
-          <th>Forma de Pagamento</th>
-          <th>Agência</th>
-          <th>Observações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for visita in visitas %}
-        <tr>
-          <td>{{ visita.data_sugerida|date:"d/m/Y" }}</td>
-          <td>{{ visita.get_periodo_display }}</td>
-          <td>{{ visita.responsavel }}</td>
-          <td>{{ visita.numero_previsto_criancas }}</td>
-          <td>{{ visita.numero_previsto_adultos }}</td>
-          <td>{{ visita.get_forma_pagamento_display }}</td>
-          <td>{{ visita.agencia }}</td>
-          <td>{{ visita.observacoes }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="8">Nenhuma visita agendada.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <a
-      href="{% url 'cadastrar_visita' %}"
-      style="
-        display: inline-block;
-        margin-top: 24px;
-        color: #388e3c;
-        text-decoration: underline;
-        font-weight: bold;
-      "
-    >
-      Agendar nova visita
-    </a>
+    Próximas Visitas Agendadas
+  </h2>
+  <div class="visitas-lista">
+    {% for visita in visitas %}
+    <div class="visita-card">
+      <div class="visita-info">
+        <div class="visita-data">
+          {{ visita.data_sugerida|date:"d/m/Y" }}<br />
+          <span style="font-size: 1em; color: #2d8346"
+            >{{ visita.get_periodo_display }}</span
+          >
+        </div>
+        <div class="visita-detalhes">
+          <strong>Responsável:</strong> {{ visita.responsavel }}<br />
+          <strong>Nº Crianças:</strong> {{ visita.numero_previsto_criancas }}<br />
+          <strong>Nº Adultos:</strong> {{ visita.numero_previsto_adultos }}<br />
+          <strong>Forma de Pagamento:</strong> {{visita.get_forma_pagamento_display }}<br />
+          <strong>Agência:</strong> {{ visita.agencia }}<br />
+          <strong>Observações:</strong> {{ visita.observacoes }}
+        </div>
+      </div>
+      <div class="visita-actions">
+        <form
+          method="post"
+          action="{% url 'cancelar_visita' visita.id %}"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit" title="Cancelar">❌</button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <div class="visita-card" style="text-align: center">
+      Nenhuma visita agendada.
+    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

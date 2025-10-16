@@ -10,80 +10,164 @@
       type="image/png"
       href="{% static 'img/logo-fazendinha1.png' %}"
     />
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Inter", Arial, sans-serif;
         margin: 0;
         padding: 0;
+        background: #f7fafc;
+        color: #234d20;
       }
-
-      .header {
-        background-color: #43a047;
-        color: white;
-        padding: 15px 20px;
+      .navbar {
+        background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
+        color: #fff;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start; 
         align-items: center;
+        padding: 0 32px;
+        height: 56px;
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 100vw;
         z-index: 1000;
+        box-shadow: 0 2px 8px rgba(56, 142, 60, 0.1);
       }
-
-      .header .logo {
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      .header .menu {
+      .navbar-logo {
         display: flex;
-        gap: 6px;
+        align-items: center;
+        font-size: 1.3rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-right: 36px; 
       }
-
-      .header .menu a {
-        color: white;
-        text-decoration: none;
-        padding: 5px 10px;
+      .navbar-logo img {
+        height: 38px;
+        margin-right: 12px;
       }
-
-      .header .menu a:last-child {
-        margin-right: 30px;
+      .navbar-links {
+        display: flex;
+        align-items: center;
+        gap: 18px; 
       }
-
-      .header .menu a:hover {
-        text-decoration: underline;
-      }
-
-      .content {
-        margin-top: 80px;
-        padding: 20px;
-      }
-
-      .header .menu a[href$="{% url 'logout' %}"] {
+      .navbar-links a {
         color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.2s, background 0.2s;
+        padding: 6px 10px;
+        border-radius: 6px;
+      }
+      .navbar-links a:hover {
+        color: #388e3c;
+        background: #dcedc8;
+      }
+      .navbar-links a.logout:hover {
+        color: #b71c1c !important;
+        background: #ffcdd2;
+      }
+      .content {
+        margin-top: 76px;
+        padding: 24px 2vw;
+        min-height: 80vh;
+      }
+      .messages {
+        max-width: 600px;
+        margin: 20px auto;
+      }
+      .messages .msg {
+        padding: 12px 18px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        font-weight: bold;
+        color: #256029;
+        background: #e8f5e9;
+        border: 1px solid #c5e1a5;
+      }
+      .messages .msg.error {
+        color: #b71c1c;
+        background: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+      @media (max-width: 700px) {
+        .navbar {
+          flex-direction: column;
+          height: auto;
+          padding: 12px 8px;
+        }
+        .navbar-logo {
+          font-size: 1.1rem;
+        }
+        .navbar-links a {
+          margin-left: 10px;
+          font-size: 0.98rem;
+        }
+        .content {
+          padding: 12px 2vw;
+        }
+      }
+      #cookie-banner {
+        display: none;
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+        color: #fff;
+        padding: 18px 32px;
+        z-index: 9999;
+        font-size: 1rem;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(56, 142, 60, 0.12);
+        max-width: 90vw;
+      }
+      #cookie-banner a {
+        color: #fff;
+        font-size: 0.98rem;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-left: 4px;
+        background: none;
+        border: none;
+        display: inline;
         transition: color 0.2s;
       }
-
-      .header .menu a[href$="{% url 'logout' %}"]:hover {
-        color: #ff3333 !important;
-        background: none;
-        text-decoration: underline;
+      #cookie-banner a:hover {
+        color: #dcedc8;
+      }
+      #cookie-banner button {
+        margin-left: 18px;
+        padding: 7px 22px;
+        border: none;
+        background: #256029;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      #cookie-banner button:hover {
+        background: #8bc34a;
+        color: #234d20;
       }
     </style>
   </head>
   <body>
-    <!-- Header -->
-    <div class="header">
-      <div class="logo" style="display: flex; align-items: center">
+    <nav class="navbar">
+      <div class="navbar-logo">
         <img
-          src="\static\img\logo-fazendinha1.png"
+          src="{% static 'img/logo-fazendinha1.png' %}"
           alt="Logo Fazendinha"
-          style="height: 38px; margin-right: 12px"
         />
         Gestão Digital de Visitas
       </div>
-      <div class="menu">
+      <div class="navbar-links">
         <a href="{% url 'home' %}">Início</a>
         <a href="{% url 'cadastrar_visita' %}">Agendar Visita</a>
         <a href="{% url 'acompanhamento_visitas' %}">Acompanhamento</a>
@@ -91,98 +175,31 @@
         <a href="{% url 'admin_dashboard' %}">Visitas Recentes</a>
         <a href="/admin/">Administração</a>
         {% endif %}
-        <a href="{% url 'logout' %}">Sair</a>
+        <a href="{% url 'logout' %}" class="logout">Sair</a>
       </div>
-    </div>
-
+    </nav>
     <div class="content">
       {% if messages %}
-      <div style="max-width: 600px; margin: 20px auto">
+      <div class="messages">
         {% for message in messages %}
-        <div
-          style="
-              padding: 12px 18px;
-              margin-bottom: 10px;
-              border-radius: 6px;
-              font-weight: bold;
-              color: {% if message.tags == 'error' %}#b30000{% else %}#155724{% endif %};
-              background: {% if message.tags == 'error' %}#ffeaea{% else %}#d4edda{% endif %};
-              border: 1px solid {% if message.tags == 'error' %}#b30000{% else %}#c3e6cb{% endif %};
-            "
-        >
+        <div class="msg {% if message.tags == 'error' %}error{% endif %}">
           {{ message }}
         </div>
         {% endfor %}
       </div>
-      {% endif %} {% block content %} {% endblock %}
+      {% endif %} {% block content %}{% endblock %}
     </div>
-    <div
-      id="cookie-banner"
-      style="
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        left: 0;
-        right: 0;
-        background: #43a047;
-        color: #fff;
-        padding: 8px 0;
-        z-index: 9999;
-        font-size: 1rem;
-        border-radius: 8px;
-      "
-    >
-      <div
-        style="
-          max-width: 1200px;
-          margin: 0 auto;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 16px;
-          padding: 0 24px;
-        "
-      >
-        <span style="white-space: nowrap">
-          Este site utiliza cookies para garantir o funcionamento correto e
-          melhorar sua experiência. Ao continuar navegando, você concorda com
-          nossa
-          <a
-            href="{% url 'politica_cookies' %}"
-            style="
-              color: #fff;
-              font-size: 0.98rem;
-              font-weight: bold;
-              text-decoration: underline;
-              margin-left: 4px;
-              white-space: nowrap;
-              padding: 0;
-              background: none;
-              border: none;
-              display: inline;
-            "
-            target="_blank"
-            >Política de Cookies</a
-          >.
-        </span>
-        <button
-          onclick="aceitarCookies()"
-          style="
-            margin-left: 10px;
-            padding: 5px 16px;
-            border: none;
-            background: #222;
-            color: #fff;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            font-size: 0.98rem;
-            white-space: nowrap;
-          "
-        >
-          Aceitar
-        </button>
-      </div>
+
+    <div id="cookie-banner">
+      <span>
+        Este site utiliza cookies para garantir o funcionamento correto e
+        melhorar sua experiência. Ao continuar navegando, você concorda com
+        nossa
+        <a href="{% url 'politica_cookies' %}" target="_blank"
+          >Política de Cookies</a
+        >.
+      </span>
+      <button onclick="aceitarCookies()">Aceitar</button>
     </div>
     <script>
       function aceitarCookies() {
