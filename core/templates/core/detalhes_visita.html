@@ -1,0 +1,126 @@
+{% extends 'core/base.html' %} {% block content %}
+<style>
+  .detalhes-wrap {
+    max-width: 900px;
+    margin: 28px auto;
+    padding: 20px;
+  }
+  .detalhes-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  }
+  .detalhes-row {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .detalhe-meta {
+    min-width: 180px;
+    color: #333;
+    font-weight: 700;
+  }
+  .detalhe-info {
+    flex: 1;
+    color: #444;
+  }
+  .acoes {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .btn-back {
+    background: #f0f0f0;
+    color: #222;
+  }
+
+  .chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-block;
+    border: 1px solid transparent;
+  }
+  .chip-confirmado {
+    background: linear-gradient(90deg, #43a047, #66bb6a);
+    color: #fff;
+    border-color: rgba(67, 160, 71, 0.15);
+  }
+  .chip-solicitado {
+    background: linear-gradient(90deg, #ffb74d, #ff8a65);
+    color: #4b2e00;
+    border-color: rgba(255, 183, 77, 0.12);
+  }
+  .chip-realizado {
+    background: linear-gradient(90deg, #29b6f6, #0288d1);
+    color: #fff;
+    border-color: rgba(2, 136, 209, 0.12);
+  }
+  .chip-cancelado {
+    background: linear-gradient(90deg, #ef9a9a, #e57373);
+    color: #fff;
+    border-color: rgba(183, 28, 28, 0.12);
+  }
+</style>
+
+<div class="detalhes-wrap">
+  <div class="detalhes-card">
+    <div class="detalhes-row">
+      <div class="detalhe-meta">
+        <div>{{ visita.data_sugerida|date:"d/m/Y" }}</div>
+        <div style="margin-top: 8px; font-size: 0.95rem">
+          {{ visita.get_periodo_display }}
+        </div>
+
+        <div style="margin-top: 12px">
+          <span
+            class="chip {% if visita.status == 'CONFIRMADO' %}chip-confirmado{% elif visita.status == 'SOLICITADO' %}chip-solicitado{% elif visita.status == 'REALIZADO' %}chip-realizado{% elif visita.status == 'CANCELADO' %}chip-cancelado{% endif %}"
+          >
+            {{ visita.get_status_display }}
+          </span>
+        </div>
+      </div>
+
+      <div class="detalhe-info">
+        <h2 style="margin: 0 0 8px">Detalhes da Visita</h2>
+
+        <div><strong>Responsável:</strong> {{ visita.responsavel }}</div>
+        <div><strong>Escola:</strong> {{ visita.escola.nome }}</div>
+        <div>
+          <strong>Nº Crianças:</strong> {{ visita.numero_previsto_criancas }}
+        </div>
+        <div>
+          <strong>Nº Adultos:</strong> {{ visita.numero_previsto_adultos }}
+        </div>
+
+
+        <div><strong>Agência:</strong> {{ visita.agencia }}</div>
+
+        {% if visita.observacoes %}
+        <div style="margin-top: 10px">
+          <strong>Observações:</strong>
+          <div style="margin-top: 6px; color: #444">
+            {{ visita.observacoes }}
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="acoes">
+          <a href="{% url 'home' %}" class="btn btn-back"
+            >← Voltar</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

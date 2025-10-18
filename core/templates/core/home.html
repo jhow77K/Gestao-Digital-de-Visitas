@@ -1,247 +1,630 @@
-{% extends 'core/base.html' %} {% block content %}
+{% extends 'core/base.html' %} {% load static %} {% block content %}
 <style>
-  body {
-    background: #f7fafc;
+  :root {
+    --bg: #fff7f0;
+    --muted: #faf8f6;
+    --green-700: #2e7d32;
+    --green-500: #43a047;
+    --accent: #f37021;
+    --card-radius: 18px;
   }
-  .dashboard-container {
+
+  .home-container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 16px;
+    margin: 28px auto;
+    padding: 20px;
   }
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 32px;
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 24px;
+    margin-bottom: 28px;
   }
-  .dashboard-cards {
-    display: flex;
-    gap: 24px;
-    flex: 1;
-  }
-  .dashboard-card {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(56, 142, 60, 0.08);
-    padding: 24px 18px;
-    min-width: 180px;
-    text-align: center;
-    border: 1px solid #e0e0e0;
-    flex: 1;
+  .info-card {
+    border-radius: 24px;
+    padding: 28px;
+    min-height: 180px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    color: #123;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+  .card-green {
+    background: #bcd86f;
+    color: #123;
+  }
+  .card-accent {
+    background: #f37021;
+    color: #fff;
+  }
+  .info-top {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .icon-square {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.12);
   }
-  .dashboard-card .icon {
-    font-size: 2.1em;
-    margin-bottom: 8px;
-    color: #388e3c;
-  }
-  .dashboard-card .card-title {
-    font-size: 1.1em;
-    color: #388e3c;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .dashboard-card .card-value {
-    font-size: 1.7em;
-    font-weight: bold;
-    color: #222;
-  }
-  .dashboard-user {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(56, 142, 60, 0.08);
-    padding: 18px 24px;
-    min-width: 180px;
-    text-align: right;
-    font-size: 1.1em;
-    color: #388e3c;
-    font-weight: 600;
-    border: 1px solid #e0e0e0;
-  }
-  .dashboard-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 24px;
-  }
-  .dashboard-actions .btn-agendar {
-    background: #43a047;
+  .card-green .icon-square {
+    background: rgba(255, 255, 255, 0.18);
     color: #fff;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 32px;
-    font-size: 1.1em;
-    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.1);
-    cursor: pointer;
-    transition: background 0.2s;
   }
-  .dashboard-actions .btn-agendar:hover {
-    background: #388e3c;
+  .card-accent .icon-square {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
   }
-  .visitas-lista {
+  .card-title {
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     margin-top: 12px;
   }
+  .card-cta {
+    padding: 10px 18px;
+    border-radius: 28px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .card-green .card-cta {
+    background: transparent;
+    color: #2e7d32;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+  }
+  .card-accent .card-cta {
+    background: #fff;
+    color: #f37021;
+    border: none;
+  }
+
+  .media-wrap {
+    display: flex;
+    gap: 26px;
+    margin-bottom: 30px;
+    align-items: stretch;
+  }
+  .media-left {
+    flex: 1;
+    border-radius: 14px;
+    overflow: visible;
+    position: relative;
+    padding: 28px;
+    background-image: url("{% static 'img/pattern.png' %}");
+    background-repeat: repeat;
+    background-position: left center;
+    background-size: auto 140%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+  .media-left .video-wrap {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+  .media-left .video-wrap iframe {
+    width: 100%;
+    height: 320px;
+    display: block;
+    border: 0;
+  }
+  .media-right {
+    width: 420px;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .media-right h2 {
+    color: var(--accent);
+    margin: 0 0 12px 0;
+    font-size: 1.6rem;
+  }
+  .media-right p {
+    color: #3b3b3b;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .btn-agendar {
+    display: inline-block;
+    margin-top: 16px;
+    background: linear-gradient(90deg, var(--green-700), var(--green-500));
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 8px 18px rgba(67, 160, 71, 0.12);
+  }
+
+  .search-area {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+  .search-input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e6eef0;
+    background: #fff;
+    min-width: 220px;
+    flex: 1;
+  }
+  .select-small {
+    max-width: 180px;
+  }
+
+  .visitas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 16px;
+  }
+  .visitas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: calc(3 * 140px + 28px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 6px;
+  }
+
+  .visitas-grid::-webkit-scrollbar {
+    width: 10px;
+  }
+  .visitas-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+  }
+
   .visita-card {
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(56, 142, 60, 0.08);
-    padding: 18px 24px;
-    margin-bottom: 18px;
+    padding: 16px;
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    border: 1px solid #e0e0e0;
     gap: 18px;
+    align-items: flex-start;
+    border: 1px solid #eef6f0;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03);
   }
-  .visita-info {
-    flex: 1;
-    display: flex;
-    gap: 24px;
-    align-items: center;
-  }
-  .visita-data {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #388e3c;
-    min-width: 110px;
+  .visita-date {
+    min-width: 120px;
     text-align: center;
+    color: var(--green-700);
+    font-weight: 800;
+    font-size: 0.98rem;
   }
-  .visita-detalhes {
-    font-size: 1em;
-    color: #222;
+  .visita-main {
+    flex: 1;
   }
-  .visita-detalhes strong {
-    color: #388e3c;
-    font-weight: 600;
-  }
-  .visita-actions {
+  .visita-meta {
+    margin-top: 8px;
+    color: #556;
+    font-size: 0.95rem;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-end;
-    min-width: 80px;
+    gap: 12px;
+    flex-wrap: wrap;
   }
-  .visita-actions button,
-  .visita-actions a {
-    background: none;
-    border: none;
-    color: #388e3c;
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 0;
+  .chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    display: inline-block;
+  }
+
+  .chip-confirmado {
+    background: linear-gradient(90deg, #43a047, #66bb6a);
+    color: #fff;
+    border-color: rgba(67, 160, 71, 0.15);
+  }
+  .chip-solicitado {
+    background: linear-gradient(90deg, #ffb74d, #ff8a65);
+    color: #4b2e00;
+    border-color: rgba(255, 183, 77, 0.12);
+  }
+  .chip-realizado {
+    background: linear-gradient(90deg, #29b6f6, #0288d1);
+    color: #fff;
+    border-color: rgba(2, 136, 209, 0.12);
+  }
+  .chip-cancelado {
+    background: linear-gradient(90deg, #ef9a9a, #e57373);
+    color: #fff;
+    border-color: rgba(183, 28, 28, 0.12);
+  }
+
+  .map-section {
+    max-width: 1200px;
+    margin: 28px auto;
+    height: 420px;
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+  .map-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .map-card {
+    position: absolute;
+    left: 28px;
+    top: 28px;
+    background: #fff;
+    padding: 18px 20px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    max-width: 340px;
+  }
+  .map-card h4 {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+  }
+  .map-card p {
     margin: 0;
-    transition: color 0.2s;
+    color: #444;
+    line-height: 1.4;
+    font-size: 0.95rem;
   }
-  .visita-actions button:hover,
-  .visita-actions a:hover {
-    color: #b71c1c;
+  .map-card a {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--green-700);
+    font-weight: 700;
+    text-decoration: none;
   }
-  @media (max-width: 900px) {
-    .dashboard-header {
+
+  @media (max-width: 1000px) {
+    .media-wrap {
       flex-direction: column;
-      gap: 12px;
     }
-    .dashboard-cards {
+    .media-right {
+      width: 100%;
+      padding: 20px;
+    }
+    .info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .map-section {
+      height: 360px;
+    }
+  }
+  @media (max-width: 520px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+    .search-area {
       flex-direction: column;
-      gap: 12px;
+      align-items: stretch;
     }
-    .dashboard-user {
-      text-align: left;
+    .visita-date {
+      min-width: 90px;
     }
-    .visita-card {
-      flex-direction: column;
-      gap: 8px;
+    .map-section {
+      height: 300px;
     }
-    .visita-info {
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-start;
-    }
-    .visita-data {
-      min-width: unset;
-    }
-    .visita-actions {
-      flex-direction: row;
-      gap: 16px;
-      min-width: unset;
+    .map-card {
+      position: static;
+      margin: 14px;
+      max-width: calc(100% - 28px);
     }
   }
 </style>
 
-<div class="dashboard-container">
-  <div class="dashboard-header">
-    <div class="dashboard-cards">
-      <div class="dashboard-card">
-        <span class="icon">🏫</span>
-        <div class="card-title">Sua Escola</div>
-        <div class="card-value">{{ escola.nome }}</div>
+<div class="home-container">
+  <div class="info-grid">
+    <div class="info-card card-green">
+      <div class="info-top">
+        <div class="icon-square">⏰</div>
+        <div>
+          <div class="card-title">Horário de Funcionamento</div>
+          <div class="card-desc">
+            Sábados, Domingos e Feriados: atendimento familiar das 10h às
+            17h.<br />
+            Terça a Sexta: programações escolares e festas (somente com
+            agendamento).
+          </div>
+        </div>
       </div>
-      <div class="dashboard-card">
-        <span class="icon">📅</span>
-        <div class="card-title">Visitas Agendadas</div>
-        <div class="card-value">{{ visitas_agendadas }}</div>
+    </div>
+
+    <div class="info-card card-accent">
+      <div class="info-top">
+        <div class="icon-square">🎟️</div>
+        <div>
+          <div class="card-title">Garanta já sua visita!</div>
+          <div class="card-desc">
+            Clique e prepare sua turma para uma visita inesquecível.
+          </div>
+        </div>
       </div>
-      <div class="dashboard-card">
-        <span class="icon">📈</span>
-        <div class="card-title">Visitas Concluídas</div>
-        <div class="card-value">{{ visitas_concluidas }}</div>
+      <div class="card-footer">
+        <a class="card-cta" href="{% url 'cadastrar_visita' %}"
+          >Agende sua visita</a
+        >
+      </div>
+    </div>
+
+    <div class="info-card card-green">
+      <div class="info-top">
+        <div class="icon-square">🗺️</div>
+        <div>
+          <div class="card-title">Confira o mapa</div>
+          <div class="card-desc">
+            Planeje sua visita com o mapa completo do local.
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a
+          class="card-cta"
+          href="https://www.google.com/maps/search/?api=1&query=Rua+Moreira+e+Costa+16%2C+Ipiranga%2C+S%C3%A3o+Paulo%2C+SP"
+          target="_blank"
+          rel="noopener"
+          >Acesse o mapa</a
+        >
+      </div>
+    </div>
+
+    <div class="info-card card-green">
+      <div class="info-top">
+        <div class="icon-square">💬</div>
+        <div>
+          <div class="card-title">Dúvidas?</div>
+          <div class="card-desc">
+            Consulte nossa seção de perguntas frequentes ou fale conosco.
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-cta" href="{% url 'duvidas' %}">Perguntas frequentes</a>
       </div>
     </div>
   </div>
-  <div class="dashboard-actions">
-    <a href="{% url 'cadastrar_visita' %}" class="btn-agendar"
-      >+ Agendar Nova Visita</a
+
+  <div class="media-wrap">
+    <div class="media-left">
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/2FuFKbs2RZk"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="media-right">
+      <h2>Conheça a Fazendinha Estação Natureza</h2>
+      <p>
+        A Fazendinha Estação Natureza é um parque rural pedagógico localizado no
+        bairro do Ipiranga, em São Paulo, que existe desde 1995. O principal
+        objetivo do local é proporcionar uma experiência prática e de contato
+        direto com a natureza, seguindo a filosofia de "sentir para aprender".
+      </p>
+      <a href="{% url 'cadastrar_visita' %}" class="btn-agendar"
+        >Agendar Visita</a
+      >
+    </div>
+  </div>
+
+  <div class="search-area">
+    <input
+      id="search"
+      class="search-input"
+      placeholder="Buscar por responsável, escola ou data..."
+    />
+    <select id="filter-status" class="search-input select-small">
+      <option value="">Todos os status</option>
+      <option value="CONFIRMADO">Confirmado</option>
+      <option value="SOLICITADO">Solicitado</option>
+      <option value="REALIZADO">Realizado</option>
+      <option value="CANCELADO">Cancelado</option>
+    </select>
+    <a
+      href="{% url 'cadastrar_visita' %}"
+      class="btn-agendar"
+      style="min-width: 160px"
+      >+ Agendar Visita</a
     >
   </div>
-  <h2
-    style="
-      color: #388e3c;
-      font-size: 1.3em;
-      font-weight: 600;
-      margin-bottom: 18px;
-    "
-  >
-    Próximas Visitas Agendadas
-  </h2>
-  <div class="visitas-lista">
-    {% for visita in visitas %}
-    <div class="visita-card">
-      <div class="visita-info">
-        <div class="visita-data">
-          {{ visita.data_sugerida|date:"d/m/Y" }}<br />
-          <span style="font-size: 1em; color: #2d8346"
-            >{{ visita.get_periodo_display }}</span
-          >
-        </div>
-        <div class="visita-detalhes">
-          <strong>Responsável:</strong> {{ visita.responsavel }}<br />
-          <strong>Nº Crianças:</strong> {{ visita.numero_previsto_criancas }}<br />
-          <strong>Nº Adultos:</strong> {{ visita.numero_previsto_adultos }}<br />
-          <strong>Forma de Pagamento:</strong> {{visita.get_forma_pagamento_display }}<br />
-          <strong>Agência:</strong> {{ visita.agencia }}<br />
-          <strong>Observações:</strong> {{ visita.observacoes }}
-        </div>
+
+  <div class="visitas-header">
+    <h3 style="color: var(--green-700); margin: 0">Próximas Visitas</h3>
+    <div style="display: flex; gap: 18px; align-items: center">
+      <div style="font-weight: 700; color: #2a6b35">
+        Agendadas: {{ visitas_agendadas }}
       </div>
-      <div class="visita-actions">
-        <form
-          method="post"
-          action="{% url 'cancelar_visita' visita.id %}"
-          style="display: inline"
+      <div style="font-weight: 700; color: #2a6b35">
+        Concluídas: {{ visitas_concluidas }}
+      </div>
+    </div>
+  </div>
+
+  <div class="visitas-grid" id="visitas-grid">
+    {% for visita in visitas %}
+    <div
+      class="visita-card"
+      data-resp="{{ visita.responsavel|default:'' }}"
+      data-escola="{{ visita.escola.nome|default:'' }}"
+      data-data="{{ visita.data_sugerida|date:'Y-m-d' }}"
+      data-status="{{ visita.status }}"
+    >
+      <div class="visita-date">
+        {{ visita.data_sugerida|date:"d/m/Y" }}<br />
+        <small>{{ visita.get_periodo_display }}</small>
+      </div>
+
+      <div class="visita-main">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
         >
+          <div>
+            <div><strong>{{ visita.escola.nome }}</strong></div>
+            <div style="margin-top: 6px; color: #556; font-size: 0.95rem">
+              Responsável: {{ visita.responsavel }}
+            </div>
+          </div>
+
+          <div
+            class="chip {% if visita.status == 'CONFIRMADO' %}chip-confirmado{% elif visita.status == 'SOLICITADO' %}chip-solicitado{% elif visita.status == 'REALIZADO' %}chip-realizado{% elif visita.status == 'CANCELADO' %}chip-cancelado{% endif %}"
+          >
+            {{ visita.get_status_display }}
+          </div>
+        </div>
+
+        <div class="visita-meta">
+          <div>
+            Nº Crianças: <strong>{{ visita.numero_previsto_criancas }}</strong>
+          </div>
+          <div>
+            Nº Adultos: <strong>{{ visita.numero_previsto_adultos }}</strong>
+          </div>
+          <div>
+            Pagamento: <strong>{{ visita.get_forma_pagamento_display }}</strong>
+          </div>
+          <div>Agência: <strong>{{ visita.agencia }}</strong></div>
+        </div>
+
+        {% if visita.observacoes %}
+        <div style="margin-top: 10px; color: #444">
+          Observações: {{ visita.observacoes }}
+        </div>
+        {% endif %}
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        {% if is_admin %}
+        <a
+          href="{% url 'detalhes_visita' visita.id %}"
+          style="
+            text-decoration: none;
+            color: var(--green-700);
+            font-weight: 700;
+          "
+          >Detalhes</a
+        >
+        {% else %}
+        <a
+          href="{% url 'editar_visita' visita.id %}"
+          style="
+            text-decoration: none;
+            color: var(--green-700);
+            font-weight: 700;
+          "
+          >Editar</a
+        >
+        {% endif %}
+        <form method="post" action="{% url 'cancelar_visita' visita.id %}">
           {% csrf_token %}
-          <button type="submit" title="Cancelar">❌</button>
+          <button
+            type="submit"
+            style="
+              background: none;
+              border: none;
+              color: #b30000;
+              font-weight: 700;
+              cursor: pointer;
+            "
+          >
+            Cancelar
+          </button>
         </form>
       </div>
     </div>
     {% empty %}
-    <div class="visita-card" style="text-align: center">
+    <div class="visita-card" style="justify-content: center">
       Nenhuma visita agendada.
     </div>
     {% endfor %}
   </div>
 </div>
+
+<div class="map-section" aria-label="Mapa da localização">
+  <iframe
+    class="map-iframe"
+    src="https://www.google.com/maps?q=Rua+Moreira+e+Costa+16%2C+Ipiranga%2C+S%C3%A3o+Paulo%2C+SP&output=embed"
+    allowfullscreen
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+  ></iframe>
+
+  <div class="map-card" role="region" aria-label="Informações do local">
+    <h4>Fazendinha Estação Natureza</h4>
+    <p>
+      Rua Moreira e Costa, 16<br />
+      Ipiranga — São Paulo / SP
+    </p>
+    <a
+      href="https://www.google.com/maps/search/?api=1&query=Rua+Moreira+e+Costa+16%2C+Ipiranga%2C+S%C3%A3o+Paulo%2C+SP"
+      target="_blank"
+      rel="noopener"
+      >Ver mapa ampliado →</a
+    >
+  </div>
+</div>
+
+<script>
+  const searchEl = document.getElementById("search");
+  const statusEl = document.getElementById("filter-status");
+  function filtrar() {
+    const q = searchEl.value.trim().toLowerCase();
+    const status = statusEl.value;
+    document.querySelectorAll("#visitas-grid .visita-card").forEach((card) => {
+      const resp = card.dataset.resp?.toLowerCase() || "";
+      const escola = card.dataset.escola?.toLowerCase() || "";
+      const data = card.dataset.data || "";
+      const st = card.dataset.status || "";
+      const matchText =
+        !q || resp.includes(q) || escola.includes(q) || data.includes(q);
+      const matchStatus = !status || st === status;
+      card.style.display = matchText && matchStatus ? "" : "none";
+    });
+  }
+  searchEl?.addEventListener("input", filtrar);
+  statusEl?.addEventListener("change", filtrar);
+
+  (function ensureFirstThreeVisible() {
+    const grid = document.getElementById("visitas-grid");
+    if (!grid) return;
+    setTimeout(() => {
+      grid.scrollTop = 0;
+    }, 50);
+  })();
+</script>
 {% endblock %}

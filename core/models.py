@@ -61,7 +61,7 @@ class Visita(models.Model):
     feita = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SOLICITADO')
     feedback = models.TextField(blank=True)
-    horario = models.TimeField(null=True, blank=True)  # Novo campo para horário exato
+    horario = models.TimeField(null=True, blank=True) 
 
     def __str__(self):
         return f"Visita à {self.escola.nome} em {self.data_sugerida} às {self.periodo}"

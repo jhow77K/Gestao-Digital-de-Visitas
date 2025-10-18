@@ -58,11 +58,11 @@
     margin-bottom: 2px;
     transition: border 0.2s;
   }
+  input[type="date"]:focus,
   input[type="number"]:focus,
   input[type="text"]:focus,
   select:focus,
-  textarea:focus,
-  input[type="date"]:focus {
+  textarea:focus {
     border: 1.5px solid #388e3c;
     outline: none;
   }
@@ -111,6 +111,34 @@
     text-align: center;
     border: 1px solid #c5e1a5;
   }
+
+  .calendar-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(56, 142, 60, 0.06);
+    padding: 28px;
+    width: 420px;
+    text-align: center;
+    border: 2px solid #dff0d9;
+  }
+  .calendar-card h3 {
+    margin: 0 0 12px;
+    color: #2e7d32;
+    font-size: 1.3rem;
+  }
+  .date-input {
+    font-size: 1.05rem;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cfd8cc;
+    background: #fafafa;
+    color: #223;
+  }
+
+  .hidden {
+    display: none;
+  }
+
   @media (max-width: 1000px) {
     .flex-container {
       flex-direction: column;
@@ -121,26 +149,91 @@
       min-width: unset;
       padding: 18px 3vw;
     }
+    .calendar-card {
+      width: calc(98vw - 40px);
+    }
     .form-row {
       flex-direction: column;
       gap: 8px;
     }
   }
 </style>
+
 <div class="flex-container">
-  <div class="visita-container">
+  <div class="calendar-card" id="calendar-section" aria-live="polite">
+    <h3>Escolha a data da visita</h3>
+    <p style="color: #444; margin: 6px 0 14px">
+      Selecione no calendário e clique em continuar para preencher o formulário.
+    </p>
+    <input type="date" id="calendar" class="date-input" />
+    <div
+      style="
+        margin-top: 14px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      "
+    >
+      <button
+        id="confirm-date-btn"
+        style="
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: linear-gradient(90deg, #43a047, #66bb6a);
+          color: #fff;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+        "
+        disabled
+      >
+        Continuar
+      </button>
+      <a
+        href="{% url 'home' %}"
+        style="
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 14px;
+          border-radius: 8px;
+          background: #f0f0f0;
+          color: #222;
+          text-decoration: none;
+          font-weight: 700;
+        "
+        >Cancelar</a
+      >
+    </div>
+  </div>
+
+  <div class="visita-container hidden" id="form-section" aria-hidden="true">
     <h2>Cadastro de Visita</h2>
     {% if messages %}
     <div class="mensagem-erro">
       {% for message in messages %} {{ message }} {% endfor %}
     </div>
     {% endif %}
-    <form method="post">
+    <form method="post" id="visita-form">
       {% csrf_token %}
-      <div class="form-row">
+      <div style="text-align: left; margin-bottom: 10px">
+        <a
+          href="#"
+          id="change-date-btn"
+          style="text-decoration: none; font-weight: 700; color: #388e3c"
+          >← Trocar data</a
+        >
+      </div>
+
+      <div class="form-row" id="form-row-data">
         <div>
           <label for="data_sugerida">Data da visita:</label>
-          <input type="date" name="data_sugerida" id="data_sugerida" required />
+          <input
+            type="date"
+            name="data_sugerida"
+            id="data_sugerida"
+            required
+            readonly
+          />
         </div>
         <div>
           <label for="periodo">Período:</label>
@@ -151,6 +244,7 @@
           </select>
         </div>
       </div>
+
       <div class="form-row">
         <div>
           <label for="numero_previsto_criancas">Nº previsto de crianças:</label>
@@ -173,6 +267,7 @@
           />
         </div>
       </div>
+
       <div class="form-row">
         <div>
           <label for="forma_pagamento">Forma de pagamento:</label>
@@ -187,6 +282,7 @@
           <input type="text" name="responsavel" id="responsavel" required />
         </div>
       </div>
+
       <div class="form-row">
         <div>
           <label for="agencia">Agência:</label>
@@ -201,9 +297,48 @@
           <textarea name="observacoes" id="observacoes" rows="3"></textarea>
         </div>
       </div>
+
       <button type="submit">Agendar Visita</button>
       <a href="{% url 'home' %}">Voltar para o início</a>
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendar = document.getElementById("calendar");
+    const confirmBtn = document.getElementById("confirm-date-btn");
+    const calendarSection = document.getElementById("calendar-section");
+    const formSection = document.getElementById("form-section");
+    const dataInput = document.getElementById("data_sugerida");
+    const changeDateBtn = document.getElementById("change-date-btn");
+
+    const today = new Date().toISOString().split("T")[0];
+    calendar.setAttribute("min", today);
+
+    calendar.addEventListener("change", function () {
+      confirmBtn.disabled = !calendar.value;
+    });
+
+    confirmBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (!calendar.value) return;
+      dataInput.value = calendar.value;
+      calendarSection.classList.add("hidden");
+      formSection.classList.remove("hidden");
+      formSection.setAttribute("aria-hidden", "false");
+      document.getElementById("periodo").focus();
+      formSection.scrollIntoView({ behavior: "smooth" });
+    });
+
+    changeDateBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      formSection.classList.add("hidden");
+      formSection.setAttribute("aria-hidden", "true");
+      calendarSection.classList.remove("hidden");
+      confirmBtn.disabled = !calendar.value;
+      calendar.focus();
+    });
+  });
+</script>
 {% endblock %}

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 from datetime import datetime, time, timedelta
@@ -244,10 +244,26 @@ def atualizar_status_visita(request, visita_id):
     return redirect('admin_dashboard')
 
 @login_required
-def detalhes_visita(request, id):
-    visita = get_object_or_404(Visita, id=id)
+def detalhes_visita(request, visita_id):
+    visita = get_object_or_404(Visita, id=visita_id)
 
-    return render(request, 'core/detalhes_visita.html', {'visita': visita})
+    if not (request.user.is_superuser or request.user.is_staff):
+        try:
+            escola_user = Escola.objects.get(email=request.user.email)
+        except Escola.DoesNotExist:
+            return redirect('cadastro_escola')
+        if visita.escola_id != escola_user.id:
+            return redirect('home')
+
+    pagamentos = getattr(visita, 'pagamento_set', None)
+    if pagamentos is not None:
+        pagamentos = visita.pagamento_set.all()
+
+    context = {
+        'visita': visita,
+        'pagamentos': pagamentos,
+    }
+    return render(request, 'core/detalhes_visita.html', context)
 
 @login_required
 def editar_visita(request, id):
@@ -275,4 +291,7 @@ def cancelar_visita(request, id):
     visita.save()
     messages.success(request, "Visita cancelada com sucesso!")
     return redirect('acompanhamento_visitas')
+
+def duvidas(request):
+    return render(request, 'core/duvidas.html')
 

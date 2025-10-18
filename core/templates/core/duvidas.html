@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %} {% block content %}
+<style>
+  :root {
+    --accent: #f37021;
+    --green-700: #2e7d32;
+  }
+  .duvidas-wrap {
+    max-width: 1000px;
+    margin: 36px auto;
+    padding: 20px;
+  }
+  .duvidas-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+  .duvidas-hero h1 {
+    color: var(--accent);
+    margin: 0;
+  }
+  .duvidas-intro {
+    color: #444;
+    margin-top: 6px;
+  }
+  .faq-list {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  details {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    border: 1px solid #eef6f0;
+  }
+  summary {
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+  }
+  details[open] summary {
+    color: var(--green-700);
+  }
+  .faq-body {
+    margin-top: 8px;
+    color: #333;
+    line-height: 1.45;
+  }
+  .contact {
+    margin-top: 20px;
+    background: #fbfbfb;
+    padding: 14px 18px;
+    border-radius: 10px;
+    color: #333;
+  }
+  @media (max-width: 700px) {
+    .duvidas-hero {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<div class="duvidas-wrap">
+  <div class="duvidas-hero">
+    <div>
+      <h1>Dúvidas frequentes</h1>
+      <div class="duvidas-intro">
+        Respostas rápidas sobre a Fazendinha Estação Natureza e o processo de
+        visitação.
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-list">
+    <details>
+      <summary>Quais são os horários de visitação?</summary>
+      <div class="faq-body">
+        Sábados, domingos e feriados: atendimento familiar das 10h às 17h. Terça
+        a sexta: programações escolares e festas (somente com agendamento
+        prévio).
+      </div>
+    </details>
+
+    <details>
+      <summary>Como agendar uma visita escolar?</summary>
+      <div class="faq-body">
+        Faça o agendamento pela área “Agendar Visita” do painel
+        informe número de alunos, preferência de datas e horários.
+      </div>
+    </details>
+
+    <details>
+      <summary>
+        É preciso pagar na entrada? Quais formas de pagamento são aceitas?
+      </summary>
+      <div class="faq-body">
+        A forma de pagamento pode variar conforme o tipo de atividade. Consulte
+        a confirmação enviada após o agendamento. Em geral aceitamos pagamentos
+        em dinheiro e transferência/pix — verifique no momento do agendamento.
+      </div>
+    </details>
+
+    <details>
+      <summary>Posso cancelar ou remarcar uma visita?</summary>
+      <div class="faq-body">
+        Sim — entre em contato com antecedência para remarcar ou cancelar.
+        Regras de reembolso ou taxa podem ser aplicáveis dependendo do prazo e
+        do tipo de programação.
+      </div>
+    </details>
+
+    <details>
+      <summary>Há estacionamento e acessibilidade?</summary>
+      <div class="faq-body">
+        Dispomos de estacionamento limitado no local; sugerimos caronas ou
+        transporte escolar quando for o caso. A Fazendinha busca oferecer
+        acessibilidade — informe necessidades especiais ao agendar.
+      </div>
+    </details>
+
+    <details>
+      <summary>Posso levar lanche e alimentos?</summary>
+      <div class="faq-body">
+        É permitido trazer lanche, mas pedimos cuidado com embalagens e
+        descarte. Para festas e eventos verificamos regras específicas no
+        agendamento.
+      </div>
+    </details>
+
+    <details>
+      <summary>Posso trazer animais de estimação?</summary>
+      <div class="faq-body">
+        Não recomendamos trazer pets nas visitas públicas por questões de
+        segurança e manejo dos animais da Fazendinha. Somente com autorização
+        prévia e em casos específicos.
+      </div>
+    </details>
+
+    <details>
+      <summary>Como entrar em contato para informações adicionais?</summary>
+      <div class="faq-body">
+        Use a página de contato do site ou envie e-mail/telefone divulgados no
+        rodapé. Para agendamento escolar utilize o formulário de agendamento.
+      </div>
+    </details>
+  </div>
+
+  <div class="contact">
+    <strong>Precisa de ajuda?</strong>
+    <div>
+      Se sua dúvida não foi respondida, entre em contato conosco pelo telefone
+      ou envie uma mensagem — retornaremos o mais breve possível.
+    </div>
+  </div>
+</div>
+{% endblock %}

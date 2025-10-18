@@ -26,7 +26,7 @@
         background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
         color: #fff;
         display: flex;
-        justify-content: flex-start; 
+        justify-content: flex-start;
         align-items: center;
         padding: 0 32px;
         height: 56px;
@@ -43,7 +43,7 @@
         font-size: 1.3rem;
         font-weight: bold;
         letter-spacing: 1px;
-        margin-right: 36px; 
+        margin-right: 36px;
       }
       .navbar-logo img {
         height: 38px;
@@ -52,7 +52,7 @@
       .navbar-links {
         display: flex;
         align-items: center;
-        gap: 18px; 
+        gap: 18px;
       }
       .navbar-links a {
         color: #fff;
@@ -156,6 +156,98 @@
         background: #8bc34a;
         color: #234d20;
       }
+      .site-footer {
+        background: linear-gradient(
+          180deg,
+          var(--green-700, #2e7d32) 0%,
+          var(--green-500, #43a047) 100%
+        );
+        color: #fff;
+        padding: 48px 0 28px;
+        margin-top: 40px;
+      }
+      .site-footer .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        gap: 28px;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      .footer-col {
+        flex: 1 1 0;
+        min-width: 220px;
+      }
+      .footer-brand {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+      .footer-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .footer-list li {
+        margin: 10px 0;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.95);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .socials {
+        display: flex;
+        gap: 12px;
+        margin-top: 6px;
+      }
+      .socials a {
+        display: inline-flex;
+        width: 38px;
+        height: 38px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        text-decoration: none;
+      }
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 18px auto 0;
+        padding: 8px 20px;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.92rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      @media (max-width: 900px) {
+        .site-footer .footer-inner {
+          flex-direction: column;
+          gap: 18px;
+          text-align: left;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+        .footer-col {
+          text-align: left;
+        }
+      }
     </style>
   </head>
   <body>
@@ -189,6 +281,109 @@
       </div>
       {% endif %} {% block content %}{% endblock %}
     </div>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <div class="footer-brand">Fazendinha Estação Natureza</div>
+          <ul class="footer-list" aria-hidden="false">
+            <li>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                />
+              </svg>
+              Rua Moreira e Costa, 16 — Ipiranga, São Paulo, SP
+            </li>
+            <li>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path
+                  d="M6.6 10.8c1.7 3.4 4.6 6.3 8 8l2-2c.3-.3.8-.4 1.1-.1.9.7 2 1 3.2 1 0 0 .4 0 .4-.4 0-4.2-3.4-8.9-7.7-11.6-.6-.4-1.5-.2-1.9.4l-1.2 2.1c-.2.4-.6.6-1.1.6-.8 0-1.8-.2-2.9-1-1.1-.8-2.2-1.9-3-3.1-.2-.3-.6-.4-.9-.2L3 6.1C2.6 6.4 2.6 7 2.9 7.5 4 9.4 5.4 10.9 6.6 10.8z"
+                />
+              </svg>
+              (11) 96928-6055
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div style="font-weight: 800; margin-bottom: 10px">Atendimento</div>
+          <div class="footer-links">
+            <a href="{% url 'cadastrar_visita' %}">Agendar visita</a>
+            <a href="{% url 'duvidas' %}">Perguntas frequentes</a>
+          </div>
+        </div>
+
+        <div class="footer-col" style="text-align: right">
+          <div style="font-weight: 800; margin-bottom: 10px">
+            Siga a Estação
+          </div>
+          <div class="socials" style="justify-content: flex-end">
+            <a
+              href="https://www.instagram.com/fazendinhaestacaonaturezasp/"
+              target="_blank"
+              rel="noopener"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="#fff"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.2A4.8 4.8 0 1 0 16.8 13 4.8 4.8 0 0 0 12 8.2zm6.4-2.6a1.1 1.1 0 1 0 1.1 1.1 1.1 1.1 0 0 0-1.1-1.1z"
+                />
+                <circle cx="12" cy="12" r="3.2" fill="#fff" />
+              </svg>
+            </a>
+            <a
+              href="https://pt-br.facebook.com/FazendinhaEstacaoNatureza/"
+              target="_blank"
+              rel="noopener"
+              aria-label="Facebook"
+              title="Facebook"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="#fff"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden
+              >
+                <path
+                  d="M22 12a10 10 0 1 0-11.5 9.9v-7H8.9v-2.9h1.6V9.3c0-1.6 1-2.5 2.4-2.5.7 0 1.4.1 1.4.1v1.6h-.8c-.8 0-1 .5-1 1v1.2h1.7l-.3 2.9h-1.4v7A10 10 0 0 0 22 12z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© Fazendinha Estação Natureza 2025</div>
+        <div>
+          Desenvolvido pelos alunos do grupo 003 da UNIVESP — todos os direitos
+          reservados
+        </div>
+      </div>
+    </footer>
 
     <div id="cookie-banner">
       <span>
