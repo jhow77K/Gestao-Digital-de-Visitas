@@ -1,15 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from .models import Escola, Visita
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
 from django.views.decorators.http import require_POST
-from django.contrib.admin.views.decorators import staff_member_required
 from datetime import datetime, time, timedelta
+from django.contrib.admin.views.decorators import staff_member_required 
+
+from .models import Escola, Visita
 
 def formatar_cnpj(cnpj):
     cnpj = ''.join(filter(str.isdigit, cnpj))
@@ -90,10 +90,30 @@ def logout_view(request):
 
 @login_required
 def home(request):
-    escola = Escola.objects.get(email=request.user.email)
+    if request.user.is_superuser or request.user.is_staff:
+        escolas = Escola.objects.all()
+        visitas = Visita.objects.all().order_by('data_sugerida')
+        visitas_agendadas = visitas.filter(status__in=['CONFIRMADO', 'SOLICITADO']).count()
+        visitas_concluidas = visitas.filter(status='REALIZADO').count()
+        return render(request, 'core/home.html', {
+            'escola': None,
+            'escolas': escolas,
+            'visitas': visitas,
+            'visitas_agendadas': visitas_agendadas,
+            'visitas_concluidas': visitas_concluidas,
+            'is_admin': True,
+        })
+
+    try:
+        escola = Escola.objects.get(email=request.user.email)
+    except Escola.DoesNotExist:
+        messages.info(request, "Nenhuma escola vinculada a este usuário. Cadastre sua escola.")
+        return redirect('cadastro_escola')
+
     visitas = Visita.objects.filter(escola=escola).order_by('data_sugerida')
-    visitas_agendadas = visitas.filter(status='CONFIRMADO').count()
+    visitas_agendadas = visitas.filter(status__in=['CONFIRMADO', 'SOLICITADO']).count()
     visitas_concluidas = visitas.filter(status='REALIZADO').count()
+
     return render(request, 'core/home.html', {
         'escola': escola,
         'visitas': visitas,
@@ -103,7 +123,23 @@ def home(request):
 
 @login_required
 def cadastrar_visita(request):
-    escola = Escola.objects.get(email=request.user.email)
+    escola = None
+    if request.user.is_superuser or request.user.is_staff:
+        escola_id = request.GET.get('escola_id') or request.POST.get('escola_id')
+        if escola_id:
+            escola = get_object_or_404(Escola, id=escola_id)
+        else:
+            escola = Escola.objects.first()
+            if not escola:
+                messages.info(request, "Nenhuma escola cadastrada. Cadastre uma escola primeiro.")
+                return redirect('cadastro_escola')
+    else:
+        try:
+            escola = Escola.objects.get(email=request.user.email)
+        except Escola.DoesNotExist:
+            messages.info(request, "Nenhuma escola vinculada a este usuário. Cadastre sua escola.")
+            return redirect('cadastro_escola')
+
     data_escolhida = request.GET.get('data')
     if not data_escolhida:
         data_escolhida = datetime.now().date().strftime('%Y-%m-%d')
@@ -134,7 +170,7 @@ def cadastrar_visita(request):
                 escola=escola,
                 data_sugerida=data_sugerida,
                 periodo=periodo,
-                horario=horario_obj, 
+                horario=horario_obj,
                 numero_previsto_criancas=request.POST.get('numero_previsto_criancas'),
                 numero_previsto_adultos=request.POST.get('numero_previsto_adultos'),
                 forma_pagamento=request.POST.get('forma_pagamento'),
@@ -145,10 +181,15 @@ def cadastrar_visita(request):
             messages.success(request, "Visita agendada com sucesso!")
             return redirect('acompanhamento_visitas')
 
-    return render(request, 'core/cadastrar_visita.html', {
+    context = {
         'data_escolhida': data_escolhida,
         'horarios_lista': horarios_lista,
-    })
+    }
+    if request.user.is_superuser or request.user.is_staff:
+        context['escolas'] = Escola.objects.all()
+        context['selected_escola_id'] = getattr(escola, 'id', None)
+
+    return render(request, 'core/cadastrar_visita.html', context)
 
 def teste_email(request):
     send_mail(
@@ -167,7 +208,19 @@ def admin_dashboard(request):
 
 @login_required
 def acompanhamento_visitas(request):
-    escola = Escola.objects.get(email=request.user.email)
+    try:
+        escola = Escola.objects.get(email=request.user.email)
+    except Escola.DoesNotExist:
+        if request.user.is_superuser or request.user.is_staff:
+            visitas = Visita.objects.all().order_by('-id')
+            horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
+            return render(request, 'core/admin_dashboard.html', {
+                'visitas': visitas,
+                'horarios': horarios,
+            })
+        messages.info(request, "Nenhuma escola vinculada a este usuário. Cadastre sua escola.")
+        return redirect('cadastro_escola')
+
     visitas = Visita.objects.filter(escola=escola).order_by('-id')
     horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
     return render(request, 'core/acompanhamento_visitas.html', {
