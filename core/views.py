@@ -92,7 +92,16 @@ def logout_view(request):
 def home(request):
     if request.user.is_superuser or request.user.is_staff:
         escolas = Escola.objects.all()
-        visitas = Visita.objects.all().order_by('data_sugerida')
+        visitas = (
+            Visita.objects.select_related('escola')
+            .only(
+                'id', 'data_sugerida', 'periodo', 'status', 'responsavel',
+                'numero_previsto_criancas', 'numero_previsto_adultos',
+                'forma_pagamento', 'agencia', 'observacoes',
+                'escola__nome'
+            )
+            .order_by('data_sugerida')
+        )
         visitas_agendadas = visitas.filter(status__in=['CONFIRMADO', 'SOLICITADO']).count()
         visitas_concluidas = visitas.filter(status='REALIZADO').count()
         return render(request, 'core/home.html', {
@@ -203,7 +212,11 @@ def teste_email(request):
 
 @staff_member_required
 def admin_dashboard(request):
-    visitas_recentes = Visita.objects.order_by('-id')[:10]
+    visitas_recentes = (
+        Visita.objects.select_related('escola')
+        .only('id','data_sugerida','periodo','status','responsavel','escola__nome')
+        .order_by('-id')[:10]
+    )
     return render(request, 'core/admin_dashboard.html', {'visitas': visitas_recentes})
 
 @login_required
@@ -212,7 +225,11 @@ def acompanhamento_visitas(request):
         escola = Escola.objects.get(email=request.user.email)
     except Escola.DoesNotExist:
         if request.user.is_superuser or request.user.is_staff:
-            visitas = Visita.objects.all().order_by('-id')
+            visitas = (
+                Visita.objects.select_related('escola')
+                .only('id','data_sugerida','periodo','status','responsavel','observacoes','escola__nome')
+                .order_by('-id')
+            )
             horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
             return render(request, 'core/admin_dashboard.html', {
                 'visitas': visitas,
@@ -221,7 +238,12 @@ def acompanhamento_visitas(request):
         messages.info(request, "Nenhuma escola vinculada a este usuário. Cadastre sua escola.")
         return redirect('cadastro_escola')
 
-    visitas = Visita.objects.filter(escola=escola).order_by('-id')
+    visitas = (
+        Visita.objects.filter(escola=escola)
+        .select_related('escola')
+        .only('id','data_sugerida','periodo','status','responsavel','observacoes','escola__nome')
+        .order_by('-id')
+    )
     horarios = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
     return render(request, 'core/acompanhamento_visitas.html', {
         'visitas': visitas,
