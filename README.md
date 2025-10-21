@@ -1,6 +1,6 @@
 # Gestão Digital de Visitas
 
-Este projeto é uma aplicação web desenvolvida pelos alunos do grupo 10 da UNIVESP utilizando o framework **Django**. O objetivo é fornecer uma solução completa para o gerenciamento de visitas escolares, incluindo funcionalidades para cadastro, edição, exclusão e visualização de escolas, visitas, pagamentos, monitores e usuários.
+Este projeto é uma aplicação web desenvolvida pelos alunos do grupo 003 da UNIVESP utilizando o framework **Django**. O objetivo é fornecer uma solução completa para o gerenciamento de visitas escolares, incluindo funcionalidades para cadastro, edição, exclusão e visualização de escolas, visitas, pagamentos, monitores e usuários.
 
 ---
 
