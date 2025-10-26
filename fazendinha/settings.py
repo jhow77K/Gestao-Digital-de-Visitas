@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='owb6%3qz_6-l8gl&wc^$j_8oyw*8=l08knmb+jol65itae120i')
 
 
 DEBUG = True
@@ -82,12 +82,12 @@ WSGI_APPLICATION = 'fazendinha.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': config('DB_NAME', default='default_db_name'), 
-        'USER': config('DB_USER', default='default_user'), 
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME', default='default_db_name'),
+        'USER': config('DB_USER', default='default_user'),
         'PASSWORD': config('DB_PASSWORD', default='default_password'),
-        'HOST': config('DB_HOST', default='localhost'), 
-        'PORT': config('DB_PORT', default='3306'),  
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='3306'),
     }
 }
 
@@ -133,6 +133,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='')
