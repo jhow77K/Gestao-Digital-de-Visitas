@@ -1,56 +1,61 @@
-{% extends 'core/base.html' %}
+{% extends 'core/base.html' %} 
 {% block content %}
 
 <div class="cadastrar-page">
-  <div class="cadastrar-calendar" id="calendar-section" aria-live="polite">
-    <h3 style="margin-top:0; color:#2e7d32">Escolha a data</h3>
-    <p class="lead">Selecione a data desejada. Horários ocupados ficarão desabilitados.</p>
-    <input type="date" id="calendar" class="date-input" />
-    <div style="margin-top:14px" class="actions-row">
-      <button id="confirm-date-btn" class="btn-primary" disabled>Continuar</button>
-      <a href="{% url 'home' %}" class="btn-secondary">Cancelar</a>
-    </div>
-    <p class="lead">Selecione no calendário e clique em continuar para preencher o formulário.</p>
-  </div>
-
-  <div class="cadastrar-card hidden" id="form-section" aria-hidden="true">
+  <div class="cadastrar-card" id="form-section" aria-hidden="false">
     <h2>Agendar visita</h2>
+    <p class="lead">Preencha os dados abaixo para solicitar o agendamento.</p>
+
     {% if messages %}
-    <div class="mensagem-erro">
+    <div class="mensagem-erro" role="alert">
       {% for message in messages %} {{ message }} {% endfor %}
     </div>
     {% endif %}
-    <form method="post" id="visita-form">
+
+  <form method="post" id="visita-form">
       {% csrf_token %}
-      <div style="text-align: left; margin-bottom: 10px">
-        <a href="#" id="change-date-btn" class="btn-secondary">← Trocar data</a>
+
+      {% if escolas %}
+      <div class="form-row">
+        <div class="form-field">
+          <label for="escola_id">Escola</label>
+          <select name="escola_id" id="escola_id" required>
+            <option value="">Selecione</option>
+            {% for e in escolas %}
+              <option value="{{ e.id }}" {% if selected_escola_id == e.id %}selected{% endif %}>{{ e.nome }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Escolha para qual escola será feita a visita.</div>
+        </div>
       </div>
+      {% endif %}
 
       <div class="form-row" id="form-row-data">
         <div class="form-field">
-          <label for="data_sugerida">Data da visita</label>
-          <input type="date" name="data_sugerida" id="data_sugerida" required readonly />
-          <div class="hint">Data selecionada para agendamento</div>
+          <label id="data-label" for="data_sugerida">Data da visita</label>
+          <input type="date" name="data_sugerida" id="data_sugerida" aria-labelledby="data-label" required value="{{ data_escolhida }}" />
+          <div class="hint">Selecione a data desejada para a visita.</div>
         </div>
         <div class="form-field">
-          <label for="periodo">Período</label>
-          <select name="periodo" id="periodo" required>
-            <option value="">Selecione</option>
-            <option value="manha">Manhã</option>
-            <option value="tarde">Tarde</option>
-          </select>
+          <label id="periodo-label">Período</label>
+          <div class="segmented" role="radiogroup" aria-labelledby="periodo-label">
+            <input type="radio" name="periodo" id="periodo-manha" value="manha" required>
+            <label for="periodo-manha">Manhã</label>
+            <input type="radio" name="periodo" id="periodo-tarde" value="tarde">
+            <label for="periodo-tarde">Tarde</label>
+          </div>
           <div class="hint">Escolha o período (manhã ou tarde).</div>
         </div>
       </div>
 
       <div class="form-row">
-        <div class="form-field">
+        <div class="form-field narrow">
           <label for="numero_previsto_criancas">Nº previsto de crianças</label>
-          <input type="number" name="numero_previsto_criancas" id="numero_previsto_criancas" min="0" required />
+          <input type="number" name="numero_previsto_criancas" id="numero_previsto_criancas" min="0" inputmode="numeric" placeholder="Ex.: 35" required />
         </div>
-        <div class="form-field">
+        <div class="form-field narrow">
           <label for="numero_previsto_adultos">Nº previsto de adultos</label>
-          <input type="number" name="numero_previsto_adultos" id="numero_previsto_adultos" min="0" required />
+          <input type="number" name="numero_previsto_adultos" id="numero_previsto_adultos" min="0" inputmode="numeric" placeholder="Ex.: 4" required />
         </div>
       </div>
 
@@ -65,7 +70,7 @@
         </div>
         <div class="form-field">
           <label for="responsavel">Responsável pela visita</label>
-          <input type="text" name="responsavel" id="responsavel" required />
+          <input type="text" name="responsavel" id="responsavel" placeholder="Nome completo" required />
         </div>
       </div>
 
@@ -78,61 +83,29 @@
             <option value="Não">Não</option>
           </select>
         </div>
-        <div class="form-field">
+        <div class="form-field full">
           <label for="observacoes">Observações</label>
-          <textarea name="observacoes" id="observacoes" rows="3"></textarea>
+          <textarea name="observacoes" id="observacoes" rows="4" placeholder="Informações adicionais (opcional)"></textarea>
         </div>
       </div>
 
-      <div class="actions-row">
-        <button type="submit" class="btn-primary">Agendar Visita</button>
-        <a href="{% url 'home' %}" class="btn-secondary">Voltar</a>
+      <div class="actions-row space-between">
+        <a href="{% url 'home' %}" class="btn-secondary" aria-label="Voltar para a página inicial">Voltar</a>
+        <button type="submit" class="btn-primary btn-auto">Agendar visita</button>
       </div>
       
     </form>
   </div>
 </div>
-
 <script>
+  // Garantir que a data mínima seja hoje e pré-preencher com o valor vindo do servidor
   document.addEventListener("DOMContentLoaded", function () {
-    const calendar = document.getElementById("calendar");
-    const confirmBtn = document.getElementById("confirm-date-btn");
-    const calendarSection = document.getElementById("calendar-section");
-    const formSection = document.getElementById("form-section");
     const dataInput = document.getElementById("data_sugerida");
-    const changeDateBtn = document.getElementById("change-date-btn");
-
-  const today = new Date().toISOString().split("T")[0];
-  calendar.setAttribute("min", today);
-  // prefill calendar if server provided a date
-  {% if data_escolhida %}
-  calendar.value = "{{ data_escolhida }}";
-  confirmBtn.disabled = false;
-  {% endif %}
-
-    calendar.addEventListener("change", function () {
-      confirmBtn.disabled = !calendar.value;
-    });
-
-    confirmBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      if (!calendar.value) return;
-      dataInput.value = calendar.value;
-      calendarSection.classList.add("hidden");
-      formSection.classList.remove("hidden");
-      formSection.setAttribute("aria-hidden", "false");
-      document.getElementById("periodo").focus();
-      formSection.scrollIntoView({ behavior: "smooth" });
-    });
-
-    changeDateBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      formSection.classList.add("hidden");
-      formSection.setAttribute("aria-hidden", "true");
-      calendarSection.classList.remove("hidden");
-      confirmBtn.disabled = !calendar.value;
-      calendar.focus();
-    });
+    const today = new Date().toISOString().split("T")[0];
+    dataInput.setAttribute("min", today);
+    if (!dataInput.value) {
+      dataInput.value = today;
+    }
   });
 </script>
 {% endblock %}

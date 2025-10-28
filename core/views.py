@@ -8,6 +8,7 @@ from django.utils.timezone import now
 from django.views.decorators.http import require_POST
 from datetime import datetime, time, timedelta
 from django.contrib.admin.views.decorators import staff_member_required 
+from django.http import HttpResponse
 
 from .models import Escola, Visita
 

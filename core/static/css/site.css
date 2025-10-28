@@ -565,31 +565,44 @@ select.status-badge {
 .cadastrar-card,
 .cadastrar-calendar {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(56,142,60,0.08);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(56, 142, 60, 0.1);
   padding: 28px;
-  border: 1px solid #e6f3e6;
+  border: 2px solid #c5e1a5;
 }
 .cadastrar-card {
-  width: 520px;
+  width: 760px; /* wider container for better breathing room */
+  max-width: 96vw; /* stay responsive on small screens */
+  padding: 36px 32px 32px 32px;
 }
 .cadastrar-calendar {
-  width: 360px;
+  width: 420px;
   text-align: center;
+  border: 2px solid #dff0d9;
 }
 .cadastrar-card h2 {
-  color: #234d20;
-  font-size: 1.5rem;
-  margin-bottom: 8px;
+  color: #388e3c;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+  letter-spacing: 1px;
+  text-align: center;
 }
 .cadastrar-card .lead {
-  color: #445;
+  color: #444;
   margin-bottom: 14px;
 }
 .form-row {
+  display: grid; /* equal distribution, prevents overlap */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 14px;
+}
+.form-field {
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  row-gap: 6px;
 }
 .form-row.column {
   flex-direction: column;
@@ -603,19 +616,21 @@ select.status-badge {
 .form-field select,
 .form-field textarea {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d0d9d0;
-  background: #fbfdfb;
-  color: #173217;
-  font-size: 0.95rem;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid #bdbdbd;
+  background: #f5f5f5;
+  color: #234d20;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  transition: border 0.2s;
+  box-sizing: border-box; /* ensure padding/border don't overflow */
 }
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  border-color: #2e7d32;
+  border: 1.5px solid #388e3c;
   outline: none;
-  box-shadow: 0 4px 12px rgba(46,125,50,0.08);
 }
 .hint {
   font-size: 0.88rem;
@@ -628,87 +643,93 @@ select.status-badge {
   align-items: center;
   margin-top: 14px;
 }
+.actions-row.space-between { justify-content: space-between; }
 .btn-primary {
-  background: linear-gradient(90deg,#388e3c 0%,#43a047 100%);
+  background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
   color: #fff;
-  padding: 12px 18px;
-  border-radius: 10px;
   border: none;
+  border-radius: 7px;
+  padding: 12px 0;
+  font-size: 1.08rem;
   font-weight: 700;
+  width: 100%;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.07);
+  transition: background 0.2s;
+}
+.btn-primary.btn-auto { width: auto; padding: 12px 18px; }
+.btn-primary:hover {
+  background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+  color: #234d20;
 }
 .btn-secondary {
-  background: transparent;
-  color: #234d20;
+  background: #f0f0f0;
+  color: #222;
   padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #e6f3e6;
+  border-radius: 8px;
+  border: none;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-}
-.availability-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 12px;
-}
-.availability-item {
-  padding: 6px 10px;
-  border-radius: 999px;
   font-weight: 700;
-  font-size: 0.85rem;
-  background: #f0fff0;
-  color: #2e7d32;
-  border: 1px solid rgba(46,125,50,0.08);
 }
-.availability-item.reservado {
-  background: #fff0f0;
-  color: #b71c1c;
-  border: 1px solid rgba(183,28,28,0.08);
-  opacity: 0.75;
+/* full-width observations area helper */
+.form-field.full {
+  flex: 1 1 100%; /* fallback for older blocks */
+  grid-column: 1 / -1; /* span both columns in grid layout */
 }
+/* make number fields visually smaller and avoid crowding */
+.form-field.narrow { justify-self: start; }
+.form-field.narrow input[type="number"] {
+  max-width: 260px;
+}
+/* removed tips/availability preview (kept styles minimal) */
 
-/* make availability items interactive */
-.availability-item {
+/* segmented control for período selection */
+.segmented {
+  display: grid; /* make each option take equal width */
+  grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid #bdbdbd;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f5f5f5;
+  height: 42px; /* align with native control height */
+}
+.segmented input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.segmented label {
+  padding: 0 16px;
   cursor: pointer;
   user-select: none;
-  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  color: #234d20;
+  font-weight: 600;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center text and make label fill its grid cell */
 }
-.availability-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(46,125,50,0.06);
+.segmented label:not(:first-of-type) {
+  border-left: 1px solid #cfd8dc;
 }
-.availability-item.reservado:hover {
-  transform: none;
-  box-shadow: none;
-  cursor: not-allowed;
+.segmented input[type="radio"]:focus-visible + label {
+  outline: 2px solid rgba(56, 142, 60, 0.35);
+  outline-offset: -2px;
 }
-.availability-item.selected {
-  box-shadow: 0 8px 28px rgba(46,125,50,0.12);
-  transform: translateY(-2px);
+.segmented input[type="radio"]:checked + label {
+  background: #388e3c;
+  color: #ffffff;
 }
-
-/* full-width observations area */
-.form-field.full {
-  flex: 1 1 100%;
-}
-.tips {
-  margin-top: 18px;
-  padding: 12px;
-  background: linear-gradient(180deg, #f7fff7, #fff);
-  border-radius: 10px;
-  border: 1px solid #eef8ee;
-}
-.tips h4 { margin: 0 0 8px 0; color: #2e7d32 }
-.tips ul { margin: 0; padding-left: 18px; color: #4a5a4a }
 
 @media (max-width: 1000px) {
   .cadastrar-page { flex-direction: column; align-items: center; gap: 18px }
-  .cadastrar-card { width: 94vw }
+  .cadastrar-card { width: 94vw; max-width: 94vw }
   .cadastrar-calendar { width: 94vw }
-  .form-row { flex-direction: column }
+  .form-row { grid-template-columns: 1fr } /* stack fields on small screens */
 }
 
 
