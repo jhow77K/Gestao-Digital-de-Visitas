@@ -1,0 +1,735 @@
+body {
+  font-family: "Inter", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f7fafc;
+  color: #234d20;
+}
+.navbar {
+  background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
+  color: #fff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 32px;
+  height: 56px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.1);
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-right: 36px;
+}
+.navbar-logo img {
+  height: 38px;
+  margin-right: 12px;
+}
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.navbar-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s, background 0.2s;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.navbar-links a:hover {
+  color: #388e3c;
+  background: #dcedc8;
+}
+.navbar-links a.logout:hover {
+  color: #b71c1c !important;
+  background: #ffcdd2;
+}
+.content {
+  margin-top: 76px;
+  padding: 24px 2vw;
+  min-height: 80vh;
+}
+.messages {
+  max-width: 600px;
+  margin: 20px auto;
+}
+.messages .msg {
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #256029;
+  background: #e8f5e9;
+  border: 1px solid #c5e1a5;
+}
+.messages .msg.error {
+  color: #b71c1c;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+}
+@media (max-width: 700px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 8px;
+  }
+  .navbar-logo {
+    font-size: 1.1rem;
+  }
+  .navbar-links a {
+    margin-left: 10px;
+    font-size: 0.98rem;
+  }
+  .content {
+    padding: 12px 2vw;
+  }
+}
+#cookie-banner {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+  color: #fff;
+  padding: 18px 32px;
+  z-index: 9999;
+  font-size: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(56, 142, 60, 0.12);
+  max-width: 90vw;
+}
+#cookie-banner a {
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-left: 4px;
+  background: none;
+  border: none;
+  display: inline;
+  transition: color 0.2s;
+}
+#cookie-banner a:hover {
+  color: #dcedc8;
+}
+#cookie-banner button {
+  margin-left: 18px;
+  padding: 7px 22px;
+  border: none;
+  background: #256029;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#cookie-banner button:hover {
+  background: #8bc34a;
+  color: #234d20;
+}
+.site-footer {
+  background: linear-gradient(
+    180deg,
+    var(--green-700, #2e7d32) 0%,
+    var(--green-500, #43a047) 100%
+  );
+  color: #fff;
+  padding: 48px 0 28px;
+  margin-top: 40px;
+}
+.site-footer .footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.footer-col {
+  flex: 1 1 0;
+  min-width: 220px;
+}
+.footer-brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+}
+.footer-list li {
+  margin: 10px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.95);
+}
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-links a {
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  font-weight: 600;
+}
+.socials {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+.socials a {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-decoration: none;
+}
+.footer-bottom {
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 8px 20px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.92rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .site-footer .footer-inner {
+    flex-direction: column;
+    gap: 18px;
+    text-align: left;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .footer-col {
+    text-align: left;
+  }
+}
+
+/* --- Admin dashboard styles (merged from admin_dashboard.css) --- */
+.admin-dashboard-container {
+  max-width: 1275px;
+  margin: 20px auto 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(56, 142, 60, 0.15);
+  padding: 64px 60px 60px 60px;
+  min-width: 340px;
+}
+.admin-dashboard-container h2 {
+  color: #388e3c;
+  font-size: 2.1rem;
+  margin-bottom: 32px;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.admin-dashboard-table {
+  width: 96%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.07);
+}
+.admin-dashboard-table th,
+.admin-dashboard-table td {
+  border: 1px solid #c5e1a5;
+  padding: 13px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+.admin-dashboard-table th {
+  background: #388e3c; /* cor verde padrão do site */
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.07rem;
+  border: none;
+}
+.admin-dashboard-table tr:nth-child(even) {
+  background: #f7fafc;
+}
+.admin-dashboard-table tr:hover {
+  background: #e8f5e9;
+  transition: background 0.2s;
+}
+.admin-dashboard-table select,
+.admin-dashboard-table textarea {
+  border-radius: 7px;
+  border: 1px solid #bdbdbd;
+  padding: 7px;
+  font-size: 0.97rem;
+  background: #f5f5f5;
+  color: #234d20;
+  resize: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.admin-dashboard-table select[name="status"] {
+  min-width: 120px;
+  font-size: 1.05rem;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1px solid #bdbdbd;
+  background: #f5f5f5;
+  color: #234d20;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.admin-dashboard-table button[type="submit"] {
+  background: #388e3c; /* cor verde padrão do site */
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.07);
+  transition: background 0.2s;
+}
+.admin-dashboard-table button[type="submit"]:hover {
+  background: #2e7d32; /* tom mais escuro ao passar o mouse */
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .admin-dashboard-container {
+    padding: 12px 2vw;
+  }
+  .admin-dashboard-table th,
+  .admin-dashboard-table td {
+    padding: 8px 4px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-dashboard-container {
+    padding: 4px 0;
+  }
+  .admin-dashboard-table {
+    font-size: 0.85rem;
+  }
+  .admin-dashboard-table th,
+  .admin-dashboard-table td {
+    padding: 5px 2px;
+  }
+}
+
+/* Reduce typography scale for admin dashboard to increase density */
+.admin-dashboard-container {
+  font-size: 0.92rem; /* slightly smaller base */
+}
+.admin-dashboard-table {
+  font-size: 0.88rem; /* table content slightly smaller */
+}
+.admin-dashboard-table th {
+  font-size: 0.9rem; /* headers slightly larger than cells */
+  font-weight: 700;
+}
+.admin-dashboard-table td {
+  font-size: 0.86rem;
+}
+
+/* tighten paddings to fit more columns without breaking layout */
+.admin-dashboard-table th,
+.admin-dashboard-table td {
+  padding: 8px 10px;
+}
+
+
+/* Status badge styles for status cells */
+.status-cell {
+  text-align: center;
+}
+/* Style the select itself as a rounded badge (background only inside the pill) */
+.status-cell select.status-badge {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid transparent;
+  font-weight: 700;
+  color: inherit;
+  padding: 4px 10px; /* slightly reduced vertical padding */
+  min-width: 92px;
+  border-radius: 999px; /* fully rounded pill */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-align: center;
+  width: auto; /* ensure it doesn't stretch to cell width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-clip: padding-box; /* ensure rounded corners paint correctly */
+}
+/* smaller type inside the status badge to match density requirements */
+select.status-badge {
+  font-size: 0.78rem;
+  line-height: 1; 
+}
+/* specific status color variants applied to the select */
+select.status-solicitado.status-badge {
+  /* Solicited: pale yellow (neutral pending) */
+  background: #FFF9C4;
+  color: #6B4A00;
+  border-color: rgba(107,74,0,0.12);
+}
+select.status-confirmado.status-badge {
+  /* Confirmed: green */
+  background: #2E7D32;
+  color: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+}
+select.status-realizado.status-badge {
+  /* Completed: blue */
+  background: #1976D2;
+  color: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+}
+select.status-cancelado.status-badge {
+  /* Cancelled: red */
+  background: #E53935;
+  color: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+}
+
+/* When user focuses/opens the select, show neutral white background and black text
+   so the interaction area is clear and doesn't inherit the status color while selecting. */
+select.status-badge:focus,
+select.status-badge:active {
+  background: #ffffff !important;
+  color: #000000 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 124, 16, 0.06);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* Custom arrow icon so we don't rely on native UI which can introduce a white seam */
+select.status-badge {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23FFFFFF' d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+  padding-right: 34px; /* make room for arrow */
+}
+select.status-badge:focus,
+select.status-badge:active {
+  /* dark arrow on white focus */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23000000' d='M7 10l5 5 5-5z'/></svg>");
+}
+
+/* Smooth transition between badge color and focus state */
+select.status-badge {
+  transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+
+
+/* --- Login page styles (extracted from login.html) --- */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background: url('../img/FundoLogin.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: "Inter", Arial, sans-serif;
+}
+.login-container {
+  background: #fff;
+  padding: 40px 32px 32px 32px;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(56, 142, 60, 0.1);
+  width: 370px;
+  text-align: center;
+  border: 2px solid #c5e1a5;
+}
+.login-container h2 {
+  margin-bottom: 22px;
+  font-size: 2rem;
+  color: #388e3c;
+  letter-spacing: 1px;
+  font-weight: bold;
+  margin-top: 0; /* ensure the title sits at the top of the container */
+  text-align: center; /* center the title horizontally */
+}
+.login-container label {
+  display: block;
+  margin: 0 auto 8px auto;
+  font-weight: 600;
+  text-align: center; /* center labels */
+  color: #388e3c;
+  letter-spacing: 0.5px;
+  font-size: 1rem;
+}
+.login-container input {
+  width: 90%;
+  padding: 11px;
+  margin: 0 auto 18px auto; /* center inputs inside the container */
+  border: 1.5px solid #bdbdbd;
+  border-radius: 7px;
+  font-size: 1rem;
+  background: #f5f5f5;
+  color: #234d20;
+  transition: border 0.2s;
+  box-sizing: border-box;
+}
+.login-container input:focus {
+  border: 1.5px solid #388e3c;
+  outline: none;
+  background: #fff;
+}
+.login-container button {
+  width: 90%; /* match input width */
+  padding: 11px;
+  background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(67, 160, 71, 0.08);
+  transition: background 0.2s;
+  margin: 12px auto 0 auto; /* center button and give slight top spacing */
+  box-sizing: border-box;
+}
+.login-container button:hover {
+  background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+  color: #234d20;
+}
+.mensagem-erro {
+  color: #b30000;
+  background: #ffeaea;
+  border: 1px solid #b30000;
+  padding: 10px 14px;
+  border-radius: 7px;
+  margin-bottom: 18px;
+  font-size: 1rem;
+  text-align: center;
+}
+.login-container a {
+  display: block;
+  margin-top: 18px;
+  color: #388e3c;
+  text-decoration: underline;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.login-container a:hover {
+  color: #8bc34a;
+  text-decoration: underline;
+}
+
+/* cadastrar-visita styles */
+.cadastrar-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 28px;
+  margin: 40px 0 60px 0;
+}
+.cadastrar-card,
+.cadastrar-calendar {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(56, 142, 60, 0.1);
+  padding: 28px;
+  border: 2px solid #c5e1a5;
+}
+.cadastrar-card {
+  width: 760px; /* wider container for better breathing room */
+  max-width: 96vw; /* stay responsive on small screens */
+  padding: 36px 32px 32px 32px;
+}
+.cadastrar-calendar {
+  width: 420px;
+  text-align: center;
+  border: 2px solid #dff0d9;
+}
+.cadastrar-card h2 {
+  color: #388e3c;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.cadastrar-card .lead {
+  color: #444;
+  margin-bottom: 14px;
+}
+.form-row {
+  display: grid; /* equal distribution, prevents overlap */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 14px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+.form-row.column {
+  flex-direction: column;
+}
+.form-field label {
+  color: #2e7d32;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid #bdbdbd;
+  background: #f5f5f5;
+  color: #234d20;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  transition: border 0.2s;
+  box-sizing: border-box; /* ensure padding/border don't overflow */
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border: 1.5px solid #388e3c;
+  outline: none;
+}
+.hint {
+  font-size: 0.88rem;
+  color: #5a6a5a;
+  margin-top: 6px;
+}
+.actions-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+.actions-row.space-between { justify-content: space-between; }
+.btn-primary {
+  background: linear-gradient(90deg, #388e3c 0%, #8bc34a 100%);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.07);
+  transition: background 0.2s;
+}
+.btn-primary.btn-auto { width: auto; padding: 12px 18px; }
+.btn-primary:hover {
+  background: linear-gradient(90deg, #8bc34a 0%, #388e3c 100%);
+  color: #234d20;
+}
+.btn-secondary {
+  background: #f0f0f0;
+  color: #222;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+}
+/* full-width observations area helper */
+.form-field.full {
+  flex: 1 1 100%; /* fallback for older blocks */
+  grid-column: 1 / -1; /* span both columns in grid layout */
+}
+/* make number fields visually smaller and avoid crowding */
+.form-field.narrow { justify-self: start; }
+.form-field.narrow input[type="number"] {
+  max-width: 260px;
+}
+/* removed tips/availability preview (kept styles minimal) */
+
+/* segmented control for período selection */
+.segmented {
+  display: grid; /* make each option take equal width */
+  grid-template-columns: repeat(2, 1fr);
+  align-items: stretch;
+  width: 100%;
+  border: 1px solid #bdbdbd;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f5f5f5;
+  height: 42px; /* align with native control height */
+}
+.segmented input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.segmented label {
+  padding: 0 16px;
+  cursor: pointer;
+  user-select: none;
+  color: #234d20;
+  font-weight: 600;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center text and make label fill its grid cell */
+}
+.segmented label:not(:first-of-type) {
+  border-left: 1px solid #cfd8dc;
+}
+.segmented input[type="radio"]:focus-visible + label {
+  outline: 2px solid rgba(56, 142, 60, 0.35);
+  outline-offset: -2px;
+}
+.segmented input[type="radio"]:checked + label {
+  background: #388e3c;
+  color: #ffffff;
+}
+
+@media (max-width: 1000px) {
+  .cadastrar-page { flex-direction: column; align-items: center; gap: 18px }
+  .cadastrar-card { width: 94vw; max-width: 94vw }
+  .cadastrar-calendar { width: 94vw }
+  .form-row { grid-template-columns: 1fr } /* stack fields on small screens */
+}
+
+
