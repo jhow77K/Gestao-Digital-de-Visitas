@@ -263,6 +263,10 @@ def atualizar_status_visita(request, visita_id):
         messages.success(request, "Status e feedback atualizados com sucesso!")
     else:
         messages.error(request, "Status inválido.")
+    # Optional redirect target (useful when updating from pages other than admin dashboard)
+    nxt = request.POST.get('next')
+    if nxt and isinstance(nxt, str) and nxt.startswith('/'):
+        return redirect(nxt)
     return redirect('admin_dashboard')
 
 @login_required
