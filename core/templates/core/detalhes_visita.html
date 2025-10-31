@@ -1,55 +1,50 @@
-{% extends 'core/base.html' %} {% block content %}
-{# View styles moved to `core/static/css/site.css` to centralize chip/status appearance. #}
-
-<div class="detalhes-wrap">
-  <div class="detalhes-card">
-    <div class="detalhes-row">
-      <div class="detalhe-meta">
-        <div>{{ visita.data_sugerida|date:"d/m/Y" }}</div>
-        <div style="margin-top: 8px; font-size: 0.95rem">
-          {{ visita.get_periodo_display }}
-        </div>
-
-        <div style="margin-top: 12px">
-          <span
-            class="chip {% if visita.status == 'CONFIRMADO' %}chip-confirmado{% elif visita.status == 'SOLICITADO' %}chip-solicitado{% elif visita.status == 'REALIZADO' %}chip-realizado{% elif visita.status == 'CANCELADO' %}chip-cancelado{% endif %}"
-          >
-            {{ visita.get_status_display }}
-          </span>
-        </div>
-      </div>
-
-      <div class="detalhe-info">
-        <h2 style="margin: 0 0 8px">Detalhes da Visita</h2>
-
-        <div><strong>Responsável:</strong> {{ visita.responsavel }}</div>
-        <div><strong>Escola:</strong> {{ visita.escola.nome }}</div>
-        <div>
-          <strong>Nº Crianças:</strong> {{ visita.numero_previsto_criancas }}
-        </div>
-        <div>
-          <strong>Nº Adultos:</strong> {{ visita.numero_previsto_adultos }}
-        </div>
-
-
-        <div><strong>Agência:</strong> {{ visita.agencia }}</div>
-
-        {% if visita.observacoes %}
-        <div style="margin-top: 10px">
-          <strong>Observações:</strong>
-          <div style="margin-top: 6px; color: #444">
-            {{ visita.observacoes }}
-          </div>
-        </div>
-        {% endif %}
-
-        <div class="acoes">
-          <a href="{% url 'home' %}" class="btn btn-back"
-            >← Voltar</a
-          >
-        </div>
-      </div>
+{% extends 'core/base.html' %} {% load static %} {% block content %}
+<div class="detalhes-container">
+  <div class="detalhes-header">
+    <div class="icon-square">🏫</div>
+    <h2>Detalhes da Visita</h2>
+  </div>
+  <div class="detalhes-grid">
+    <div class="detalhes-card">
+      <h3>Informações</h3>
+      <ul class="detalhes-list">
+        <li>
+          <span class="detalhes-label">Status:</span>
+          <span class="detalhes-status confirmado">Confirmado</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Data:</span>
+          <span class="detalhes-value">31/10/2025</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Responsável:</span>
+          <span class="detalhes-value">João Silva</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Escola:</span>
+          <span class="detalhes-value">Escola de Educação Infantil</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Nº Crianças:</span>
+          <span class="detalhes-value">20</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Nº Adultos:</span>
+          <span class="detalhes-value">5</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Agência:</span>
+          <span class="detalhes-value">Agência de Saúde</span>
+        </li>
+        <li>
+          <span class="detalhes-label">Observações:</span>
+          <span class="detalhes-value">Observações sobre a visita</span>
+        </li>
+      </ul>
     </div>
+  </div>
+  <div class="detalhes-actions">
+    <a href="{% url 'home' %}" class="btn-primary">Voltar</a>
   </div>
 </div>
 {% endblock %}

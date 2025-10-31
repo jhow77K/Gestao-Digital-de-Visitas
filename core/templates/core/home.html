@@ -429,8 +429,8 @@
     </div>
     <script>
       (function () {
-        function createIframe(id) {
-          const src =
+function createIframe(id) {
+        const src =
             "https://www.youtube-nocookie.com/embed/" +
             id +
             "?rel=0&modestbranding=1&autoplay=1";
@@ -441,6 +441,9 @@
             "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           );
           ifr.setAttribute("allowfullscreen", "");
+        
+          ifr.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+
           ifr.style.width = "100%";
           ifr.style.height = "320px";
           ifr.style.border = "0";
