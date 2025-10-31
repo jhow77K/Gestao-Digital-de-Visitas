@@ -231,35 +231,7 @@
     gap: 12px;
     flex-wrap: wrap;
   }
-  .chip {
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 0.88rem;
-    font-weight: 700;
-    border: 1px solid transparent;
-    display: inline-block;
-  }
-
-  .chip-confirmado {
-    background: linear-gradient(90deg, #43a047, #66bb6a);
-    color: #fff;
-    border-color: rgba(67, 160, 71, 0.15);
-  }
-  .chip-solicitado {
-    background: linear-gradient(90deg, #ffb74d, #ff8a65);
-    color: #4b2e00;
-    border-color: rgba(255, 183, 77, 0.12);
-  }
-  .chip-realizado {
-    background: linear-gradient(90deg, #29b6f6, #0288d1);
-    color: #fff;
-    border-color: rgba(2, 136, 209, 0.12);
-  }
-  .chip-cancelado {
-    background: linear-gradient(90deg, #ef9a9a, #e57373);
-    color: #fff;
-    border-color: rgba(183, 28, 28, 0.12);
-  }
+  /* Chip/status styles moved to `core/static/css/site.css` to centralize appearance */
 
   .map-section {
     max-width: 1200px;
@@ -565,11 +537,24 @@
             </div>
           </div>
 
+          {% if is_admin %}
+          <form method="post" action="{% url 'atualizar_status_visita' visita.id %}" style="display:flex; gap:8px; align-items:center;">
+            {% csrf_token %}
+            <select name="status" onchange="this.form.submit()" class="status-badge {% if visita.status == 'SOLICITADO' %}status-solicitado{% elif visita.status == 'CONFIRMADO' %}status-confirmado{% elif visita.status == 'REALIZADO' %}status-realizado{% elif visita.status == 'CANCELADO' %}status-cancelado{% endif %}">
+              <option value="SOLICITADO" {% if visita.status == 'SOLICITADO' %}selected{% endif %}>Solicitado</option>
+              <option value="CONFIRMADO" {% if visita.status == 'CONFIRMADO' %}selected{% endif %}>Confirmado</option>
+              <option value="REALIZADO" {% if visita.status == 'REALIZADO' %}selected{% endif %}>Realizado</option>
+              <option value="CANCELADO" {% if visita.status == 'CANCELADO' %}selected{% endif %}>Cancelado</option>
+            </select>
+            <input type="hidden" name="next" value="{{ request.path }}">
+          </form>
+          {% else %}
           <div
             class="chip {% if visita.status == 'CONFIRMADO' %}chip-confirmado{% elif visita.status == 'SOLICITADO' %}chip-solicitado{% elif visita.status == 'REALIZADO' %}chip-realizado{% elif visita.status == 'CANCELADO' %}chip-cancelado{% endif %}"
           >
             {{ visita.get_status_display }}
           </div>
+          {% endif %}
         </div>
 
         <div class="visita-meta">

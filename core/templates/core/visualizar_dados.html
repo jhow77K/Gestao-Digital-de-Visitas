@@ -400,7 +400,7 @@
                   class="finalizar-visita-link"
                   >Finalizar Visita</a
                 >
-                {% else %} | <span class="status-realizada">Realizada</span>
+                {% else %} | <span class="chip chip-realizado">Realizada</span>
                 {% endif %}
               </td>
             </tr>
@@ -460,14 +460,14 @@
                   >Excluir</a
                 >
                 {% if not pagamento.confirmado %} |
-                <span class="status-pendente">Pagamento Pendente</span>
+                <span class="chip chip-solicitado">Pagamento Pendente</span>
                 <a
                   href="{% url 'marcar_pagamento_confirmado' pagamento.id %}"
                   class="confirmar-link"
                   >Confirmar</a
                 >
                 {% else %} |
-                <span class="status-realizada">Pagamento Confirmado</span>
+                <span class="chip chip-realizado">Pagamento Confirmado</span>
                 {% endif %}
               </td>
             </tr>
